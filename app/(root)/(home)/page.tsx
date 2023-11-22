@@ -5,36 +5,15 @@ import NoResults from "@/components/shared/NoResults";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
+import { getQuestions } from "@/lib/actions/question.action";
 import Link from "next/link";
 
-const questions = [
-  {
-    _id: "1",
-    title: "Cascading Deletes in SQLAlchemy?",
-    tags: [{ _id: "1", name: "python" }],
-    author: { _id: "101", name: "John Doe", picture: "john-doe.jpg" },
-    upvotes: 10,
-    views: 100,
-    answers: [{}], // Replace with a more specific type if needed
-    createdAt: new Date(),
-  },
-  {
-    _id: "2",
-    title: "Responsive Design Techniques?",
-    tags: [
-      { _id: "2", name: "html" },
-      { _id: "3", name: "css" },
-    ],
-    author: { _id: "102", name: "Jane Smith", picture: "jane-smith.jpg" },
-    upvotes: 15,
-    views: 120,
-    answers: [{}], // Replace with a more specific type if needed
-    createdAt: new Date(),
-  },
-  // Add more objects with random values as needed
-];
 
-export default function Home() {
+
+export default async function Home() {
+  const res = await getQuestions({});
+  
+  
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center ">
@@ -61,8 +40,8 @@ export default function Home() {
       </div>
       <HomeFilters />
       <div className="mt-10 flex w-full flex-col gap-6">
-        {questions.length > 0 ? (
-          questions.map((question) => (
+        {res.questions.length > 0 ? (
+          res.questions.map((question) => (
             <QuestionCard
               key={question._id}
               _id={question._id}

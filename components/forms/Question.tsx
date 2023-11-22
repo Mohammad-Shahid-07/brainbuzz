@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { QuestionsSchema } from "@/lib/validations";
 import { Badge } from "../ui/badge";
-import Image from "next/image";
+
 import { createQuestion } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -48,7 +48,7 @@ const Question = ({userID}: Props ) => {
 
       const tagInput = e.target as HTMLInputElement;
       const tagVal = tagInput.value.trim();
-      console.log(tagVal, field.value);
+   
 
       if (tagVal !== "") {
         if (tagVal.length > 15) {
@@ -79,7 +79,7 @@ const Question = ({userID}: Props ) => {
       content: values.explanation,
       tags: values.tags,
       author: JSON.parse(userID),
-
+      path: pathname,
     })
     router.push("/questions");
    } catch (error) {
