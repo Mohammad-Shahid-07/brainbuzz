@@ -2,18 +2,21 @@ import QuestionCard from "@/components/cards/QuestionCard";
 import HomeFilters from "@/components/home/HomeFilters";
 import Filter from "@/components/shared/Filter";
 import NoResults from "@/components/shared/NoResults";
+import Pagination from "@/components/shared/Pagination";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
 import { getQuestions } from "@/lib/actions/question.action";
+import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 
+export default async function Home({ searchParams }: SearchParamsProps) {
+  const res = await getQuestions({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+    page: searchParams.page ?  +searchParams.page : 1,
+  });
 
-
-export default async function Home() {
-  const res = await getQuestions({});
-  
-  
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center ">
@@ -32,7 +35,7 @@ export default async function Home() {
           placeholder="Search for a specific question"
           otherClasses="flex-1"
         />
-        
+
         <Filter
           filters={HomePageFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
@@ -51,6 +54,7 @@ export default async function Home() {
               author={question.author}
               upvotes={question.upvotes}
               views={question.views}
+              slug={question.slug}
               answers={question.answers}
               createdAt={question.createdAt}
             />
@@ -63,6 +67,12 @@ export default async function Home() {
             linkText="Ask a Question"
           />
         )}
+      </div>
+      <div className="mt-10">
+        <Pagination
+        pageNumber={searchParams?.page? +searchParams.page : 1}
+        isNext={res.isNext}
+        />
       </div>
     </>
   );

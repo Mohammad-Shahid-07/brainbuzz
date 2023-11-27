@@ -18,24 +18,36 @@ import { Button } from "../ui/button";
 import { QuestionsSchema } from "@/lib/validations";
 import { Badge } from "../ui/badge";
 
-import { createQuestion } from "@/lib/actions/question.action";
+import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
+import { useTheme } from "@/context/ThemeProvider";
+import Image from "next/image";
 
-const type = "edit";
 type Props = {
-  userID: string;
+  mongoUserId: string;
+  type?: string;
+  questionDetails?: string;
 };
-const Question = ({userID}: Props ) => {
+const Question = ({ mongoUserId, type, questionDetails }: Props) => {
   const editorRef = useRef(null);
+  const { mode } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+
+
+    const parsedQuestionDetails =   type=== 'Edit' &&  JSON.parse(questionDetails || "");
+    
+  
+
+  const groupedTags = type=== 'Edit' &&  parsedQuestionDetails.tags.map((tag: any) => tag.name);
+
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
-      title: "",
-      explanation: "",
-      tags: [],
+      title: parsedQuestionDetails.title || "",
+      explanation: parsedQuestionDetails.content || "",
+      tags: groupedTags || [],
     },
   });
 
@@ -48,7 +60,6 @@ const Question = ({userID}: Props ) => {
 
       const tagInput = e.target as HTMLInputElement;
       const tagVal = tagInput.value.trim();
-   
 
       if (tagVal !== "") {
         if (tagVal.length > 15) {
@@ -62,31 +73,42 @@ const Question = ({userID}: Props ) => {
           form.setValue("tags", [...field.value, tagVal]);
           tagInput.value = "";
           form.clearErrors("tags");
-          console.log(form.getValues("tags"));
         }
       } else {
         form.trigger();
       }
     }
   };
+  const handleTagRemove = (tag: string, field: any) => {
+    const filteredTags = field.value.filter((t: string) => t !== tag);
+    form.setValue("tags", filteredTags);
+  };
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
-   try {
-    // make an async request
-    await createQuestion({
-      title: values.title,
-      content: values.explanation,
-      tags: values.tags,
-      author: JSON.parse(userID),
-      path: pathname,
-    })
-    router.push("/questions");
-   } catch (error) {
-    
-   }finally{
-    setIsSubmitting(false);
-   }
+    try {
+      if (type === "Edit") {
+        const slug = await editQuestion({
+          questionId: parsedQuestionDetails._id,
+          title: values.title,
+          content: values.explanation,
+          path: pathname,
+        });
+        router.push(`/question/${slug}/${parsedQuestionDetails._id}`);
+      } else {
+        await createQuestion({
+          title: values.title,
+          content: values.explanation,
+          tags: values.tags,
+          author: JSON.parse(mongoUserId),
+          path: pathname,
+        });
+        router.push("/");
+      }
+    } catch (error) {
+    } finally {
+      setIsSubmitting(false);
+    }
   }
   return (
     <div>
@@ -138,7 +160,7 @@ const Question = ({userID}: Props ) => {
                     onEditorChange={(content, editor) => {
                       field.onChange(content);
                     }}
-                    initialValue=""
+                    initialValue={parsedQuestionDetails.content || ""}
                     init={{
                       height: 350,
                       menubar: true,
@@ -165,6 +187,8 @@ const Question = ({userID}: Props ) => {
                         "alignright alignjustify | bullist numlist  | ",
                       content_style:
                         "body { font-family:Inter; font-size:16px }",
+                      skin: mode === "dark" ? "oxide-dark" : "oxide",
+                      content_css: mode === "dark" ? "dark" : "light",
                     }}
                   />
                 </FormControl>
@@ -190,6 +214,7 @@ const Question = ({userID}: Props ) => {
                       className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                       onKeyDown={(e) => handleKeydown(e, field)}
                       placeholder="Add tags..."
+                      disabled={type === "Edit"}
                     />
 
                     {field.value.length > 0 && (
@@ -197,9 +222,21 @@ const Question = ({userID}: Props ) => {
                         {field.value.map((tag: any) => (
                           <Badge
                             key={tag}
+                            onClick={() =>
+                              type !== "Edit" && handleTagRemove(tag, field)
+                            }
                             className="subtle-medium background-light800_dark300 text-light400_light500 flex items-center justify-center gap-2 rounded-md border-none px-4 py-2 capitalize"
                           >
                             {tag}{" "}
+                            {type !== "Edit" && (
+                              <Image
+                                src="/assets/icons/close.svg"
+                                alt="Close"
+                                width={12}
+                                height={12}
+                                className="cursor-pointer object-contain invert-0 dark:invert"
+                              />
+                            )}
                           </Badge>
                         ))}
                       </div>
@@ -220,9 +257,9 @@ const Question = ({userID}: Props ) => {
             disabled={isSubmitting}
           >
             {isSubmitting ? (
-              <>{type === "edit" ? "Editing" : "Posting"} Question...</>
+              <>{type === "Edit" ? "Editing" : "Posting"} Question...</>
             ) : (
-              <>{type === "edit" ? "Edit" : "Ask a"} Question</>
+              <>{type === "Edit" ? "Edit" : "Ask a"} Question</>
             )}
           </Button>
         </form>

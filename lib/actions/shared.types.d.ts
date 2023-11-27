@@ -1,4 +1,5 @@
 import { Schema } from "mongoose";
+
 import { IUser } from "@/mongodb";
 
 export interface CreateAnswerParams {
@@ -97,7 +98,7 @@ export interface GetAllTagsParams {
 }
 
 export interface GetQuestionsByTagIdParams {
-  tagId: string;
+  tagName: string;
   page?: number;
   pageSize?: number;
   searchQuery?: string;
@@ -118,13 +119,14 @@ export interface CreateUserParams {
 
 export interface GetUserByIdParams {
   userId: string;
+
 }
 
 export interface GetAllUsersParams {
   page?: number;
   pageSize?: number;
   filter?: string;
-  searchQuery?: string;
+  searchQuery?: string; // Add searchQuery parameter
 }
 
 export interface UpdateUserParams {

@@ -8,7 +8,7 @@ interface Props {
   title: string;
   href?: string;
   textStyles?: string;
-  isAuther?: boolean;
+  isauthor?: boolean;
 }
 const Matric = ({
   imgURL,
@@ -17,7 +17,7 @@ const Matric = ({
   title,
   href,
   textStyles,
-  isAuther,
+  isauthor,
 }: Props) => {
   const matricContent = (
     <>
@@ -32,7 +32,7 @@ const Matric = ({
         {value}
         <span
           className={`small-regular line-clamp-1 ${
-            isAuther ? "max-sm:hidden" : ""
+            isauthor ? "max-sm:hidden" : ""
           }`}
         >
           {title}
@@ -41,17 +41,13 @@ const Matric = ({
     </>
   );
   if (href) {
-   return (
-    <Link href={href} className="flex-center gap-1">
+    return (
+      <Link href={href} className="flex-center gap-1">
         {matricContent}
-    </Link>
-   )  
+      </Link>
+    );
   }
-  return (
-    <div className="flex-center flex-wrap gap-1">
-        {matricContent} 
-    </div>
-  );
+  return <div className="flex-center flex-wrap gap-1">{matricContent}</div>;
 };
 
 export default Matric;
