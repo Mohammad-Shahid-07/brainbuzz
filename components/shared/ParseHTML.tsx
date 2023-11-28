@@ -6,6 +6,7 @@ import "katex/dist/katex.min.css";
 import { useEffect } from "react";
 
 // Language Components
+
 import "prismjs/components/prism-python";
 import "prismjs/components/prism-java";
 import "prismjs/components/prism-c";
