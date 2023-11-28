@@ -6,16 +6,37 @@ import Pagination from "@/components/shared/Pagination";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { Button } from "@/components/ui/button";
 import { HomePageFilters } from "@/constants/filters";
-import { getQuestions } from "@/lib/actions/question.action";
+import {
+  getQuestions,
+  getRecommendedQuestions,
+} from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
+import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-  const res = await getQuestions({
-    searchQuery: searchParams.q,
-    filter: searchParams.filter,
-    page: searchParams.page ?  +searchParams.page : 1,
-  });
+  const { userId } = auth();
+  let res;
+  if (searchParams?.filter === "recommended") {
+    if (userId) {
+      res = await getRecommendedQuestions({
+        searchQuery: searchParams.q,
+        page: searchParams.page ? +searchParams.page : 1,
+        userId,
+      });
+    } else {
+      res = {
+        questions: [],
+        isNext: false,
+      };
+    }
+  } else {
+    res = await getQuestions({
+      searchQuery: searchParams.q,
+      filter: searchParams.filter,
+      page: searchParams.page ? +searchParams.page : 1,
+    });
+  }
 
   return (
     <>
@@ -45,7 +66,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       <HomeFilters />
       <div className="mt-10 flex w-full flex-col gap-6">
         {res.questions.length > 0 ? (
-          res.questions.map((question) => (
+          res.questions.map((question : any) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
@@ -70,8 +91,8 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       </div>
       <div className="mt-10">
         <Pagination
-        pageNumber={searchParams?.page? +searchParams.page : 1}
-        isNext={res.isNext}
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={res.isNext}
         />
       </div>
     </>

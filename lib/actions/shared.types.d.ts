@@ -22,6 +22,7 @@ export interface AnswerVoteParams {
   hasupVoted: boolean;
   hasdownVoted: boolean;
   path: string;
+  
 }
 
 export interface DeleteAnswerParams {

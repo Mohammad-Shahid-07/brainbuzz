@@ -10,6 +10,7 @@ import { formatLargeNumber } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { toast } from "../ui/use-toast";
 
 interface Props {
   type: string;
@@ -39,10 +40,19 @@ const Votes = ({
       userId: JSON.parse(userId),
       path,
     });
+    return toast({
+      title: `Question ${
+        !hasSaved ? "Saved in" : "Removed from"
+      } Your Collections`,
+      variant: !hasSaved ? "default" : "destructive",
+    });
   };
   const handleVote = async (voteType: string) => {
     if (!userId) {
-      return;
+      return toast({
+        title: "Login to vote",
+        description: "You need to login to vote",
+      });
     }
     if (voteType === "upvote") {
       if (type === "Question") {
@@ -62,6 +72,10 @@ const Votes = ({
           path,
         });
       }
+      return toast({
+        title: `Upvote ${!hasUpvoted ? "Successull" : "Removed"}`,
+        variant: !hasUpvoted ? "default" : "destructive",
+      });
     }
     if (voteType === "downvote") {
       if (type === "Question") {
@@ -81,10 +95,17 @@ const Votes = ({
           path,
         });
       }
+      return toast({
+        title: `Downvote ${!hasDownvoted ? "Successull" : "Removed"}`,
+        variant: !hasDownvoted ? "default" : "destructive",
+      });
     }
   };
   useEffect(() => {
-    viewQuestion({ questionId: JSON.parse(itemId), userId: userId ? JSON.parse(userId) : undefined });
+    viewQuestion({
+      questionId: JSON.parse(itemId),
+      userId: userId ? JSON.parse(userId) : undefined,
+    });
   }, [itemId, userId, path, router]);
   return (
     <div className="flex gap-5">

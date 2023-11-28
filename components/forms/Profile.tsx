@@ -18,8 +18,8 @@ import { ProfileSchema } from "@/lib/validations";
 import { usePathname, useRouter } from "next/navigation";
 import { updateUser } from "@/lib/actions/user.action";
 interface Props {
- clerkId: string;
- user: string;
+  clerkId: string;
+  user: string;
 }
 
 const Profile = ({ clerkId, user }: Props) => {
@@ -45,8 +45,6 @@ const Profile = ({ clerkId, user }: Props) => {
   async function onSubmit(values: z.infer<typeof ProfileSchema>) {
     setIsSubmitting(true);
     try {
-    
-      
       await updateUser({
         clerkId,
         updateData: {
@@ -79,14 +77,14 @@ const Profile = ({ clerkId, user }: Props) => {
             name="name"
             render={({ field }) => (
               <FormItem className="space-y-3.5">
-                <FormLabel>
+                  <FormLabel className="paragraph-semibold text-dark400_light800">
                   Name <span className="text-primary-500">*</span>{" "}
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Name"
                     {...field}
-                    className="no-focus paragraph-regular text-dark300_light700 background-light700_dark300 border"
+                    className="no-focus paragraph-regular text-dark300_light700 background-light800_dark300 border"
                   />
                 </FormControl>
 
@@ -99,14 +97,14 @@ const Profile = ({ clerkId, user }: Props) => {
             name="username"
             render={({ field }) => (
               <FormItem className="space-y-3.5">
-                <FormLabel>
+                  <FormLabel className="paragraph-semibold text-dark400_light800" >
                   Username <span className="text-primary-500">*</span>{" "}
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Your Username"
                     {...field}
-                    className="no-focus paragraph-regular text-dark300_light700 background-light700_dark300 border"
+                    className="no-focus paragraph-regular text-dark300_light700 background-light800_dark300 border"
                   />
                 </FormControl>
 
@@ -119,13 +117,13 @@ const Profile = ({ clerkId, user }: Props) => {
             name="portfolioWebsite"
             render={({ field }) => (
               <FormItem className="space-y-3.5">
-                <FormLabel>Porfoliyo Link</FormLabel>
+                  <FormLabel className="paragraph-semibold text-dark400_light800">Porfoliyo Link</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Porfoliyo Link (Optional)"
                     type="url"
                     {...field}
-                    className="no-focus paragraph-regular text-dark300_light700 background-light700_dark300 border"
+                    className="no-focus paragraph-regular text-dark300_light700 background-light800_dark300 border"
                   />
                 </FormControl>
 
@@ -138,13 +136,13 @@ const Profile = ({ clerkId, user }: Props) => {
             name="linkedin"
             render={({ field }) => (
               <FormItem className="space-y-3.5">
-                <FormLabel>linkedin</FormLabel>
+                  <FormLabel className="paragraph-semibold text-dark400_light800">linkedin</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="linkedin Link (Optional)"
                     type="url"
                     {...field}
-                    className="no-focus paragraph-regular text-dark300_light700 background-light700_dark300 border"
+                    className="no-focus paragraph-regular text-dark300_light700 background-light800_dark300 border"
                   />
                 </FormControl>
 
@@ -158,12 +156,12 @@ const Profile = ({ clerkId, user }: Props) => {
             name="location"
             render={({ field }) => (
               <FormItem className="space-y-3.5">
-                <FormLabel>Location</FormLabel>
+                  <FormLabel className="paragraph-semibold text-dark400_light800">Location</FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Where are you from"
                     {...field}
-                    className="no-focus paragraph-regular text-dark300_light700 background-light700_dark300 border"
+                    className="no-focus paragraph-regular text-dark300_light700 background-light800_dark300 border"
                   />
                 </FormControl>
 
@@ -176,14 +174,14 @@ const Profile = ({ clerkId, user }: Props) => {
             name="bio"
             render={({ field }) => (
               <FormItem className="space-y-3.5">
-                <FormLabel>
+                  <FormLabel className="paragraph-semibold text-dark400_light800">
                   Bio <span className="text-primary-500">*</span>{" "}
                 </FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Whats special About you"
                     {...field}
-                    className="no-focus paragraph-regular text-dark300_light700 background-light700_dark300 border"
+                    className="no-focus paragraph-regular text-dark300_light700 background-light800_dark300 border"
                   />
                 </FormControl>
 

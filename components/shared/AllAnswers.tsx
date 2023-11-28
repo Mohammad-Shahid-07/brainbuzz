@@ -15,7 +15,6 @@ interface Props extends SearchParamsProps {
   questionId: string;
   userId: string;
   totalAnswers: number;
-
   filter?: string;
 }
 
@@ -23,13 +22,12 @@ const AllAnswers = async ({
   questionId,
   userId,
   totalAnswers,
- 
   filter,
   searchParams
 }: Props) => {
   const res = await getAnswers({
     questionId:  JSON.parse(questionId),
-    page: searchParams.page ?  +searchParams.page : 1,
+    page: searchParams?.page ?  +searchParams.page : 1,
     sortBy: filter || "newest",
   });
 
@@ -45,14 +43,13 @@ const AllAnswers = async ({
             key={answer._id}
             className="light-border mt-5 border-b py-10 "
           >
-            <div className="flex items-center justify-between">
               <div className="mb-8 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
                 <Link
-                  href={`/profile/${answer.author.username}`}
+                  href={`/profile/${answer.author[0].username}`}
                   className="flex items-start gap-1 sm:items-center"
                 >
                   <Image
-                    src={answer.author.picture}
+                    src={answer.author[0].picture}
                     alt="Picture of the author"
                     width={18}
                     height={18}
@@ -60,7 +57,7 @@ const AllAnswers = async ({
                   />
                   <div className="flex flex-col sm:flex-row sm:items-center">
                     <p className="body-semibold text-dark300_light700">
-                      {answer.author.name}
+                      {answer.author[0].name}
                     </p>
                     <p className="small-regular text-light400_light500 mt-0.5 line-clamp-1">
                       <span className="max-sm:hidden">-</span>
@@ -79,7 +76,6 @@ const AllAnswers = async ({
                     userId={JSON.stringify(userId)}
                   />
                 </div>
-              </div>
             </div>
             <ParseHTML data={answer.content} />
           </article>

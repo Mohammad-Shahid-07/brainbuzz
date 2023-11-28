@@ -35,21 +35,19 @@ const LocalSearchbar = ({
           value: search,
         });
         router.push(newUrl, { scroll: false });
-      }
-      else{
+      } else {
         if (pathname === route) {
           const newUrl = removeKeysFromQuery({
             params: searchParams.toString(),
             keysToRemove: ["q"],
-          });  
+          });
           router.push(newUrl, { scroll: false });
         }
       }
     }, 300);
     return () => clearTimeout(delayDebounceFn);
   }, [query, search, pathname, route, router, searchParams]);
-  
- 
+
   return (
     <div
       className={`background-light800_darkgradient flex grow gap-4 rounded px-4 ${otherClasses}`}
@@ -69,7 +67,7 @@ const LocalSearchbar = ({
         onChange={(e) => {
           setSearch(e.target.value);
         }}
-        className="text-dark100_light900 paragraph-regular no-focus  border-none bg-transparent font-spaceGrotesk shadow-none outline-none"
+        className="text-dark400_light700 paragraph-regular no-focus placeholder border-none bg-transparent font-spaceGrotesk shadow-none outline-none"
       />
       {iconPosition === "right" && (
         <Image

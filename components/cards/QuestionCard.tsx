@@ -72,27 +72,29 @@ const QuestionCard = ({
           href={`/profile/${author?.username}`}
           isauthor
         />
-        <Matric
-          imgURL="/assets/icons/like.svg"
-          alt="Upvotes"
-          value={formatLargeNumber(upvotes.length)}
-          title="Votes"
-          textStyles="small-medium text-dark400_light900"
-        />
-        <Matric
-          imgURL="/assets/icons/message.svg"
-          alt="message"
-          value={formatLargeNumber(answers.length)}
-          title="Answers"
-          textStyles="small-medium text-dark400_light900"
-        />
-        <Matric
-          imgURL="/assets/icons/eye.svg"
-          alt="eye"
-          value={formatLargeNumber(views)}
-          title="Views"
-          textStyles="small-medium text-dark400_light900"
-        />
+        <div className="flex items-center gap-3 max-sm:flex-wrap max-sm:justify-start">
+          <Matric
+            imgURL="/assets/icons/like.svg"
+            alt="Upvotes"
+            value={formatLargeNumber(upvotes.length)}
+            title="Votes"
+            textStyles="small-medium text-dark400_light900"
+          />
+          <Matric
+            imgURL="/assets/icons/message.svg"
+            alt="message"
+            value={formatLargeNumber(answers.length)}
+            title="Answers"
+            textStyles="small-medium text-dark400_light900"
+          />
+          <Matric
+            imgURL="/assets/icons/eye.svg"
+            alt="eye"
+            value={formatLargeNumber(views)}
+            title="Views"
+            textStyles="small-medium text-dark400_light900"
+          />
+        </div>
       </div>
     </div>
   );

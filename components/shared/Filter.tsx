@@ -30,14 +30,14 @@ const Filters = ({ filters, otherClasses, containerClasses }: Props) => {
       key: "filter",
       value: item.toLowerCase(),
     });
-    router.push(newUrl, {scroll: false})
+    router.push(newUrl, { scroll: false });
   };
 
   return (
     <div className={`relative ${containerClasses}`}>
       <Select
-      onValueChange={handleUpdateParams}
-      defaultValue={paramFilter || undefined}
+        onValueChange={handleUpdateParams}
+        defaultValue={paramFilter || undefined}
       >
         <SelectTrigger
           className={`${otherClasses} body-regular light-border background-light800_dark300 text-dark500_light700 border px-5 py-2.5`}
@@ -46,11 +46,15 @@ const Filters = ({ filters, otherClasses, containerClasses }: Props) => {
             <SelectValue placeholder="select a Filter" />
           </div>
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="text-dark500_light700 small-regular border-none bg-light-900 dark:bg-dark-300">
           <SelectGroup className="text-light400_light500">
             <SelectLabel>Filters</SelectLabel>
             {filters.map((filter) => (
-              <SelectItem key={filter.value} value={filter.value}>
+              <SelectItem
+                key={filter.value}
+                value={filter.value}
+                className="cursor-pointer focus:bg-light-800 dark:focus:bg-dark-300"
+              >
                 {filter.name}
               </SelectItem>
             ))}

@@ -22,6 +22,7 @@ import { createQuestion, editQuestion } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
 import Image from "next/image";
+import { toast } from "../ui/use-toast";
 
 type Props = {
   mongoUserId: string;
@@ -35,12 +36,11 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const parsedQuestionDetails =
+    type === "Edit" && JSON.parse(questionDetails || "");
 
-    const parsedQuestionDetails =   type=== 'Edit' &&  JSON.parse(questionDetails || "");
-    
-  
-
-  const groupedTags = type=== 'Edit' &&  parsedQuestionDetails.tags.map((tag: any) => tag.name);
+  const groupedTags =
+    type === "Edit" && parsedQuestionDetails.tags.map((tag: any) => tag.name);
 
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
@@ -83,6 +83,14 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
     const filteredTags = field.value.filter((t: string) => t !== tag);
     form.setValue("tags", filteredTags);
   };
+
+  if (isSubmitting) {
+    toast({
+      title: `Your Question is Being ${
+        type === "Edit" ? "Edited" : "Posted"
+      }  `,
+    });
+  }
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
@@ -103,9 +111,16 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
           author: JSON.parse(mongoUserId),
           path: pathname,
         });
+
         router.push("/");
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error);
+      toast({
+        title: `Error ${type === "Edit" ? "Editing" : "Posting"} Question`,
+        description: error.message,
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }

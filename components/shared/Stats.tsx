@@ -1,4 +1,5 @@
 import { formatLargeNumber } from "@/lib/utils";
+import { BadgeCounts } from "@/types";
 import Image from "next/image";
 
 interface StatsCardProps {
@@ -22,8 +23,9 @@ const StatsCard = ({ imgUrl, value, title }: StatsCardProps) => {
 interface Props {
   totalAnswers: number;
   totalQuestions: number;
+  badges: BadgeCounts;
 }
-const Stats = ({ totalAnswers, totalQuestions }: Props) => {
+const Stats = ({ totalAnswers, totalQuestions, badges }: Props) => {
   return (
     <div className="mt-10">
       <div className="h3-semibold text-dark200_light900">
@@ -44,18 +46,18 @@ const Stats = ({ totalAnswers, totalQuestions }: Props) => {
           </div>
           <StatsCard
             imgUrl="/assets/icons/gold-medal.svg"
-            value={0}
+            value={badges.GOLD}
             title="Gold Badges"
           />
 
           <StatsCard
             imgUrl="/assets/icons/silver-medal.svg"
-            value={0}
+            value={badges.SILVER}
             title="Silver Badges"
           />
           <StatsCard
             imgUrl="/assets/icons/bronze-medal.svg"
-            value={0}
+            value={badges.BRONZE}
             title="Bronze Badges"
           />
         </div>

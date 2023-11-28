@@ -7,7 +7,7 @@ import { QuestionFilters } from "@/constants/filters";
 import { getSavedQuestions } from "@/lib/actions/question.action";
 
 import { auth } from "@clerk/nextjs";
-import { IQuestion } from "@/database/question.model";
+
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination";
 
@@ -44,7 +44,7 @@ export default async function Home({searchParams}: SearchParamsProps) {
 
       <div className="mt-10 flex w-full flex-col gap-6">
         {res.questions.length > 0 ? (
-          res.questions.map((question: IQuestion) => (
+          res.questions.map((question: any) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
