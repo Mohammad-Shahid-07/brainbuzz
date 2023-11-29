@@ -11,17 +11,15 @@ import { auth } from "@clerk/nextjs";
 import { SearchParamsProps } from "@/types";
 import Pagination from "@/components/shared/Pagination";
 
-export default async function Home({searchParams}: SearchParamsProps) {
-
+export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId } = auth();
   if (!userId) return null;
   const res = await getSavedQuestions({
     clerkId: userId,
     searchQuery: searchParams.q,
     filter: searchParams.filter,
-    page: searchParams.page ?  +searchParams.page : 1,
+    page: searchParams.page ? +searchParams.page : 1,
   });
-  
 
   return (
     <>
@@ -43,8 +41,8 @@ export default async function Home({searchParams}: SearchParamsProps) {
       </div>
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {res.questions.length > 0 ? (
-          res.questions.map((question: any) => (
+        {res?.questions.length > 0 ? (
+          res?.questions.map((question: any) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
@@ -69,8 +67,8 @@ export default async function Home({searchParams}: SearchParamsProps) {
       </div>
       <div className="mt-10">
         <Pagination
-        pageNumber={searchParams?.page? +searchParams.page : 1}
-        isNext={res.isNext}
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={res?.isNext}
         />
       </div>
     </>

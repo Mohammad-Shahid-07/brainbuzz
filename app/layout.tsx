@@ -18,7 +18,13 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-spaceGrotesk",
 });
 export const metadata: Metadata = {
-  title: "StackWithNext",
+  metadataBase: new URL(
+    "https://stack-with-next-mohammad-shahid-07.vercel.app",
+  ),
+  title: {
+    default: "StackWithNext",
+    template: "%s | StackWithNext",
+  },
   description:
     "A Community for Developers to Share and Learn with each other and grow.",
   icons: {

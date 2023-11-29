@@ -5,6 +5,30 @@ import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { getQuestionByTagName } from "@/lib/actions/tag.actions";
 import { URLProps } from "@/types";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: {
+    id: string;
+  };
+}) {
+  try {
+    return {
+      title: params?.id,
+      description: `Get all the questions related to ${params?.id}`,
+      alternates: {
+        canonical: `/tags/${params.id}`,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      title: "Not Found",
+      description: "The page you are looking for does not exist.",
+    };
+  }
+}
+
 const Page = async ({ params, searchParams }: URLProps) => {
   const res = await getQuestionByTagName({
     tagName: params?.id,
@@ -15,7 +39,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
   return (
     <>
       <h1 className="h1-bold text-dark100_light900 capitalize ">
-        {res.tagTitle}
+        {res?.tagTitle}
       </h1>
 
       <div className="mt-11 w-full">
@@ -29,8 +53,8 @@ const Page = async ({ params, searchParams }: URLProps) => {
       </div>
 
       <div className="mt-10 flex w-full flex-col gap-6">
-        {res.questions.length > 0 ? (
-          res.questions.map((question: any) => (
+        {res?.questions.length > 0 ? (
+          res?.questions.map((question: any) => (
             <QuestionCard
               key={question._id}
               _id={question._id}
@@ -56,7 +80,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
       <div className="mt-10">
         <Pagination
           pageNumber={searchParams?.page ? +searchParams.page : 1}
-          isNext={res.isNext}
+          isNext={res?.isNext}
         />
       </div>
     </>

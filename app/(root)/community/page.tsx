@@ -9,16 +9,12 @@ import Link from "next/link";
 
 import React from "react";
 
-const Page = async ( {searchParams}: SearchParamsProps) => {
-  const res = await getAllUsers({ 
+const Page = async ({ searchParams }: SearchParamsProps) => {
+  const res = await getAllUsers({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
-    page: searchParams.page ?  +searchParams.page : 1, 
+    page: searchParams.page ? +searchParams.page : 1,
   });
-
-   
-     
-     
 
   return (
     <>
@@ -40,8 +36,8 @@ const Page = async ( {searchParams}: SearchParamsProps) => {
         </div>
       </div>
       <section className="mt-12 flex flex-wrap gap-4">
-        {res.users.length > 0 ? (
-          res.users.map((user) => <UserCard key={user._id} user={user} />)
+        {res?.users.length > 0 ? (
+          res?.users.map((user) => <UserCard key={user._id} user={user} />)
         ) : (
           <div className="paragraph-regular text-dark200_light800 mx-auto max-w-4xl text-center">
             <p>No Users Yet</p>
@@ -53,8 +49,8 @@ const Page = async ( {searchParams}: SearchParamsProps) => {
       </section>
       <div className="mt-10">
         <Pagination
-        pageNumber={searchParams?.page? +searchParams.page : 1}
-        isNext={res.isNext}
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={res?.isNext}
         />
       </div>
     </>

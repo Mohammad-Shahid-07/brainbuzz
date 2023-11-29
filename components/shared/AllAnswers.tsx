@@ -23,11 +23,11 @@ const AllAnswers = async ({
   userId,
   totalAnswers,
   filter,
-  searchParams
+  searchParams,
 }: Props) => {
   const res = await getAnswers({
-    questionId:  JSON.parse(questionId),
-    page: searchParams?.page ?  +searchParams.page : 1,
+    questionId: JSON.parse(questionId),
+    page: searchParams?.page ? +searchParams.page : 1,
     sortBy: filter || "newest",
   });
 
@@ -38,44 +38,44 @@ const AllAnswers = async ({
         <Filters filters={AnswerFilters} />
       </div>
       <div>
-        {res.answers.map((answer) => (
+        {res?.answers.map((answer) => (
           <article
             key={answer._id}
             className="light-border mt-5 border-b py-10 "
           >
-              <div className="mb-8 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
-                <Link
-                  href={`/profile/${answer.author[0].username}`}
-                  className="flex items-start gap-1 sm:items-center"
-                >
-                  <Image
-                    src={answer.author[0].picture}
-                    alt="Picture of the author"
-                    width={18}
-                    height={18}
-                    className="rounded-full object-cover max-sm:mt-0.5"
-                  />
-                  <div className="flex flex-col sm:flex-row sm:items-center">
-                    <p className="body-semibold text-dark300_light700">
-                      {answer.author[0].name}
-                    </p>
-                    <p className="small-regular text-light400_light500 mt-0.5 line-clamp-1">
-                      <span className="max-sm:hidden">-</span>
-                      answered {getTimeStamp(answer.createdAt)}
-                    </p>
-                  </div>
-                </Link>
-                <div className="flex justify-end">
-                  <Votes
-                    type="Answer"
-                    upvotes={answer.upvotes.length}
-                    hasUpvoted={answer.upvotes.includes(userId)}
-                    downvotes={answer.downvotes.length}
-                    hasDownvoted={answer.downvotes.includes(userId)}
-                    itemId={JSON.stringify(answer._id)}
-                    userId={JSON.stringify(userId)}
-                  />
+            <div className="mb-8 flex flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
+              <Link
+                href={`/profile/${answer.author[0].username}`}
+                className="flex items-start gap-1 sm:items-center"
+              >
+                <Image
+                  src={answer.author[0].picture}
+                  alt="Picture of the author"
+                  width={18}
+                  height={18}
+                  className="rounded-full object-cover max-sm:mt-0.5"
+                />
+                <div className="flex flex-col sm:flex-row sm:items-center">
+                  <p className="body-semibold text-dark300_light700">
+                    {answer.author[0].name}
+                  </p>
+                  <p className="small-regular text-light400_light500 mt-0.5 line-clamp-1">
+                    <span className="max-sm:hidden">-</span>
+                    answered {getTimeStamp(answer.createdAt)}
+                  </p>
                 </div>
+              </Link>
+              <div className="flex justify-end">
+                <Votes
+                  type="Answer"
+                  upvotes={answer.upvotes.length}
+                  hasUpvoted={answer.upvotes.includes(userId)}
+                  downvotes={answer.downvotes.length}
+                  hasDownvoted={answer.downvotes.includes(userId)}
+                  itemId={JSON.stringify(answer._id)}
+                  userId={JSON.stringify(userId)}
+                />
+              </div>
             </div>
             <ParseHTML data={answer.content} />
           </article>
@@ -83,8 +83,8 @@ const AllAnswers = async ({
       </div>
       <div className="mt-10">
         <Pagination
-        pageNumber={searchParams?.page? +searchParams.page : 1}
-        isNext={res.isNext}
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={res?.isNext}
         />
       </div>
     </div>

@@ -9,11 +9,14 @@ interface Props extends SearchParamsProps {
 }
 
 const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
-  const res = await getUserAnswers({ userId,     page: searchParams.page ?  +searchParams.page : 1, });
+  const res = await getUserAnswers({
+    userId,
+    page: searchParams.page ? +searchParams.page : 1,
+  });
 
-
-  return <>
-   {res.userAnswers.map((answer) => (
+  return (
+    <>
+      {res?.userAnswers.map((answer) => (
         <AnswerCard
           key={answer._id}
           clerkId={clerkId}
@@ -24,13 +27,14 @@ const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
           createdAt={answer.createdAt}
         />
       ))}
-       <div className="mt-10">
+      <div className="mt-10">
         <Pagination
-        pageNumber={searchParams?.page? +searchParams.page : 1}
-        isNext={res.isNext}
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={res?.isNext}
         />
       </div>
-  </>;
+    </>
+  );
 };
 
 export default AnswersTab;

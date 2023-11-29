@@ -5,7 +5,7 @@ import Pagination from "./Pagination";
 
 interface Props extends SearchParamsProps {
   userId: string;
-  clerkId?: string ;
+  clerkId?: string;
 }
 const QuestionsTab = async ({ searchParams, userId, clerkId }: Props) => {
   const res = await getUserQuestions({
@@ -15,7 +15,7 @@ const QuestionsTab = async ({ searchParams, userId, clerkId }: Props) => {
 
   return (
     <>
-      {res.userQuestions.map((question : any) => (
+      {res?.userQuestions.map((question: any) => (
         <QuestionCard
           key={question._id}
           _id={question._id}
@@ -33,7 +33,7 @@ const QuestionsTab = async ({ searchParams, userId, clerkId }: Props) => {
       <div className="mt-10">
         <Pagination
           pageNumber={searchParams?.page ? +searchParams.page : 1}
-          isNext={res.isNext}
+          isNext={res?.isNext}
         />
       </div>
     </>

@@ -12,9 +12,41 @@ import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: {
+    slug: string;
+    id: string;
+  };
+}) {
+  try {
+    const question = await getQuestionById({ questionId: params.id });
+
+    if (!question)
+      return {
+        title: "Not Found",
+        description: "The page you are looking for does not exist.",
+      };
+
+    return {
+      title: question?.title,
+      description: question?.content,
+      alternates: {
+        canonical: `/question/${params.slug}/${params.id}`,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      title: "Not Found",
+      description: "The page you are looking for does not exist.",
+    };
+  }
+}
 const Page = async ({ params, searchParams }: URLProps) => {
   const res = await getQuestionById({ questionId: params.id });
-  
+
   const { userId } = auth();
   const mongoUser = await getUserById(userId);
 
@@ -23,7 +55,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
       <div className="flex-start w-full flex-col">
         <div className="flex w-full flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
           <Link
-            href={`/profile/${res.author.username}`}
+            href={`/profile/${res?.author.username}`}
             className="flex items-center justify-start gap-1"
           >
             <Image
@@ -40,13 +72,13 @@ const Page = async ({ params, searchParams }: URLProps) => {
           <div className="flex justify-end">
             <Votes
               type="Question"
-              upvotes={res?.upvotes.length}
-              hasUpvoted={res?.upvotes.includes(mongoUser._id)}
-              downvotes={res?.downvotes.length}
-              hasDownvoted={res?.downvotes.includes(mongoUser._id)}
-              hasSaved={mongoUser?.saved.includes(res._id)}
+              upvotes={res?.upvotes?.length}
+              hasUpvoted={res?.upvotes.includes(mongoUser?._id)}
+              downvotes={res?.downvotes?.length}
+              hasDownvoted={res?.downvotes.includes(mongoUser?._id)}
+              hasSaved={mongoUser?.saved.includes(res?._id)}
               itemId={JSON.stringify(res?._id)}
-              userId={JSON.stringify(mongoUser._id)}
+              userId={JSON.stringify(mongoUser?._id)}
             />
           </div>
         </div>
@@ -58,24 +90,24 @@ const Page = async ({ params, searchParams }: URLProps) => {
         <Matric
           imgURL="/assets/icons/clock.svg"
           alt="clock"
-          value={`asked ${getTimeStamp(res.createdAt)}`}
+          value={`asked ${getTimeStamp(res?.createdAt)}`}
           title="Asked"
           textStyles="small-medium text-dark400_light900"
         />
         <Matric
           imgURL="/assets/icons/message.svg"
           alt="User"
-          value={formatLargeNumber(res.answers.length)}
+          value={formatLargeNumber(res?.answers.length)}
           title="Answers"
           textStyles="body-medium text-dark400_light700"
-          href={`/profile/${res.author._id}`}
+          href={`/profile/${res?.author._id}`}
           isauthor
         />
 
         <Matric
           imgURL="/assets/icons/eye.svg"
           alt="message"
-          value={formatLargeNumber(res.views)}
+          value={formatLargeNumber(res?.views)}
           title="Answers"
           textStyles="small-medium text-dark400_light900"
         />
@@ -83,7 +115,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
       <ParseHTML data={res?.content} />
 
       <div className="mt-8 flex flex-wrap gap-2">
-        {res.tags.map((tag: any) => (
+        {res?.tags.map((tag: any) => (
           <RenderTags
             key={tag._id}
             name={tag.name}
@@ -94,15 +126,15 @@ const Page = async ({ params, searchParams }: URLProps) => {
       </div>
       <AllAnswers
         questionId={JSON.stringify(params.id)}
-        totalAnswers={res.answers.length}
-        userId={mongoUser._id}
+        totalAnswers={res?.answers.length}
+        userId={mongoUser?._id}
         filter={searchParams?.filter}
         searchParams={searchParams}
       />
       <Answer
-        question={res.content}
-        authorId={JSON.stringify(mongoUser._id)}
-        questionId={JSON.stringify(res._id)}
+        question={res?.content}
+        authorId={JSON.stringify(mongoUser?._id)}
+        questionId={JSON.stringify(res?._id)}
       />
     </>
   );

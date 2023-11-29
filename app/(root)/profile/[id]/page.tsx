@@ -12,6 +12,37 @@ import Stats from "@/components/shared/Stats";
 import QuestionsTab from "@/components/shared/QuestionsTab";
 import AnswersTab from "@/components/shared/AnswersTab";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: {
+    id: string;
+  };
+}) {
+  try {
+    const userInfo = await getUserInfo({ userId: params.id });
+
+    if (!userInfo)
+      return {
+        title: "Not Found",
+        description: "The page you are looking for does not exist.",
+      };
+
+    return {
+      title: userInfo?.user.name,
+      description: userInfo?.user.bio,
+      alternates: {
+        canonical: `/profile/${params.id}`,
+      },
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      title: "Not Found",
+      description: "The page you are looking for does not exist.",
+    };
+  }
+}
 const Page = async ({ params, searchParams }: URLProps) => {
   const { userId: clerkId } = auth();
 
