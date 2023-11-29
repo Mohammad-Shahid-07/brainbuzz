@@ -7,6 +7,7 @@ import { URLProps } from "@/types";
 
 export async function generateMetadata({
   params,
+  
 }: {
   params: {
     id: string;
