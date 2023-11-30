@@ -187,7 +187,7 @@ const Votes = ({
         </div>
       </div>
 
-      {type === "Question" || type ==='Blog'  && (
+      {(type === "Question" || type === 'Blog') && (
           <Image
             src={
               hasSaved
