@@ -1,9 +1,8 @@
-import Comment from "@/components/forms/Comment";
+
 import Filters from "@/components/shared/Filter";
 import Matric from "@/components/shared/Matric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTags from "@/components/shared/RenderTags";
-import ShowComments from "@/components/shared/ShowComments";
 import Votes from "@/components/shared/Votes";
 import { HomePageFilters } from "@/constants/filters";
 import { getBlogBySlug } from "@/lib/actions/blog.action";
@@ -147,18 +146,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
           />
         </div>
 
-        <div>
-          <Comment
-            blogId={JSON.stringify(res?._id)}
-            userId={JSON.stringify(mongoUser?._id)}
-          />
-          <ShowComments
-            blogId={JSON.stringify(res?._id)}
-            userId={JSON.stringify(mongoUser?._id)}
-            mongoUser={mongoUser}
-            
-          />
-        </div>
+       
       </div>
     </>
   );

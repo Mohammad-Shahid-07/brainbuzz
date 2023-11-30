@@ -12,7 +12,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "../ui/use-toast";
 import { downvoteBlog, toggleSaveBlog, upvoteBlog } from "@/lib/actions/blog.action";
-import { downvoteComment, upvoteComment } from "@/lib/actions/comment.action";
 
 interface Props {
   type: string;
@@ -96,15 +95,7 @@ const Votes = ({
           path,
         });
 
-      } else if(type === "Comment"){
-        await upvoteComment({
-          commentId: JSON.parse(itemId),
-          userId: JSON.parse(userId),
-          hasupVoted: hasUpvoted,
-          hasdownVoted: hasDownvoted,
-          path,
-        });
-      }
+      } 
       return toast({
         title: `Upvote ${!hasUpvoted ? "Successull" : "Removed"}`,
         variant: !hasUpvoted ? "default" : "destructive",
@@ -135,15 +126,7 @@ const Votes = ({
           hasdownVoted: hasDownvoted,
           path,
         });
-      } else if(type === "Comment"){
-        await downvoteComment({
-          commentId: JSON.parse(itemId),
-          userId: JSON.parse(userId),
-          hasupVoted: hasUpvoted,
-          hasdownVoted: hasDownvoted,
-          path,
-        });
-      }
+      } 
       return toast({
         title: `Downvote ${!hasDownvoted ? "Successull" : "Removed"}`,
         variant: !hasDownvoted ? "default" : "destructive",
