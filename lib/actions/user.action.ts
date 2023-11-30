@@ -188,16 +188,16 @@ export async function getUserQuestions(params: GetUserStatsParams) {
     const { userId, page = 1, pageSize = 20 } = params;
     const skipAmount = (page - 1) * pageSize;
     const totalQuestions = await Question.countDocuments({ author: userId });
-    const userQuestions = await Question.find({ author: userId })
+    const questions = await Question.find({ author: userId })
       .skip(skipAmount)
       .limit(pageSize)
       .sort({ views: -1, upvotes: -1 })
       .populate({ path: "tags", model: Tags, select: "_id name" })
       .populate("author", "name picture clerkId username");
-    const isNext = totalQuestions > skipAmount + userQuestions.length;  
-   
+    const isNext = totalQuestions > skipAmount + questions.length;  
+  
     
-    return { userQuestions, totalQuestions, isNext };
+    return { questions, totalQuestions, isNext };
   } catch (error) {
     console.log(error);
     throw error;

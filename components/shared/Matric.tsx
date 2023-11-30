@@ -9,6 +9,8 @@ interface Props {
   href?: string;
   textStyles?: string;
   isauthor?: boolean;
+  height?: number;
+  width?: number;
 }
 const Matric = ({
   imgURL,
@@ -18,23 +20,21 @@ const Matric = ({
   href,
   textStyles,
   isauthor,
+  height,
+  width,
 }: Props) => {
   const matricContent = (
     <>
       <Image
         src={imgURL}
         alt={alt}
-        width={16}
-        height={16}
+        width={`${width || "16"}`}
+        height={`${height || "16"}`}
         className={`object-contain ${href ? "rounded-full" : ""}`}
       />
       <p className={`${textStyles} flex items-center gap-1 `}>
         {value}
-        <span
-          className={`small-regular line-clamp-1 ${
-            isauthor ? "max-sm:hidden" : ""
-          }`}
-        >
+        <span className={` line-clamp-1 ${isauthor ? "max-sm:hidden" : ""}`}>
           {title}
         </span>
       </p>

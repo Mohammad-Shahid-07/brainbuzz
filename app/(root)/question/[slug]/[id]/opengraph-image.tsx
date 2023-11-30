@@ -15,7 +15,7 @@ export const size = {
 export const contentType = "image/png";
 
 // Image generation
-export default async function Image({ params }: ParamsProps) {
+export default async function DynamicImage({ params }: ParamsProps) {
   function slugToCamelCaseWithSpaces(slug: string): string {
     return slug
       .split("-")
@@ -23,7 +23,6 @@ export default async function Image({ params }: ParamsProps) {
       .join(" ");
   }
 
-  // Example usage:
 
   const camelCaseString: string = slugToCamelCaseWithSpaces(params?.slug);
 

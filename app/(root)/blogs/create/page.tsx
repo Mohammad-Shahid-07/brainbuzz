@@ -3,20 +3,20 @@ import { getUserById } from "@/lib/actions/user.action";
 import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
-const Page = async() => {
-  const {userId} = auth();
+const Page = async () => {
+  const { userId } = auth();
   if (!userId) redirect("/sign-in");
- 
-  
-   const user = await getUserById(userId);
 
+  const user = await getUserById(userId);
+  
+  if (!user?.owner) return null;
   
 
   return (
     <div>
-      <h1 className="h1-bold text-dark100_light900">Ask a Question</h1>
+      <h1 className="h1-bold text-dark100_light900">Write A blog</h1>
       <div className="mt-9">
-        <Question mongoUserId={JSON.stringify(user?._id)} type="Question" />
+        <Question mongoUserId={JSON.stringify(user?._id)} type="Blog"  />
       </div>
     </div>
   );

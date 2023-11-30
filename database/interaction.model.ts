@@ -5,6 +5,7 @@ export interface IInteraction extends Document {
     action: string;
     question: Schema.Types.ObjectId;
     answer: Schema.Types.ObjectId;
+    blog: Schema.Types.ObjectId;
     tags: Schema.Types.ObjectId[];
     createdAt: Date;
 }
@@ -14,6 +15,7 @@ const InteractionSchema = new Schema({
     action: { type: String, required: true },
     question: { type: Schema.Types.ObjectId, ref: 'Question' },
     answer: { type: Schema.Types.ObjectId, ref: 'Answer' },
+    blog: { type: Schema.Types.ObjectId, ref: 'Blog' },
     tags: [{ type: Schema.Types.ObjectId, ref: 'Tags' }],
     createdAt: { type: Date, default: Date.now },
 });

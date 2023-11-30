@@ -1,8 +1,11 @@
 import * as z from "zod";
 export const QuestionsSchema = z.object({
   title: z.string().min(5).max(100),
+  description: z.string().min(50),
   explanation: z.string().min(50),
   tags: z.array(z.string()).min(1).max(3),
+  image: z.string().url().min(5),
+
 });
 
 export const AnswerSchema = z.object({

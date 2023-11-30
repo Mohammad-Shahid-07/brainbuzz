@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+
 import * as z from "zod";
 import {
   Form,
@@ -23,6 +24,8 @@ import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "@/context/ThemeProvider";
 import Image from "next/image";
 import { toast } from "../ui/use-toast";
+import { createBlog } from "@/lib/actions/blog.action";
+import { UploadButton } from "@/lib/uploadthig";
 
 type Props = {
   mongoUserId: string;
@@ -42,12 +45,15 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
   const groupedTags =
     type === "Edit" && parsedQuestionDetails.tags.map((tag: any) => tag.name);
 
+  
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
       title: parsedQuestionDetails.title || "",
+      description: parsedQuestionDetails.description || "",
       explanation: parsedQuestionDetails.content || "",
       tags: groupedTags || [],
+      image: "",
     },
   });
 
@@ -91,9 +97,32 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
       }  `,
     });
   }
+
+  const handleClientUploadComplete = (res: any) => {
+    // Do something with the response, e.g., update the form data
+
+    form.setValue("image", res[0].url);
+
+    toast({
+      title: "Image Upload Completed",
+    });
+  };
+
+  // New function to handle client upload error
+  const handleUploadError = (error: any) => {
+    // Handle the error, e.g., show a toast message
+    toast({
+      title: `Image Upload Error: ${error.message}`,
+      variant: "destructive",
+    });
+  };
   // 2. Define a submit handler.
+  
+  
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
+    console.log("asldj");
+    
     try {
       if (type === "Edit") {
         const slug = await editQuestion({
@@ -103,7 +132,19 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
           path: pathname,
         });
         router.push(`/question/${slug}/${parsedQuestionDetails._id}`);
-      } else {
+      } else if (type === "Blog") {
+        await createBlog({
+          title: values.title,
+          description: values.description,
+          content: values.explanation,
+          tags: values.tags,
+          image: values.image,
+          author: JSON.parse(mongoUserId),
+          path: pathname,
+        });
+        router.push("/blogs");
+      } else if(type === "Question") {
+        console.log("values", values);
         await createQuestion({
           title: values.title,
           content: values.explanation,
@@ -143,7 +184,7 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
                 </FormLabel>
                 <FormControl className="mt-3.5">
                   <Input
-                    className="no-focus paragraph-regular background-light700_dark300 light-border-2 min-h-[56px] border "
+                    className="no-focus paragraph-regular text-dark400_light800 background-light700_dark300 light-border-2 min-h-[56px] border "
                     {...field}
                   />
                 </FormControl>
@@ -155,6 +196,30 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
               </FormItem>
             )}
           />
+          {type === "Blog" && (
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem className="flex w-full flex-col">
+                  <FormLabel className="paragraph-semibold text-dark400_light800">
+                    Description of Your Blog{" "}
+                    <span className="text-primary-500">*</span>{" "}
+                  </FormLabel>
+                  <FormControl className="mt-3.5">
+                    <Input
+                      className="no-focus paragraph-regular text-dark400_light800 background-light700_dark300 light-border-2 min-h-[56px] border "
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription className="body-regular mt-2.5 text-light-500">
+                    Summerize your blog in 2-3 lines
+                  </FormDescription>
+                  <FormMessage className="text-red-500" />
+                </FormItem>
+              )}
+            />
+          )}
           <FormField
             control={form.control}
             name="explanation"
@@ -266,6 +331,13 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
               </FormItem>
             )}
           />
+          {type === "Blog" && (
+            <UploadButton
+              endpoint="imageUploader"
+              onClientUploadComplete={handleClientUploadComplete}
+              onUploadError={handleUploadError}
+            />
+          )}
           <Button
             type="submit"
             className="primary-gradient !text-light-900"

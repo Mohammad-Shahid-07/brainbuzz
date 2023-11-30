@@ -1,25 +1,22 @@
-import QuestionCard from "@/components/cards/QuestionCard";
 import Filter from "@/components/shared/Filter";
-import NoResults from "@/components/shared/NoResults";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
-
 import { QuestionFilters } from "@/constants/filters";
-import { getSavedQuestions } from "@/lib/actions/question.action";
-
 import { auth } from "@clerk/nextjs";
-
 import { SearchParamsProps } from "@/types";
-import Pagination from "@/components/shared/Pagination";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import QuestionsTab from "@/components/shared/QuestionsTab";
+import SavedBlogsTab from "@/components/shared/SavedBlogsTab";
+import { getUserById} from "@/lib/actions/user.action";
+
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-  const { userId } = auth();
-  if (!userId) return null;
-  const res = await getSavedQuestions({
-    clerkId: userId,
-    searchQuery: searchParams.q,
-    filter: searchParams.filter,
-    page: searchParams.page ? +searchParams.page : 1,
-  });
+  const { userId: clerkId } = auth();
+  const userInfo = await getUserById(clerkId);
+
+
+  if (!clerkId) return null;
+
+  
 
   return (
     <>
@@ -39,38 +36,38 @@ export default async function Home({ searchParams }: SearchParamsProps) {
           otherClasses="min-h-[56px] sm:min-w-[170px]"
         />
       </div>
-
-      <div className="mt-10 flex w-full flex-col gap-6">
-        {res?.questions.length > 0 ? (
-          res?.questions.map((question: any) => (
-            <QuestionCard
-              key={question._id}
-              _id={question._id}
-              title={question.title}
-              tags={question.tags}
-              author={question.author}
-              upvotes={question.upvotes}
-              views={question.views}
-              slug={question.slug}
-              answers={question.answers}
-              createdAt={question.createdAt}
+      <div className="mt-10 flex gap-10">
+        <Tabs defaultValue="questions" className="flex-1">
+          <TabsList className="background-light800_dark400 min-h-[42px] p-1">
+            <TabsTrigger value="questions" className="tab">
+             Saved Questions
+            </TabsTrigger>
+            <TabsTrigger value="blogs" className="tab">
+              Saved Blogs
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent
+            value="questions"
+            className="mt-5 flex w-full flex-col gap-6"
+          >
+            <QuestionsTab
+              clerkId={clerkId || ""}
+              searchParams={searchParams}
+              userId={userInfo?._id}
+              route='/collection'
             />
-          ))
-        ) : (
-          <NoResults
-            title="There are no Saved Questions"
-            discription="Be the first one to ask a question! ask a question! ask a question! and ask a question! get it?"
-            link="/ask-question"
-            linkText="Ask a Question"
-          />
-        )}
+          </TabsContent>
+          <TabsContent value="blogs" className="flex w-full flex-col gap-6">
+            <SavedBlogsTab
+              searchParams={searchParams}
+              userId={userInfo?._id}
+              clerkId={clerkId}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
-      <div className="mt-10">
-        <Pagination
-          pageNumber={searchParams?.page ? +searchParams.page : 1}
-          isNext={res?.isNext}
-        />
-      </div>
+      
+     
     </>
   );
 }

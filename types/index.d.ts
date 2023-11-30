@@ -27,7 +27,7 @@ export interface Country {
 }
 export interface ParamsProps {
   params: {
-    slug: ReactNode;
+    slug: string;
     id: string;
   };
 }

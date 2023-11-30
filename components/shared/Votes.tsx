@@ -1,6 +1,6 @@
 "use client";
 import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.action";
-import { viewQuestion } from "@/lib/actions/interaction.action";
+import { viewBlog, viewQuestion } from "@/lib/actions/interaction.action";
 import {
   downvoteQuestion,
   toggleSaveQuestion,
@@ -11,6 +11,8 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "../ui/use-toast";
+import { downvoteBlog, toggleSaveBlog, upvoteBlog } from "@/lib/actions/blog.action";
+import { downvoteComment, upvoteComment } from "@/lib/actions/comment.action";
 
 interface Props {
   type: string;
@@ -35,13 +37,27 @@ const Votes = ({
   const path = usePathname();
   const router = useRouter();
   const handleSave = async () => {
-    await toggleSaveQuestion({
-      questionId: JSON.parse(itemId),
-      userId: JSON.parse(userId),
-      path,
-    });
+    if (!userId) {
+      return toast({
+        title: "Login to save",
+        description: "You need to login to save",
+      });
+    }
+    if (type === "Question") {
+      await toggleSaveQuestion({
+        questionId: JSON.parse(itemId),
+        userId: JSON.parse(userId),
+        path,
+      });
+    } else if (type === "Blog") {
+      await toggleSaveBlog({
+        blogId: JSON.parse(itemId),
+        userId: JSON.parse(userId),
+        path,
+      });
+    }
     return toast({
-      title: `Question ${
+      title: `${type} ${
         !hasSaved ? "Saved in" : "Removed from"
       } Your Collections`,
       variant: !hasSaved ? "default" : "destructive",
@@ -71,6 +87,23 @@ const Votes = ({
           hasdownVoted: hasDownvoted,
           path,
         });
+      } else if (type === "Blog") {
+        await upvoteBlog({
+          blogId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasupVoted: hasUpvoted,
+          hasdownVoted: hasDownvoted,
+          path,
+        });
+
+      } else if(type === "Comment"){
+        await upvoteComment({
+          commentId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasupVoted: hasUpvoted,
+          hasdownVoted: hasDownvoted,
+          path,
+        });
       }
       return toast({
         title: `Upvote ${!hasUpvoted ? "Successull" : "Removed"}`,
@@ -94,6 +127,22 @@ const Votes = ({
           hasdownVoted: hasDownvoted,
           path,
         });
+      } else if (type === "Blog") {
+        await downvoteBlog({
+          blogId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasupVoted: hasUpvoted,
+          hasdownVoted: hasDownvoted,
+          path,
+        });
+      } else if(type === "Comment"){
+        await downvoteComment({
+          commentId: JSON.parse(itemId),
+          userId: JSON.parse(userId),
+          hasupVoted: hasUpvoted,
+          hasdownVoted: hasDownvoted,
+          path,
+        });
       }
       return toast({
         title: `Downvote ${!hasDownvoted ? "Successull" : "Removed"}`,
@@ -106,7 +155,12 @@ const Votes = ({
       questionId: JSON.parse(itemId),
       userId: userId ? JSON.parse(userId) : undefined,
     });
+    viewBlog({
+      blogId: JSON.parse(itemId),
+      userId: userId ? JSON.parse(userId) : undefined,
+    });
   }, [itemId, userId, path, router]);
+
   return (
     <div className="flex gap-5">
       <div className="flex-center gap-2.5">
@@ -150,20 +204,21 @@ const Votes = ({
         </div>
       </div>
 
-      {type === "Question" && (
-        <Image
-          src={
-            hasSaved
-              ? "/assets/icons/star-filled.svg"
-              : "/assets/icons/star-red.svg"
-          }
-          alt="saved"
-          width={15}
-          height={15}
-          className="cursor-pointer"
-          onClick={handleSave}
-        />
-      )}
+      {type === "Question" || type ==='Blog'  && (
+          <Image
+            src={
+              hasSaved
+                ? "/assets/icons/star-filled.svg"
+                : "/assets/icons/star-red.svg"
+            }
+            alt="saved"
+            width={15}
+            height={15}
+            className="cursor-pointer"
+            onClick={handleSave}
+          />
+        )}
+        
     </div>
   );
 };

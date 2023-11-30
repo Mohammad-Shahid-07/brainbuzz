@@ -7,9 +7,9 @@ export default authMiddleware({
   publicRoutes: [
     "/",
     "/api/webhook",
+    "/api/uploadthing",
     "/question/:slug/:id",
     "/question/:slug/:id/opengraph-image-:imageId",
-
     "/tags",
     "/tags/:tag",
     "/tags/:tag/opengraph-image-:imageId",
@@ -17,9 +17,11 @@ export default authMiddleware({
     "/profile/:username/opengraph-image-:imageId",
     "/community",
     "/community/:id",
-    "/jobs",
+    "/blogs",
+    "/blogs/:id",
+
   ],
-  ignoredRoutes: ["/api/webhook", "/api/chatbot"],
+  ignoredRoutes: ["/api/webhook", "/api/chatbot", "/api/uploadthing"],
 });
 
 export const config = {

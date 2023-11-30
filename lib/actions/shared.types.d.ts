@@ -22,7 +22,6 @@ export interface AnswerVoteParams {
   hasupVoted: boolean;
   hasdownVoted: boolean;
   path: string;
-  
 }
 
 export interface DeleteAnswerParams {
@@ -44,6 +43,10 @@ export interface RecommendedParams {
 
 export interface ViewQuestionParams {
   questionId: string;
+  userId: string | undefined;
+}
+export interface ViewBlogParams {
+  blogId: string;
   userId: string | undefined;
 }
 
@@ -120,7 +123,6 @@ export interface CreateUserParams {
 
 export interface GetUserByIdParams {
   userId: string;
-
 }
 
 export interface GetAllUsersParams {
@@ -141,8 +143,19 @@ export interface ToggleSaveQuestionParams {
   questionId: string;
   path: string;
 }
-
+export interface ToggleSaveBlogParams {
+  userId: string;
+  blogId: string;
+  path: string;
+}
 export interface GetSavedQuestionsParams {
+  clerkId: string;
+  page?: number;
+  pageSize?: number;
+  filter?: string;
+  searchQuery?: string;
+}
+export interface GetSavedBlogsParams {
   clerkId: string;
   page?: number;
   pageSize?: number;
@@ -158,4 +171,64 @@ export interface GetUserStatsParams {
 
 export interface DeleteUserParams {
   clerkId: string;
+}
+
+export interface CreateBlogParams {
+  title: string;
+  content: string;
+  description: string;
+  image: string;
+  tags: string[];
+  path: string;
+  author: Schema.Types.ObjectId | IUser;
+}
+
+export interface GetAllBlogsParams {
+  page?: number;
+  pageSize?: number;
+  filter?: string;
+  searchQuery?: string;
+}
+
+export interface GetBlogBySlugParams {
+  slug: string;
+}
+
+export interface BlogVoteParams {
+  blogId: string;
+  userId: string;
+  hasupVoted: boolean;
+  hasdownVoted: boolean;
+  path: string;
+}
+
+export interface CommentVoteParams {
+  commentId: string;
+  userId: string;
+  hasupVoted: boolean;
+  hasdownVoted: boolean;
+  path: string;
+}
+
+
+
+
+
+export interface CreateCommentParams {
+  content: string;
+  author: string; // User ID
+  blog: string; // Blog ID
+  path: string;
+}
+export interface CreateReplyParams {
+  content: string;
+  author: string; // User ID
+  commentId: string; // comment replying to
+  path: string;
+  blog: string;
+}
+
+export interface GetCommentsParams {
+  blogId: string;
+  filter?: string;
 }
