@@ -1,17 +1,18 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { useAuth } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 
 type Chats = { role: string; content: string }[];
 const Page = () => {
+  const { userId } = useAuth();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [message, setMessage] = useState("");
   const [chats, setChats] = useState<Chats>([]);
 
   const startVoiceRecognition = () => {
-   
     const recognition = new window.webkitSpeechRecognition();
     recognition.lang = "en-US"; // Correct language code
     recognition.continuous = true;
@@ -50,7 +51,7 @@ const Page = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({ message: userMessage, userId }),
       });
 
       if (!response.ok) {
@@ -124,6 +125,9 @@ const Page = () => {
         </Button>
         <Button className="dark-gradient  ml-5 border-2 border-green-400 text-green-400 ">
           Speak
+        </Button>
+        <Button className="dark-gradient  ml-5 border-2 border-green-400 text-green-400 ">
+          Delete Conversation
         </Button>
       </div>
     </div>
