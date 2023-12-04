@@ -122,3 +122,25 @@ export const assignBadge = (params : BadgeParams) =>{
   return badgeCounts;
   }
   
+
+
+
+// export const textToSpeech = (text: string, lang: string) => {
+//    const utterance = new SpeechSynthesisUtterance(text);
+//    utterance.lang = lang;
+//    speechSynthesis.speak(utterance);
+// }
+
+// export const speechToText = (lang: string) => {
+
+//   const recognition = new SpeechRecognition();
+//   const speechRecognitionList = new SpeechGrammarList();
+//   recognition.lang = lang;
+//   recognition.start();
+//   recognition.onresult = (event) => {
+//     const speechResult = event.results[0][0].transcript;
+//     return speechResult;
+//   }
+// }
+
+
