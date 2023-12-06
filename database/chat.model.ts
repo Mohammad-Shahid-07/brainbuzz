@@ -6,7 +6,7 @@ interface IMessage {
 }
 
 export interface IChat extends Document {
-  user: Schema.Types.ObjectId;
+  userId: Schema.Types.ObjectId;
   chatHistory: IMessage[];
   createdAt: Date;
 }
@@ -17,7 +17,7 @@ const MessageSchema = new Schema({
 });
 
 const ChatSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   chatHistory: [MessageSchema],
   createdAt: { type: Date, default: Date.now },
 });

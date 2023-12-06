@@ -2,10 +2,12 @@ import { createUpdateChats, getChat } from "@/lib/actions/chat.action";
 
 export async function POST(req: any, res: any) {
   try {
-    const { message, userId } = await req.json();
+    const { message, user } = await req.json();
+    const userId= JSON.parse(user);
+    
 
     // Retrieve chat history from the database
-    const chatHistory = await getChat({ userId });
+    const chatHistory = await getChat(userId);
 
     const apiKey = process.env.PERPEX_API;
 
@@ -36,7 +38,7 @@ export async function POST(req: any, res: any) {
     // Parse the API response
     const data = await response.json();
     const assistantResponse = data.choices[0]?.message?.content;
-
+    
     // Update chat history in the database
     await createUpdateChats({
       userId,

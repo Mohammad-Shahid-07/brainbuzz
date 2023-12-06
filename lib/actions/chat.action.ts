@@ -6,8 +6,8 @@ import { connectToDatabase } from "../mongoose";
 export async function getChat({ userId }) {
   try {
     connectToDatabase();
-
-    const chat = await Chat.findOne({ user: "656d4c249ffa2ee042e0f367" });
+    
+    const chat = await Chat.findOne({ userId });
     if (!chat) {
       return [];
     }
@@ -19,14 +19,16 @@ export async function getChat({ userId }) {
 export async function createUpdateChats({ userId, chatHistory }) {
   try {
     connectToDatabase();
-    let chat = await Chat.findOne({ user: "656d4c249ffa2ee042e0f367" });
 
+    let chat = await Chat.findOne({userId});
+    
     if (!chat) {
       chat = await Chat.create({
-        user: "656d4c249ffa2ee042e0f367",
-        chatHistory: [],
+        userId,
+        chatHistory,
         createdAt: Date.now(),
       });
+      return;
     }
 
     chat.chatHistory = chatHistory;
@@ -38,10 +40,12 @@ export async function createUpdateChats({ userId, chatHistory }) {
   }
 }
 
-export async function deleteChat() {
+export async function deleteChat({ user }) {
   try {
     connectToDatabase();
-    await Chat.deleteMany({});
+    const userId = JSON.parse(user);
+    await Chat.findOneAndUpdate({ user: userId }, { chatHistory: [] });
+    console.log("chat deleted");
   } catch (err) {
     console.log(err);
   }
