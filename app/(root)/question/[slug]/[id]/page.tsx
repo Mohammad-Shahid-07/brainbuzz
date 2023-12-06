@@ -108,7 +108,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
           imgURL="/assets/icons/eye.svg"
           alt="message"
           value={formatLargeNumber(res?.views)}
-          title="Answers"
+          title="Views"
           textStyles="small-medium text-dark400_light900"
         />
       </div>
