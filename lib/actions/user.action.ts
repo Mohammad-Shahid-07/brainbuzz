@@ -22,6 +22,9 @@ import { assignBadge } from "../utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import bcrypt from "bcrypt";
+import crypto from "crypto";
+import { sendEmail } from "../mailer";
+
 export async function getUserById(clerkId: string) {
   try {
     connectToDatabase();
@@ -59,11 +62,142 @@ export async function createUser(userData: CreateUserParams) {
       username,
     });
     await user.save();
+    sendverifyEmail(email);
     revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;
   }
+}
+
+export async function sendverifyEmail(email: string) {
+  try {
+    connectToDatabase();
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const verificationToken = crypto.randomBytes(64).toString("hex");
+    const emailVericationToken = crypto
+      .createHash("sha256")
+      .update(verificationToken)
+      .digest("hex");
+    const emailVerificationTokenExpiresAt = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+    user.emailVerificationToken = emailVericationToken;
+    user.emailVerificationTokenExpiresAt = emailVerificationTokenExpiresAt;
+    const resetUrl = `${process.env.NEXTAUTH_URL}/signup/verify/${verificationToken}`;
+    sendEmail(email, resetUrl, "Email Verification");
+    await user.save();
+  } catch (error) {
+    console.error(error);
+    throw error; // Re-throw the error to handle it in the calling code
+  }
+}
+export async function sendPasswordResetEmail(email: string) {
+  try {
+    connectToDatabase();
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    const passwordResetTokenExpiry = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+    user.passwordResetToken = hashedToken;
+    user.passwordResetTokenExpiry = passwordResetTokenExpiry;
+
+    const resetUrl = `${process.env.NEXTAUTH_URL}/signin/reset-password/${resetToken}`;
+    await sendEmail(email, resetUrl, "Password Reset");
+
+    await user.save();
+  } catch (error) {
+    console.error(error);
+    throw error; // Re-throw the error to handle it in the calling code
+  }
+}
+
+export async function verifyResetPasswordToken(params: any) {
+  try {
+    connectToDatabase();
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(params)
+      .digest("hex");
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetTokenExpiry: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return false;
+    }
+    return true;
+  } catch (error) {
+    console.error(error);
+    throw error; // Re-throw the error to handle it in the calling code
+  }
+}
+export async function resetPassword(params: any) {
+  try {
+    connectToDatabase();
+    const { password, token } = params;
+
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const user = await User.findOne({
+      passwordResetToken: hashedToken,
+      passwordResetTokenExpiry: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      throw new Error("Invalid or expired password reset token");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    user.hashedPassword = hashedPassword;
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpiry = undefined;
+    await user.save();
+  } catch (error) {
+    console.error(error);
+    throw error; // Re-throw the error to handle it in the calling code
+  }
+}
+
+export async function verifyToken(token: string) {
+  let redirectUrl = "/";
+  try {
+    connectToDatabase();
+    const hashedToken = crypto
+      .createHash("sha256")
+      .update(token)
+      .digest("hex");
+
+    const user = await User.findOne({
+      emailVerificationToken: hashedToken,
+      emailVerificationTokenExpiresAt: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return false;
+    }
+    user.emailVerificationToken = undefined;
+    user.emailVerificationTokenExpiry = undefined;
+    user.isVerified = true;
+    await user.save();
+    redirectUrl =  `${process.env.NEXTAUTH_URL}/signup/verify`;
+  } catch (error) {
+    console.error(error);
+    throw error; // Re-throw the error to handle it in the calling code
+  }
+  return redirect(redirectUrl);
 }
 
 export async function createUserWithProvider(
@@ -132,7 +266,6 @@ export async function createUserWithProvider(
       // Do not redirect here
       // You can return a value indicating that redirection is needed
       redirectUrl = "/signup/username";
-      return;
     }
   } catch (error) {
     console.log(error);
@@ -142,11 +275,11 @@ export async function createUserWithProvider(
   // If you get here, it means there was an error or no redirection is needed
   return redirect(redirectUrl);
 }
-export async function addUsername(params: any) {
+export async function addUsername(params: { username: string; path: string }) {
   try {
     const session: any = await getServerSession(authOptions);
     connectToDatabase();
-
+    const { username, path } = params;
     // Check if the username is already taken
     const user = await User.findOne({ email: session.user.email });
 
@@ -154,7 +287,7 @@ export async function addUsername(params: any) {
       throw new Error("User not found");
     }
     const existingUserWithUsername = await User.findOne({
-      username: params.username,
+      username,
     });
 
     if (existingUserWithUsername) {
@@ -167,6 +300,7 @@ export async function addUsername(params: any) {
 
     // Add the new username to the session
     session.user.username = user.username;
+    revalidatePath(path);
   } catch (error) {
     console.error(error);
     throw error; // Re-throw the error to handle it in the calling code

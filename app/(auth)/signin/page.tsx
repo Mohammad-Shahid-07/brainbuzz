@@ -43,10 +43,12 @@ const Signin = () => {
         password: values.password,
         redirect: false,
       }).then((res: any) => {
+        console.log(res);
+        
         if (res.error) {
           console.log(res.error);
         } else {
-          router.push("/");
+          router.push("/test");
         }
       });
       console.log(values);

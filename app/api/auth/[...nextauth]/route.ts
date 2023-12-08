@@ -47,7 +47,8 @@ export const authOptions: NextAuthOptions = {
         return true;
       } else {
         try {
-          await createUserWithProvider({ user , account: user.account });
+          await createUserWithProvider({ user, account: user.account });
+
           return true;
         } catch (error) {
           console.log(error);
@@ -55,11 +56,27 @@ export const authOptions: NextAuthOptions = {
         }
       }
     },
+    session: async ({ session }) => {
+      const user = await User.findOne({ email: session?.user?.email });
+      if (!user) {
+        return session;
+      }
+      session.user = {
+        ...(session.user as {
+          name?: string;
+          email?: string;
+          image?: string;
+          id?: string;
+          username?: string;
+        }),
+        username: user.username.toString(),
+        id: user._id.toString(),
+      };
+
+      return session;
+    },
   },
   secret: process.env.AUTH_SECRET,
-  session: {
-    jwt: true,
-  },
 };
 
 const handler = NextAuth(authOptions);

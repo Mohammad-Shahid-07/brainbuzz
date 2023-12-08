@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
 import React from "react";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Inter, Space_Grotesk } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -42,20 +41,12 @@ export default function RootLayout({
       <head>
         <title>Brain Buzz</title>
       </head>
-      <ClerkProvider
-        appearance={{
-          elements: {
-            formButtonPrimary: "primary-gradient",
-            footerActionLink: "primary-text-gradient hover:text-primary-500",
-          },
-        }}
-      >
-        <ThemeProvider>
-          <body className={`${spaceGrotesk.variable} ${inter.variable} `}>
-            {children}
-          </body>
-        </ThemeProvider>
-      </ClerkProvider>
+
+      <ThemeProvider>
+        <body className={`${spaceGrotesk.variable} ${inter.variable} `}>
+          {children}
+        </body>
+      </ThemeProvider>
     </html>
   );
 }
