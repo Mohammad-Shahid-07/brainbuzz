@@ -22,8 +22,8 @@ export const metadata: Metadata = {
     "https://stack-with-next-mohammad-shahid-07.vercel.app",
   ),
   title: {
-    default: "StackWithNext",
-    template: "%s | StackWithNext",
+    default: "Brain Buzz",
+    template: "%s | Brain Buzz",
   },
   description:
     "A Community for Developers to Share and Learn with each other and grow.",
@@ -40,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>StackWithNext</title>
+        <title>Brain Buzz</title>
       </head>
       <ClerkProvider
         appearance={{

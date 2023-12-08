@@ -17,26 +17,26 @@ const Navbar = () => {
           alt="site logo"
         />
         <p className="h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden">
-          StackWith <span className="text-primary-500">Next</span>{" "}
+          Brain <span className="text-primary-500">Buzz</span>{" "}
         </p>
       </Link>
       <GlobalSearch />
       <div className="flex-between gap-5">
-    <Theme /> 
-    <SignedIn>
-    <UserButton afterSignOutUrl="/"
-    appearance={{
-      elements:{
-        avatarBox: 'h-10 w-10'
-
-      },
-      variables:{
-        colorPrimary: '#ff7000'
-      }
-    }}
-    />
-    </SignedIn>
-    <MobileNav />
+        <Theme />
+        <SignedIn>
+          <UserButton
+            afterSignOutUrl="/"
+            appearance={{
+              elements: {
+                avatarBox: "h-10 w-10",
+              },
+              variables: {
+                colorPrimary: "#ff7000",
+              },
+            }}
+          />
+        </SignedIn>
+        <MobileNav />
       </div>
     </nav>
   );
