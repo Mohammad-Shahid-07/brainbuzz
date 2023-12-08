@@ -1,11 +1,16 @@
-import React from 'react'
+import { Toaster } from "@/components/ui/toaster";
+import React from "react";
 
-const Layout = ({children} : {children : React.ReactNode}) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <main 
-    className='flex min-h-screen w-full items-center justify-center'
-    >{children}</main >
-  )
-}
+    <main className="relative bg-auth-dark bg-cover bg-center  bg-no-repeat">
+      <section className="flex min-h-screen flex-col items-center justify-center px-6 pb-6 max-md:pb-14 sm:px-14 ">
+        <div className="mx-auto w-full max-w-5xl">{children}</div>
+      </section>
 
-export default Layout
+      <Toaster />
+    </main>
+  );
+};
+
+export default Layout;

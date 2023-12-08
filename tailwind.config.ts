@@ -50,6 +50,13 @@ module.exports = {
         "light-300": "-10px 10px 20px 0px rgba(218, 213, 213, 0.10)",
         "dark-100": "0px 2px 10px 0px rgba(46, 52, 56, 0.10)",
         "dark-200": "2px 0px 20px 0px rgba(39, 36, 36, 0.04)",
+        
+      },
+      dropShadow: {
+        glow: [
+          "0 0px 20px rgba(255,255, 255, 0.35)",
+          "0 0px 65px rgba(255, 255,255, 0.2)"
+        ]
       },
       backgroundImage: {
         "auth-dark": "url('/assets/images/auth-dark.png')",

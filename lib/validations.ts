@@ -23,3 +23,33 @@ export const ProfileSchema = z.object({
   portfolioWebsite: z.string().url().min(5),
   linkedin: z.string().url().min(5),
 });
+
+export const UserSchema = z.object({
+  name: z.string().min(2, {
+    message: "Please enter a valid name.",
+  }),
+  username: z.string().min(2, {
+    message: "Please enter a valid username.",
+  }),
+  email: z.string().email({
+    message: "Please enter a valid email.",
+  }),
+  password: z
+    .string()
+    .min(6, {
+      message: "Please use at least 6 characters.",
+    })
+    .max(32),
+});
+
+export const LoginSchema = z.object({
+  email: z.string().email({
+    message: "Please enter a valid email.",
+  }),
+  password: z
+    .string()
+    .min(6, {
+      message: "Please use at least 6 characters.",
+    })
+    .max(32),
+});

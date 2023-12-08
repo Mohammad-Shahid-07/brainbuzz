@@ -19,9 +19,14 @@ export default authMiddleware({
     "/community/:id",
     "/blogs",
     "/blogs/:id",
-
   ],
-  ignoredRoutes: ["/api/webhook", "/api/chatbot", "/api/uploadthing"],
+  ignoredRoutes: [
+    "/api/webhook",
+    "/api/chatbot",
+    "/api/uploadthing",
+    "/api/auth/[...nextauth]",
+    "/api/auth/signin",
+  ],
 });
 
 export const config = {

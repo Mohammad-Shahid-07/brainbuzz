@@ -2,6 +2,8 @@ import { Schema } from "mongoose";
 
 import { IUser } from "@/mongodb";
 
+import Account from "next-auth";
+
 export interface CreateAnswerParams {
   content: string;
   author: string; // User ID
@@ -114,11 +116,11 @@ export interface GetTopInteractedTagsParams {
 }
 
 export interface CreateUserParams {
-  clerkId: string;
   name: string;
   username: string;
   email: string;
-  picture: string;
+  password: string;
+  path: string;
 }
 
 export interface GetUserByIdParams {
@@ -210,10 +212,6 @@ export interface CommentVoteParams {
   path: string;
 }
 
-
-
-
-
 export interface CreateCommentParams {
   content: string;
   author: string; // User ID
@@ -231,4 +229,15 @@ export interface CreateReplyParams {
 export interface GetCommentsParams {
   blogId: string;
   filter?: string;
+}
+
+export interface CreateUserWithCredentialsParams {
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    image: string;
+    // Add any other user-related fields here
+  };
+  account: Account;
 }

@@ -2,8 +2,10 @@
 
 import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
+import { redirect } from "next/navigation";
 import {
   CreateUserParams,
+  CreateUserWithCredentialsParams,
   DeleteUserParams,
   GetAllUsersParams,
   GetUserByIdParams,
@@ -17,8 +19,10 @@ import Tags from "@/database/tag.model";
 import { FilterQuery } from "mongoose";
 import { BadgeCriteriaType } from "@/types";
 import { assignBadge } from "../utils";
-
-export async function getUserById(clerkId: any) {
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import bcrypt from "bcrypt";
+export async function getUserById(clerkId: string) {
   try {
     connectToDatabase();
     const user = await User.findOne({ clerkId });
@@ -28,7 +32,7 @@ export async function getUserById(clerkId: any) {
     throw error;
   }
 }
-export async function getUserByClerkId(clerkId: any) {
+export async function getUserByClerkId(clerkId: string) {
   try {
     connectToDatabase();
     const user = await User.findOne({ clerkId }).select("username _id");
@@ -42,14 +46,132 @@ export async function getUserByClerkId(clerkId: any) {
 export async function createUser(userData: CreateUserParams) {
   try {
     connectToDatabase();
-    const newUser = await User.create(userData);
-    return newUser;
+    const { name, username, email, password, path } = userData;
+    const existing = await User.findOne({ email });
+    if (existing) {
+      return { message: "Email already exists" };
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({
+      name,
+      email,
+      hashedPassword,
+      username,
+    });
+    await user.save();
+    revalidatePath(path);
   } catch (error) {
     console.log(error);
     throw error;
   }
 }
 
+export async function createUserWithProvider(
+  params: CreateUserWithCredentialsParams,
+) {
+  let redirectUrl = "/";
+
+  try {
+    connectToDatabase();
+    const { user, account } = params;
+    // Check if the user already exists
+    const existingUser = await User.findOne({
+      "accounts.providerAccountId": account.providerAccountId,
+    });
+    if (existingUser) {
+      // User exists, update the accounts array
+
+      await User.updateOne(
+        { "accounts.providerAccountId": account.providerAccountId },
+        {
+          $set: {
+            "accounts.$": {
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+              refresh_token: account.refresh_token,
+              access_token: account.access_token,
+              expires_at: account.expires_at,
+              token_type: account.token_type,
+              scope: account.scope,
+              id_token: account.id_token,
+            },
+          },
+        },
+      );
+
+      // Check if the user has a username
+      if (!existingUser.username) {
+        // Do not redirect here
+        // You can return a value indicating that redirection is needed
+        redirectUrl = "/signup/username";
+        return;
+      }
+    } else {
+      // User does not exist, create a new user
+
+      const newUser = new User({
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        accounts: [
+          {
+            provider: account.provider,
+            providerAccountId: account.providerAccountId,
+            refresh_token: account.refresh_token,
+            access_token: account.access_token,
+            expires_at: account.expires_at,
+            token_type: account.token_type,
+            scope: account.scope,
+            id_token: account.id_token,
+          },
+        ],
+        isVerified: true,
+      });
+      await newUser.save();
+
+      // Do not redirect here
+      // You can return a value indicating that redirection is needed
+      redirectUrl = "/signup/username";
+      return;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  // Handle redirection outside the try-catch block
+  // If you get here, it means there was an error or no redirection is needed
+  return redirect(redirectUrl);
+}
+export async function addUsername(params: any) {
+  try {
+    const session: any = await getServerSession(authOptions);
+    connectToDatabase();
+
+    // Check if the username is already taken
+    const user = await User.findOne({ email: session.user.email });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const existingUserWithUsername = await User.findOne({
+      username: params.username,
+    });
+
+    if (existingUserWithUsername) {
+      throw new Error("Username is already taken");
+    }
+
+    // Update the user record in the database with the new username
+    user.username = params.username;
+    await user.save();
+
+    // Add the new username to the session
+    session.user.username = user.username;
+  } catch (error) {
+    console.error(error);
+    throw error; // Re-throw the error to handle it in the calling code
+  }
+}
 export async function updateUser(params: UpdateUserParams) {
   try {
     connectToDatabase();
@@ -145,36 +267,45 @@ export async function getUserInfo(params: GetUserByIdParams) {
 
     const [questionUpvotes] = await Question.aggregate([
       {
-        $match: {author: user._id}
+        $match: { author: user._id },
       },
-      {$project: {_id:0, upvotes: {$size: "$upvotes"}}},
-      {$group: {_id: null, totalUpvotes: {$sum: "$upvotes"}}}
+      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+      { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
     ]);
 
     const [answerUpvotes] = await Answer.aggregate([
       {
-        $match: {author: user._id}
+        $match: { author: user._id },
       },
-      {$project: {_id:0, upvotes: {$size: "$upvotes"}}},
-      {$group: {_id: null, totalUpvotes: {$sum: "$upvotes"}}}
+      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+      { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
     ]);
 
     const [QuestionVeiws] = await Question.aggregate([
       {
-        $match: {author: user._id}
+        $match: { author: user._id },
       },
-      {$group: {_id: null, totalviews: {$sum: "$views"}}}
+      { $group: { _id: null, totalviews: { $sum: "$views" } } },
     ]);
 
     const criteria = [
-      {type: "QUESTION_COUNT" as BadgeCriteriaType, count: totalQuestions},
-      {type: "ANSWER_COUNT" as BadgeCriteriaType, count: totalAnswers},
-      {type: "QUESTION_UPVOTES" as BadgeCriteriaType, count: questionUpvotes?.totalUpvotes || 0},
-      {type: "ANSWER_UPVOTES" as BadgeCriteriaType, count: answerUpvotes?.totalUpvotes || 0},
-      {type: "TOTAL_VIEWS" as BadgeCriteriaType, count: QuestionVeiws?.totalviews || 0},
-    ]
+      { type: "QUESTION_COUNT" as BadgeCriteriaType, count: totalQuestions },
+      { type: "ANSWER_COUNT" as BadgeCriteriaType, count: totalAnswers },
+      {
+        type: "QUESTION_UPVOTES" as BadgeCriteriaType,
+        count: questionUpvotes?.totalUpvotes || 0,
+      },
+      {
+        type: "ANSWER_UPVOTES" as BadgeCriteriaType,
+        count: answerUpvotes?.totalUpvotes || 0,
+      },
+      {
+        type: "TOTAL_VIEWS" as BadgeCriteriaType,
+        count: QuestionVeiws?.totalviews || 0,
+      },
+    ];
 
-    const badgeCounts = assignBadge({criteria});
+    const badgeCounts = assignBadge({ criteria });
     return { user, totalAnswers, totalQuestions, badgeCounts };
   } catch (error) {
     console.log(error);
@@ -194,9 +325,8 @@ export async function getUserQuestions(params: GetUserStatsParams) {
       .sort({ views: -1, upvotes: -1 })
       .populate({ path: "tags", model: Tags, select: "_id name" })
       .populate("author", "name picture clerkId username");
-    const isNext = totalQuestions > skipAmount + questions.length;  
-  
-    
+    const isNext = totalQuestions > skipAmount + questions.length;
+
     return { questions, totalQuestions, isNext };
   } catch (error) {
     console.log(error);
@@ -216,7 +346,7 @@ export async function getUserAnswers(params: GetUserStatsParams) {
       .sort({ upvotes: -1 })
       .populate("question", "_id title slug")
       .populate("author", "name picture username clerkId");
-    const isNext = totalAnswers > skipAmount + userAnswers.length;  
+    const isNext = totalAnswers > skipAmount + userAnswers.length;
     return { userAnswers, totalAnswers, isNext };
   } catch (error) {
     console.log(error);

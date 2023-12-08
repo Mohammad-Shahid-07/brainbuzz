@@ -27,7 +27,7 @@ export interface Country {
 }
 export interface ParamsProps {
   params: {
-    slug: string;
+    slug?: string;
     id: string;
   };
 }
@@ -55,3 +55,5 @@ export interface BadgeCounts {
 }
 
 export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;
+
+
