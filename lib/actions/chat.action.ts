@@ -2,11 +2,12 @@
 
 import Chat from "@/database/chat.model";
 import { connectToDatabase } from "../mongoose";
+import { GetChatParams, UpdateChatParams } from "./shared.types";
 
-export async function getChat({ userId }) {
+export async function getChat({ userId }: GetChatParams) {
   try {
     connectToDatabase();
-    
+
     const chat = await Chat.findOne({ userId });
     if (!chat) {
       return [];
@@ -16,12 +17,15 @@ export async function getChat({ userId }) {
     console.log(error);
   }
 }
-export async function createUpdateChats({ userId, chatHistory }) {
+export async function createUpdateChats({
+  userId,
+  chatHistory,
+}: UpdateChatParams) {
   try {
     connectToDatabase();
 
-    let chat = await Chat.findOne({userId});
-    
+    let chat = await Chat.findOne({ userId });
+
     if (!chat) {
       chat = await Chat.create({
         userId,
@@ -40,12 +44,12 @@ export async function createUpdateChats({ userId, chatHistory }) {
   }
 }
 
-export async function deleteChat({ user }) {
+export async function deleteChat(params: GetChatParams) {
   try {
     connectToDatabase();
-    const userId = JSON.parse(user);
-    await Chat.findOneAndUpdate({ user: userId }, { chatHistory: [] });
-    console.log("chat deleted");
+    const { userId } = params;
+    const user = JSON.parse(userId);
+    await Chat.findOneAndUpdate({ user }, { chatHistory: [] });
   } catch (err) {
     console.log(err);
   }

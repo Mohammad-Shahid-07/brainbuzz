@@ -1,6 +1,6 @@
 import { Schema, models, model, Document } from "mongoose";
 
-interface IMessage {
+export interface IMessage {
   role: string;
   content: string;
 }

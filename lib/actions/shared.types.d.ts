@@ -1,6 +1,7 @@
 import { Schema } from "mongoose";
 
 import { IUser } from "@/mongodb";
+import { IMessage } from "@/database/chat.model";
 
 export interface CreateAnswerParams {
   content: string;
@@ -158,4 +159,12 @@ export interface GetUserStatsParams {
 
 export interface DeleteUserParams {
   clerkId: string;
+}
+
+export interface GetChatParams {
+  userId: string;
+}
+export interface UpdateChatParams {
+  userId: string;
+  chatHistory: IMessage[];
 }
