@@ -45,7 +45,6 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
   const groupedTags =
     type === "Edit" && parsedQuestionDetails.tags.map((tag: any) => tag.name);
 
-  
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
@@ -117,12 +116,11 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
     });
   };
   // 2. Define a submit handler.
-  
-  
+
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
     console.log("asldj");
-    
+
     try {
       if (type === "Edit") {
         const slug = await editQuestion({
@@ -135,15 +133,15 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
       } else if (type === "Blog") {
         await createBlog({
           title: values.title,
-          description: values.description,
+          description: values.description!,
           content: values.explanation,
           tags: values.tags,
-          image: values.image,
+          image: values.image!,
           author: JSON.parse(mongoUserId),
           path: pathname,
         });
         router.push("/blogs");
-      } else if(type === "Question") {
+      } else if (type === "Question") {
         console.log("values", values);
         await createQuestion({
           title: values.title,
@@ -344,9 +342,15 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
             disabled={isSubmitting}
           >
             {isSubmitting ? (
-              <>{type === "Edit" ? "Editing" : "Posting"} Question...</>
+              <>
+                {type === "Edit" ? "Editing" : "Posting"}{" "}
+                {type === "Blog" ? "Blog..." : "Question..."}
+              </>
             ) : (
-              <>{type === "Edit" ? "Edit" : "Ask a"} Question</>
+              <>
+                {type === "Edit" ? "Edit" : "Ask a"}{" "}
+                {type === "Blog" ? "Blog" : "Question"}
+              </>
             )}
           </Button>
         </form>

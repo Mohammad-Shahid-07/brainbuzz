@@ -1,4 +1,3 @@
-
 import Matric from "@/components/shared/Matric";
 import ParseHTML from "@/components/shared/ParseHTML";
 import RenderTags from "@/components/shared/RenderTags";
@@ -42,7 +41,6 @@ export async function generateMetadata({
     };
   }
 }
-
 
 const Page = async ({ params, searchParams }: URLProps) => {
   const res = await getBlogBySlug({ slug: params.id });
@@ -90,15 +88,15 @@ const Page = async ({ params, searchParams }: URLProps) => {
         <Matric
           imgURL="/assets/icons/clock.svg"
           alt="clock"
-          value={`- asked ${getTimeStamp(res?.createdAt)}`}
-          title="Asked"
+          value={`- Posted ${getTimeStamp(res?.createdAt)}`}
+          title=""
           textStyles="small-medium text-dark400_light900"
         />
         <Matric
           imgURL="/assets/icons/message.svg"
-          alt="User"
+          alt="message"
           value={formatLargeNumber(res?.comments?.length)}
-          title="Answers"
+          title="Comments"
           textStyles="body-medium text-dark400_light700"
           href={`/profile/${res?.author?._id}`}
           isauthor
@@ -106,9 +104,9 @@ const Page = async ({ params, searchParams }: URLProps) => {
 
         <Matric
           imgURL="/assets/icons/eye.svg"
-          alt="message"
+          alt="eye"
           value={formatLargeNumber(res?.views.toString())}
-          title="Answers"
+          title="Views"
           textStyles="small-medium text-dark400_light900"
         />
       </div>
@@ -124,7 +122,21 @@ const Page = async ({ params, searchParams }: URLProps) => {
       </div>
       <ParseHTML data={res?.content} />
 
-    
+      <div className="mt-8">
+        <div className="mt-5 h-[2px] bg-light-700/50 dark:bg-dark-500/50" />
+        <div className="mt-11 flex  justify-between gap-5 max-sm:flex-col sm:items-center">
+          <Matric
+            imgURL="/assets/icons/message.svg"
+            alt="Comments"
+            value={formatLargeNumber(res?.comments?.length)}
+            title="Comments"
+            textStyles="!h2-bold text-dark400_light700"
+            isauthor
+            height={50}
+            width={50}
+          />
+        </div>
+      </div>
     </>
   );
 };

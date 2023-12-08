@@ -13,14 +13,11 @@ export default async function Home({ searchParams }: SearchParamsProps) {
   const { userId: clerkId } = auth();
   const userInfo = await getUserById(clerkId);
 
-
   if (!clerkId) return null;
-
-  
 
   return (
     <>
-      <h1 className="h1-bold text-dark100_light900 ">Saved Questions</h1>
+      <h1 className="h1-bold text-dark100_light900 ">Saved </h1>
 
       <div className="mt-11 flex  justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearchbar

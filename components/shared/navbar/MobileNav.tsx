@@ -71,7 +71,7 @@ const MobileNav = () => {
             alt="site logo"
           />
           <p className="h2-bold text-dark100_light900 font-spaceGrotesk ">
-            StackWith <span className="text-primary-500">Next</span>{" "}
+            Brain <span className="text-primary-500">Buzz</span>{" "}
           </p>
         </Link>
         <div className="flex  min-h-full flex-col justify-between">

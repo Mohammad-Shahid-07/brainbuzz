@@ -2,6 +2,7 @@ import { SearchParamsProps } from "@/types";
 import Pagination from "./Pagination";
 import BlogsCard from "../cards/BlogsCard";
 import { getSavedBlogs } from "@/lib/actions/blog.action";
+import NoResults from "./NoResults";
 
 interface Props extends SearchParamsProps {
   userId: string;
@@ -16,22 +17,31 @@ const SavedBlogsTab = async ({ searchParams, userId, clerkId }: Props) => {
   });
   return (
     <>
-      {res?.blogs.map((question: any) => (
-        <BlogsCard
-          key={question._id}
-          clerkId={clerkId}
-          title={question.title}
-          tags={question.tags}
-          author={question.author}
-          upvotes={question.upvotes}
-          views={question.views}
-          slug={question.slug}
-          comments={question.comments}
-          image={question.image}
-          description={question.description}
-          createdAt={question.createdAt}
+      {res?.blogs.length > 0 ? (
+        res?.blogs.map((blog: any) => (
+          <BlogsCard
+            key={blog._id}
+            clerkId={clerkId}
+            title={blog.title}
+            tags={blog.tags}
+            author={blog.author}
+            upvotes={blog.upvotes}
+            views={blog.views}
+            slug={blog.slug}
+            comments={blog.comments}
+            image={blog.image}
+            description={blog.description}
+            createdAt={blog.createdAt}
+          />
+        ))
+      ) : (
+        <NoResults
+          title="You haven't saved any blogs yet"
+          discription="Save blogs to read them later"
+          link="/blogs"
+          linkText="Explore Blogs"
         />
-      ))}
+      )}
       <div className="mt-10">
         <Pagination
           pageNumber={searchParams?.page ? +searchParams.page : 1}
