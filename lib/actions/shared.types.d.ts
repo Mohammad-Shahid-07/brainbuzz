@@ -233,7 +233,6 @@ export interface GetCommentsParams {
 
 export interface CreateUserWithCredentialsParams {
   user: {
-    id: string;
     name: string;
     email: string;
     image: string;

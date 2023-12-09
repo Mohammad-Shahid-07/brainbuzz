@@ -47,7 +47,14 @@ export const authOptions: NextAuthOptions = {
         return true;
       } else {
         try {
-          await createUserWithProvider({ user, account: user.account });
+          await createUserWithProvider({
+            user: {
+              name: user?.user?.name!,
+              email: user?.user?.email!,
+              image: user?.user?.image!,
+            },
+            account: user.account,
+          });
 
           return true;
         } catch (error) {
