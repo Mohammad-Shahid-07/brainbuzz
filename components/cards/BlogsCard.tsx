@@ -11,7 +11,7 @@ interface Props {
   author: {
     _id: string;
     name: string;
-    picture: string;
+    image: string;
     username: string;
   };
   upvotes: string[];
