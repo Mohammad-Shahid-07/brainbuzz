@@ -121,7 +121,7 @@ export async function sendPasswordResetEmail(email: string) {
     user.passwordResetToken = hashedToken;
     user.passwordResetTokenExpiry = passwordResetTokenExpiry;
 
-    const resetUrl = `${process.env.NEXTAUTH_URL}/signin/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.NEXTAUTH_URL}/signin/forgot-password/${resetToken}`;
     await sendEmail(email, resetUrl, "Password Reset");
 
     await user.save();
@@ -143,7 +143,7 @@ export async function verifyResetPasswordToken(params: any) {
       passwordResetToken: hashedToken,
       passwordResetTokenExpiry: { $gt: Date.now() },
     });
-
+ 
     if (!user) {
       return false;
     }

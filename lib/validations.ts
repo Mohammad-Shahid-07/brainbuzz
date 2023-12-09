@@ -54,11 +54,20 @@ export const LoginSchema = z.object({
     .max(32),
 });
 
-export const ForgotPasswordSchema = z.object({
+export const ForgotPasswordRequestSchema = z.object({
   email: z.string().email({
     message: "Please enter a valid email.",
   }),
 });
+export const ForgotPasswordSchema = z.object({
+  password: z
+    .string()
+    .min(6, {
+      message: "Please use at least 6 characters.",
+    })
+    .max(32),
+});
+
 export const AddUsernameSchema = z.object({
   username: z.string().min(2, {
     message: "Please enter a valid username.",

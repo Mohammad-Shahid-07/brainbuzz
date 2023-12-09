@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 // import { createUser } from "@/lib/action/user.action";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
@@ -25,7 +25,6 @@ import { createUser } from "@/lib/actions/user.action";
 
 const Signup = () => {
   const pathname = usePathname();
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   // 1. Define your form.
   const form = useForm<z.infer<typeof UserSchema>>({
@@ -49,7 +48,7 @@ const Signup = () => {
         password: values.password,
         path: pathname,
       });
-      router.push("/signup/email-verification");
+      
     } catch (error) {
       console.log(error);
     } finally {
@@ -153,7 +152,7 @@ const Signup = () => {
         />
         <span className="text-light-400">
           Already have an account?{" "}
-          <Link href="/signin" className="text-primary-500 hover:text-blue-500">
+          <Link href="/signup" className="text-primary-500 hover:text-blue-500">
             Sign in
           </Link>
         </span>

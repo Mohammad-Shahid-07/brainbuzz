@@ -117,10 +117,18 @@ const Signin = () => {
             </FormItem>
           )}
         />
+
+        <Link
+          href="/signin/forgot-password"
+          className="text-primary-500 hover:text-blue-500"
+        >
+          Forgot Password?{" "}
+        </Link>
+
         <span className="text-light-400">
-          Don&rsquo;t have an account Yet?{" "}
-          <Link href="/signup" className="text-primary-500 hover:text-blue-500">
-            Sign Up
+          Don&rsquo;t have a account yet?{" "}
+          <Link href="/signin" className="text-primary-500 hover:text-blue-500">
+            Sign up
           </Link>
         </span>
 
