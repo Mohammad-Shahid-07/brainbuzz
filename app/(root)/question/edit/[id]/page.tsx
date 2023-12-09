@@ -2,14 +2,19 @@ import Question from "@/components/forms/Question";
 import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { URLProps } from "@/types";
-import { auth } from "@clerk/nextjs";
-import React from "react";
 
-const page = async ({ params }: URLProps) => {
-  const { userId } = auth();
-  if (!userId) {
-    return null;
-  }
+
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
+
+  const page = async ({ params }: URLProps) => {
+  const session = await getServerSession(authOptions);
+
+  const userId = session?.user?.id || null;
+  if (!userId) redirect("/sign-in");
+ 
+
   const mongoUser = await getUserById(userId);
   const res = await getQuestionById({ questionId: params.id });
   return (
