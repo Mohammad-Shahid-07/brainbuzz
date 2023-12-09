@@ -72,7 +72,7 @@ export const BADGE_CRITERIA = {
 
 type ProfileUrl = string;
 
-const ProfileUrls: ProfileUrl[] = [
+export const ProfileUrls: ProfileUrl[] = [
   "https://i.postimg.cc/BnCyJ853/1.jpg",
   "https://i.postimg.cc/zXg0GLrM/10.jpg",
   "https://i.postimg.cc/hjY1Sn3c/11.jpg",

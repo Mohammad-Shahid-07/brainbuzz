@@ -174,6 +174,10 @@ export interface GetUserStatsParams {
 export interface DeleteUserParams {
   clerkId: string;
 }
+export interface UpdateUserImageParams{
+  image: string;
+  path: string;
+}
 
 export interface CreateBlogParams {
   title: string;

@@ -16,8 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { AddUsernameSchema} from "@/lib/validations";
+import { AddUsernameSchema } from "@/lib/validations";
 import { addUsername } from "@/lib/actions/user.action";
+import { toast } from "@/components/ui/use-toast";
 
 const Signup = () => {
   const pathname = usePathname();
@@ -35,13 +36,28 @@ const Signup = () => {
   async function onSubmit(values: z.infer<typeof AddUsernameSchema>) {
     try {
       setLoading(true);
+      const regex = /^[a-zA-Z][a-zA-Z0-9_]{2,20}$/;
+      if (!regex.test(values.username)) {
+        // Handle the error (e.g., display a message to the user)
+        return toast({
+          title: "Invalid Username",
+          description:
+            "Please use only letters, numbers, and underscores. It should start with a letter and be between 3 to 20 characters long.",
+        });
+      }
       await addUsername({
         username: values.username,
         path: pathname,
+      }).then(() => {
+        toast({
+          title: "Success",
+          description: "Username added successfully.",
+        });
       });
       router.push("/");
     } catch (error) {
       console.log(error);
+      
     } finally {
       setLoading(false);
     }
@@ -71,7 +87,6 @@ const Signup = () => {
             </FormItem>
           )}
         />
-        
 
         <Button
           type="submit"

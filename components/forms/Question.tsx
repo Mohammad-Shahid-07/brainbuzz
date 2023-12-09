@@ -119,7 +119,7 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
 
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
-    console.log("asldj");
+   
 
     try {
       if (type === "Edit") {
@@ -142,7 +142,7 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
         });
         router.push("/blogs");
       } else if (type === "Question") {
-        console.log("values", values);
+      
         await createQuestion({
           title: values.title,
           content: values.explanation,

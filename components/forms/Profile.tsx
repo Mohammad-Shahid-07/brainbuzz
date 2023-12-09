@@ -32,8 +32,6 @@ const Profile = ({ userId, user }: Props) => {
   const form = useForm<z.infer<typeof ProfileSchema>>({
     resolver: zodResolver(ProfileSchema),
     defaultValues: {
-      name: parsedUser?.name || "",
-      username: parsedUser?.username || "",
       portfolioWebsite: parsedUser?.portfolioWebsite || "",
       linkedin: parsedUser?.linkedin || "",
       location: parsedUser?.location || "",
@@ -48,8 +46,6 @@ const Profile = ({ userId, user }: Props) => {
       await updateUser({
         userId,
         updateData: {
-          name: values.name,
-          username: values.username,
           portfolioWebsite: values.portfolioWebsite,
           linkedin: values.linkedin,
           location: values.location,
@@ -66,58 +62,21 @@ const Profile = ({ userId, user }: Props) => {
   }
 
   return (
-    <div>
+    <div className="mt-5">
+      <h3 className="h2-bold text-dark100_light900">More About You </h3>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-9 flex w-full flex-col gap-9 "
+          className="mt-5 flex w-full flex-col gap-9 "
         >
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem className="space-y-3.5">
-                  <FormLabel className="paragraph-semibold text-dark400_light800">
-                  Name <span className="text-primary-500">*</span>{" "}
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Name"
-                    {...field}
-                    className="no-focus paragraph-regular text-dark300_light700 background-light800_dark300 border"
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem className="space-y-3.5">
-                  <FormLabel className="paragraph-semibold text-dark400_light800" >
-                  Username <span className="text-primary-500">*</span>{" "}
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Your Username"
-                    {...field}
-                    className="no-focus paragraph-regular text-dark300_light700 background-light800_dark300 border"
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="portfolioWebsite"
             render={({ field }) => (
               <FormItem className="space-y-3.5">
-                  <FormLabel className="paragraph-semibold text-dark400_light800">Porfoliyo Link</FormLabel>
+                <FormLabel className="paragraph-semibold text-dark400_light800">
+                  Porfoliyo Link
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Porfoliyo Link (Optional)"
@@ -136,7 +95,9 @@ const Profile = ({ userId, user }: Props) => {
             name="linkedin"
             render={({ field }) => (
               <FormItem className="space-y-3.5">
-                  <FormLabel className="paragraph-semibold text-dark400_light800">linkedin</FormLabel>
+                <FormLabel className="paragraph-semibold text-dark400_light800">
+                  linkedin
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="linkedin Link (Optional)"
@@ -156,7 +117,9 @@ const Profile = ({ userId, user }: Props) => {
             name="location"
             render={({ field }) => (
               <FormItem className="space-y-3.5">
-                  <FormLabel className="paragraph-semibold text-dark400_light800">Location</FormLabel>
+                <FormLabel className="paragraph-semibold text-dark400_light800">
+                  Location
+                </FormLabel>
                 <FormControl>
                   <Input
                     placeholder="Where are you from"
@@ -174,7 +137,7 @@ const Profile = ({ userId, user }: Props) => {
             name="bio"
             render={({ field }) => (
               <FormItem className="space-y-3.5">
-                  <FormLabel className="paragraph-semibold text-dark400_light800">
+                <FormLabel className="paragraph-semibold text-dark400_light800">
                   Bio <span className="text-primary-500">*</span>{" "}
                 </FormLabel>
                 <FormControl>

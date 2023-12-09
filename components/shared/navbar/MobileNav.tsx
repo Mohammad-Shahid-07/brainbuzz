@@ -50,7 +50,7 @@ interface Props {
   SignedIn: boolean;
 }
 const MobileNav = ({SignedIn} : Props) => {
- console.log(SignedIn);
+
  
   return (
     <Sheet>

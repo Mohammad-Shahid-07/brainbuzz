@@ -112,7 +112,7 @@ export async function getBlogBySlug(params: GetBlogBySlugParams) {
       .populate({
         path: "author",
         model: User,
-        select: "username _id name picture",
+        select: "username _id name image",
       });
     return blog;
   } catch (error) {
@@ -125,7 +125,7 @@ export async function downvoteBlog(params: BlogVoteParams) {
   try {
     connectToDatabase();
     const { blogId, userId, hasdownVoted, hasupVoted, path } = params;
-    console.log({ blogId, userId, hasdownVoted, hasupVoted, path });
+   
 
     let updateQuery = {};
     if (hasupVoted) {
@@ -240,8 +240,7 @@ export async function toggleSaveBlog(params: ToggleSaveBlogParams) {
   try {
     connectToDatabase();
     const { blogId, userId, path } = params;
-    console.log(params);
-
+  
     const user = await User.findById(userId);
     if (!user) {
       throw new Error("User not found");
@@ -312,7 +311,7 @@ export async function getSavedBlogs(params: GetSavedBlogsParams) {
         {
           path: "author",
           model: User,
-          select: "username _id name picture",
+          select: "username _id name image",
         },
       ],
     });

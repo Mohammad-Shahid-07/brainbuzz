@@ -37,13 +37,16 @@ const QuestionCard = async ({
   createdAt,
 }: Props) => {
   const session = await getServerSession(authOptions);
-  const showActionButtons = userId && userId === author?._id.toString();
+  const user = session?.user?.id || null;
+  const showActionButtons = user && user === author?._id.toString();
   let SignedIn;
   if (session) {
     SignedIn = true;
   } else {
     SignedIn = false;
   }
+  console.log(author);
+  
   return (
     <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row ">
@@ -69,7 +72,7 @@ const QuestionCard = async ({
       </div>
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
         <Matric
-          imgURL={`${author?.image}`}
+          imgURL={`${author?.image || "/assets/icons/user.svg"}`}
           alt="User"
           value={author?.name}
           title={`- asked ${getTimeStamp(createdAt)}`}

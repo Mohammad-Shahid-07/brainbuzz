@@ -33,10 +33,7 @@ const Navbar = async () => {
       <div className="flex-between gap-5">
         <Theme />
 
-        <MobileNav  SignedIn={SignedIn} />
-      </div>
-      {SignedIn && (
-
+        {SignedIn && (
           <Image
             src={session?.user?.image!}
             alt="sign up"
@@ -44,9 +41,9 @@ const Navbar = async () => {
             height={30}
             className="rounded-full"
           />
-
-      )}
-   
+        )}
+        <MobileNav SignedIn={SignedIn} />
+      </div>
     </nav>
   );
 };

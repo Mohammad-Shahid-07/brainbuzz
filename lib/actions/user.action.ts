@@ -10,6 +10,7 @@ import {
   GetAllUsersParams,
   GetUserByIdParams,
   GetUserStatsParams,
+  UpdateUserImageParams,
   UpdateUserParams,
 } from "./shared.types";
 import { revalidatePath } from "next/cache";
@@ -25,6 +26,7 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { sendEmail } from "../mailer";
 import { getRandomProfileUrl } from "@/constants";
+import path from "path";
 
 export async function getUserById(id?: string) {
   try {
@@ -143,7 +145,7 @@ export async function verifyResetPasswordToken(params: any) {
       passwordResetToken: hashedToken,
       passwordResetTokenExpiry: { $gt: Date.now() },
     });
- 
+
     if (!user) {
       return false;
     }
@@ -209,8 +211,6 @@ export async function verifyToken(token: string) {
 export async function createUserWithProvider(
   params: CreateUserWithCredentialsParams,
 ) {
-  let redirectUrl = "/";
-
   try {
     connectToDatabase();
     const { user, account } = params;
@@ -240,12 +240,6 @@ export async function createUserWithProvider(
       );
 
       // Check if the user has a username
-      if (!existingUser.username) {
-        // Do not redirect here
-        // You can return a value indicating that redirection is needed
-        redirectUrl = "/signup/username";
-        return;
-      }
     } else {
       // User does not exist, create a new user
 
@@ -253,6 +247,7 @@ export async function createUserWithProvider(
         name: user.name,
         email: user.email,
         image: user.image,
+        username: user.email,
         accounts: [
           {
             provider: account.provider,
@@ -268,10 +263,6 @@ export async function createUserWithProvider(
         isVerified: true,
       });
       await newUser.save();
-
-      // Do not redirect here
-      // You can return a value indicating that redirection is needed
-      redirectUrl = "/signup/username";
     }
   } catch (error) {
     console.log(error);
@@ -279,7 +270,7 @@ export async function createUserWithProvider(
 
   // Handle redirection outside the try-catch block
   // If you get here, it means there was an error or no redirection is needed
-  return redirect(redirectUrl);
+  // return redirect(redirectUrl);
 }
 export async function addUsername(params: { username: string; path: string }) {
   try {
@@ -312,6 +303,29 @@ export async function addUsername(params: { username: string; path: string }) {
     throw error; // Re-throw the error to handle it in the calling code
   }
 }
+export async function addName(params: { name: string; path: string }) {
+  try {
+    const session: any = await getServerSession(authOptions);
+    connectToDatabase();
+    const { name, path } = params;
+    // Check if the username is already taken
+    const user = await User.findOne({ email: session?.user?.email });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    // Update the user record in the database with the new username
+    user.name = name;
+    await user.save();
+
+    // Add the new username to the session
+    session.user.name = user.name;
+    revalidatePath(path);
+  } catch (error) {
+    console.error(error);
+    throw error; // Re-throw the error to handle it in the calling code
+  }
+}
+
 export async function updateUser(params: UpdateUserParams) {
   try {
     connectToDatabase();
@@ -326,7 +340,26 @@ export async function updateUser(params: UpdateUserParams) {
     throw error;
   }
 }
-
+export async function updateUserImage(params: UpdateUserImageParams) {
+  try {
+    const { image, path } = params;
+    connectToDatabase();
+    const session: any = await getServerSession(authOptions);
+    const user = await User.findOne({ email: session?.user?.email });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    user.image = image;
+    await user.save();
+    session.user.image = image;
+    console.log("image updated",session.user.image, image );
+    
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 export async function deleteUser(params: DeleteUserParams) {
   try {
     connectToDatabase();

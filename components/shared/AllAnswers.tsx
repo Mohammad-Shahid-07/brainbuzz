@@ -49,7 +49,7 @@ const AllAnswers = async ({
                 className="flex items-start gap-1 sm:items-center"
               >
                 <Image
-                  src={answer.author[0].picture}
+                  src={answer.author[0].image}
                   alt="Picture of the author"
                   width={18}
                   height={18}

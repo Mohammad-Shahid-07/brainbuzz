@@ -21,6 +21,7 @@ import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { LoginSchema } from "@/lib/validations";
+import { toast } from "@/components/ui/use-toast";
 
 const Signin = () => {
   const router = useRouter();
@@ -44,12 +45,15 @@ const Signin = () => {
         redirect: false,
       }).then((res: any) => {
         if (res.error) {
-          console.log(res.error);
+          return toast({
+            title: res.error,
+            description: "Please try again",
+            variant: "destructive",
+          });
         } else {
           router.push("/");
         }
       });
-      console.log(values);
     } catch (error) {
       console.log(error);
     } finally {
@@ -67,7 +71,7 @@ const Signin = () => {
           <button
             type="button"
             onClick={() => {
-              signIn("google", { callbackUrl: "/signup/username" });
+              signIn("google");
             }}
             className=" mb-2 flex w-full items-center justify-between rounded-lg bg-light-850 px-5 py-2.5 text-center text-sm font-medium text-dark-400 hover:shadow-light-200 focus:outline-none focus:ring-4 focus:ring-light-400/50"
           >

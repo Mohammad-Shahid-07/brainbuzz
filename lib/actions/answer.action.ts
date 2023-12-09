@@ -70,7 +70,7 @@ export async function getAnswers(params: GetAnswersParams) {
     }
     const skipAmount = (page - 1) * pageSize;
     const answers = await Answer.find({ question: questionId })
-      .populate("author", "_id  name picture username")
+      .populate("author", "_id  name image username")
       .skip(skipAmount)
       .limit(pageSize)
       .sort(sortOptions);

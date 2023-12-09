@@ -90,7 +90,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
           imgURL="/assets/icons/clock.svg"
           alt="clock"
           value={`- asked ${getTimeStamp(res?.createdAt)}`}
-          title="Asked"
+          title=""
           textStyles="small-medium text-dark400_light900"
         />
         <Matric

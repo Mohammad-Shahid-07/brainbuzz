@@ -96,7 +96,7 @@ export async function getQuestionByTagName(params: GetQuestionsByTagIdParams) {
         {
           path: "author",
           model: User,
-          select: "name username picture _id",
+          select: "name username image _id",
         },
         { path: "tags", model: Tags, select: "name" },
       ],

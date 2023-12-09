@@ -42,6 +42,12 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update") {
+        return { ...token, ...session };
+      }
+      return token;
+    },
     async signIn(user) {
       if (user.account?.provider === "credentials") {
         return true;

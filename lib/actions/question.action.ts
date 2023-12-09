@@ -131,7 +131,7 @@ export async function getQuestionById({ questionId }: GetQuestionByIdParams) {
       .populate({
         path: "author",
         model: User,
-        select: "username _id name picture",
+        select: "username _id name image",
       });
 
     return question;
@@ -295,7 +295,7 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
         {
           path: "author",
           model: User,
-          select: "username _id name picture",
+          select: "username _id name image",
         },
       ],
     });
