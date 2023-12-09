@@ -1,13 +1,14 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import QuestionCard from "@/components/cards/QuestionCard";
 import NoResults from "@/components/shared/NoResults";
 import Pagination from "@/components/shared/Pagination";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { getQuestionByTagName } from "@/lib/actions/tag.actions";
 import { URLProps } from "@/types";
+import { getServerSession } from "next-auth";
 
 export async function generateMetadata({
   params,
-  
 }: {
   params: {
     id: string;
@@ -31,6 +32,8 @@ export async function generateMetadata({
 }
 
 const Page = async ({ params, searchParams }: URLProps) => {
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id || null;
   const res = await getQuestionByTagName({
     tagName: params?.id,
     page: searchParams.page ? +searchParams.page : 1,
@@ -59,6 +62,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
             <QuestionCard
               key={question._id}
               _id={question._id}
+              userId={userId}
               title={question.title}
               tags={question.tags}
               author={question.author}

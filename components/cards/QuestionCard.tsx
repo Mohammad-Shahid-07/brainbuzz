@@ -10,7 +10,7 @@ interface Props {
   _id: string;
   title: string;
   tags: { _id: string; name: string }[];
-  userId: string;
+  userId?: string | null;
   author: {
     _id: string;
     name: string;
@@ -36,8 +36,8 @@ const QuestionCard = async ({
   answers,
   createdAt,
 }: Props) => {
-  const showActionButtons = userId && userId === author?._id.toString();
   const session = await getServerSession(authOptions);
+  const showActionButtons = userId && userId === author?._id.toString();
   let SignedIn;
   if (session) {
     SignedIn = true;
