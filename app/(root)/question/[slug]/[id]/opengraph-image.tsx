@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 // opengraph-image.tsx
-import { ParamsProps } from "@/types";
+
 import { ImageResponse } from "next/og";
 
 // Route segment config
@@ -15,14 +15,19 @@ export const size = {
 export const contentType = "image/png";
 
 // Image generation
-export default async function DynamicImage({ params }: ParamsProps) {
+interface Props {
+  params: {
+    id: string;
+    slug: string;
+  };
+}
+export default async function DynamicImage({ params }: Props) {
   function slugToCamelCaseWithSpaces(slug: string): string {
     return slug
       .split("-")
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
   }
-
 
   const camelCaseString: string = slugToCamelCaseWithSpaces(params?.slug);
 
@@ -106,11 +111,11 @@ export default async function DynamicImage({ params }: ParamsProps) {
             </defs>
           </svg>
         </span>
-       
+
         <div tw="flex flex-col mb-10 p-10 text-center min-h-[60vh] justify-center items-center">
-        <h1 tw="flex-1 mr-auto mt-3 font-sans text-red-500 text-5xl">
-          Do You Know ?
-        </h1>
+          <h1 tw="flex-1 mr-auto mt-3 font-sans text-red-500 text-5xl">
+            Do You Know ?
+          </h1>
           <h1 tw="text-white text-5xl">{camelCaseString}</h1>
           <a
             href="#"
