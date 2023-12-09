@@ -24,21 +24,26 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { sendEmail } from "../mailer";
+import { getRandomProfileUrl } from "@/constants";
 
-export async function getUserById(clerkId: string) {
+export async function getUserById(id?: string) {
   try {
     connectToDatabase();
-    const user = await User.findOne({ clerkId });
+
+    const user = await User.findOne({ _id: id });
+    if (!user) {
+      return null;
+    }
     return user;
   } catch (error) {
     console.log(error);
     throw error;
   }
 }
-export async function getUserByClerkId(clerkId: string) {
+export async function getUserByClerkId(userId: string) {
   try {
     connectToDatabase();
-    const user = await User.findOne({ clerkId }).select("username _id");
+    const user = await User.findOne({ _id: userId }).select("username _id");
     return user.username;
   } catch (error) {
     console.log(error);
@@ -55,11 +60,15 @@ export async function createUser(userData: CreateUserParams) {
       return { message: "Email already exists" };
     }
     const hashedPassword = await bcrypt.hash(password, 10);
+    // Example usage:
+    const image = getRandomProfileUrl();
+
     const user = new User({
       name,
       email,
       hashedPassword,
       username,
+      image,
     });
     await user.save();
     sendverifyEmail(email);
@@ -175,10 +184,7 @@ export async function verifyToken(token: string) {
   let redirectUrl = "/";
   try {
     connectToDatabase();
-    const hashedToken = crypto
-      .createHash("sha256")
-      .update(token)
-      .digest("hex");
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
     const user = await User.findOne({
       emailVerificationToken: hashedToken,
@@ -192,7 +198,7 @@ export async function verifyToken(token: string) {
     user.emailVerificationTokenExpiry = undefined;
     user.isVerified = true;
     await user.save();
-    redirectUrl =  `${process.env.NEXTAUTH_URL}/signup/verify`;
+    redirectUrl = `${process.env.NEXTAUTH_URL}/signin`;
   } catch (error) {
     console.error(error);
     throw error; // Re-throw the error to handle it in the calling code
@@ -309,8 +315,8 @@ export async function addUsername(params: { username: string; path: string }) {
 export async function updateUser(params: UpdateUserParams) {
   try {
     connectToDatabase();
-    const { clerkId, updateData, path } = params;
-    await User.findOneAndUpdate({ clerkId }, updateData, {
+    const { userId, updateData, path } = params;
+    await User.findOneAndUpdate({ _id: userId }, updateData, {
       new: true,
     });
 
@@ -458,7 +464,7 @@ export async function getUserQuestions(params: GetUserStatsParams) {
       .limit(pageSize)
       .sort({ views: -1, upvotes: -1 })
       .populate({ path: "tags", model: Tags, select: "_id name" })
-      .populate("author", "name picture clerkId username");
+      .populate("author", "name image _id username");
     const isNext = totalQuestions > skipAmount + questions.length;
 
     return { questions, totalQuestions, isNext };
@@ -479,7 +485,7 @@ export async function getUserAnswers(params: GetUserStatsParams) {
       .limit(pageSize)
       .sort({ upvotes: -1 })
       .populate("question", "_id title slug")
-      .populate("author", "name picture username clerkId");
+      .populate("author", "name image username _id");
     const isNext = totalAnswers > skipAmount + userAnswers.length;
     return { userAnswers, totalAnswers, isNext };
   } catch (error) {

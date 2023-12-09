@@ -135,7 +135,7 @@ export interface GetAllUsersParams {
 }
 
 export interface UpdateUserParams {
-  clerkId: string;
+  userId: string;
   updateData: Partial<IUser>;
   path: string;
 }
@@ -151,14 +151,14 @@ export interface ToggleSaveBlogParams {
   path: string;
 }
 export interface GetSavedQuestionsParams {
-  clerkId: string;
+  userId: string;
   page?: number;
   pageSize?: number;
   filter?: string;
   searchQuery?: string;
 }
 export interface GetSavedBlogsParams {
-  clerkId: string;
+  userId: string;
   page?: number;
   pageSize?: number;
   filter?: string;

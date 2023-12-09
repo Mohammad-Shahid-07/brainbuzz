@@ -1,3 +1,5 @@
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Answer from "@/components/forms/Answer";
 import AllAnswers from "@/components/shared/AllAnswers";
 import Matric from "@/components/shared/Matric";
@@ -8,7 +10,6 @@ import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { formatLargeNumber, getTimeStamp } from "@/lib/utils";
 import { URLProps } from "@/types";
-import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -22,7 +23,6 @@ export async function generateMetadata({
 }) {
   try {
     const question = await getQuestionById({ questionId: params.id });
-
     if (!question)
       return {
         title: "Not Found",
@@ -46,10 +46,9 @@ export async function generateMetadata({
 }
 const Page = async ({ params, searchParams }: URLProps) => {
   const res = await getQuestionById({ questionId: params.id });
-
-  const { userId } = auth();
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id; 
   const mongoUser = await getUserById(userId);
-
   return (
     <>
       <div className="flex-start w-full flex-col">
@@ -59,7 +58,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
             className="flex items-center justify-start gap-1"
           >
             <Image
-              src={res?.author?.picture}
+              src={res?.author?.image}
               alt="Picture of the author"
               width={40}
               height={40}

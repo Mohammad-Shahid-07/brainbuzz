@@ -1,45 +1,23 @@
 "use client";
 import { sidebarLinks } from "@/constants";
-import { SignedOut, useAuth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { getUserByClerkId } from "@/lib/actions/user.action";
-
-const LeftSidebar = () => {
-  const { userId } = useAuth();
-  const [username, setUsername] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const user = await getUserByClerkId(userId);
-        if (user) {
-          setUsername(user);
-        }
-      } catch (error) {
-        console.error("Error fetching user:", error);
-      } finally {
-        setIsLoading(false);
+import { signOut } from "next-auth/react";
+interface Props {
+  SignedIn: boolean;
+  username?: string;
+}
+const LeftSidebar = ({ SignedIn, username }: Props) => {
+  if (username) {
+    sidebarLinks.forEach((link) => {
+      if (link.route === "/profile") {
+        link.route = `/profile/${username}`;
       }
-    };
+    });
+  }
 
-    if (userId) {
-      getUser();
-    }
-  }, [userId]);
-  useEffect(() => {
-    if (!isLoading && username) {
-      sidebarLinks.forEach((link) => {
-        if (link.route === "/profile") {
-          link.route = `/profile/${username}`;
-        }
-      });
-    }
-  }, [username, isLoading]);
   const NavContent = () => {
     const path = usePathname();
     return (
@@ -83,7 +61,7 @@ const LeftSidebar = () => {
   return (
     <section className="background-light900_dark200 light-border custom-scrollbar sticky  left-0 top-0 flex h-screen max-w-sm flex-col justify-between   p-6 pt-36 shadow-light-300 dark:shadow-none  max-sm:hidden   sm:pt-12">
       <NavContent />
-      <SignedOut>
+      {!SignedIn ? (
         <div className="flex flex-col gap-3">
           <Link href="/sign-in">
             <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
@@ -113,7 +91,21 @@ const LeftSidebar = () => {
             </Button>
           </Link>
         </div>
-      </SignedOut>
+      ) : (
+        <Button
+          className="small-medium btn-secondarytext-light-400  min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none"
+          onClick={() => signOut()}
+        >
+          <span className=" max-lg:hidden">Logout</span>
+          <Image
+            src="/assets/icons/logout.svg"
+            alt="sign up"
+            width={20}
+            height={20}
+            className="lg:hidden"
+          />
+        </Button>
+      )}
     </section>
   );
 };

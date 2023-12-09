@@ -1,19 +1,23 @@
 import Filter from "@/components/shared/Filter";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { QuestionFilters } from "@/constants/filters";
-import { auth } from "@clerk/nextjs";
+
 import { SearchParamsProps } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import QuestionsTab from "@/components/shared/QuestionsTab";
 import SavedBlogsTab from "@/components/shared/SavedBlogsTab";
 import { getUserById} from "@/lib/actions/user.action";
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-  const { userId: clerkId } = auth();
-  const userInfo = await getUserById(clerkId);
+  
+  const session = await getServerSession(authOptions);
+  const userId = session?.user?.id || "";
+  if (!userId) return null;
+  const userInfo = await getUserById(userId);
 
-  if (!clerkId) return null;
+
 
   return (
     <>
@@ -48,7 +52,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
             className="mt-5 flex w-full flex-col gap-6"
           >
             <QuestionsTab
-              clerkId={clerkId || ""}
+        
               searchParams={searchParams}
               userId={userInfo?._id}
               route='/collection'
@@ -58,7 +62,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
             <SavedBlogsTab
               searchParams={searchParams}
               userId={userInfo?._id}
-              clerkId={clerkId}
+             
             />
           </TabsContent>
         </Tabs>

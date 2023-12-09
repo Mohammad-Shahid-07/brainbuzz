@@ -5,10 +5,10 @@ import Pagination from "./Pagination";
 
 interface Props extends SearchParamsProps {
   userId: string;
-  clerkId?: string | null;
+
 }
 
-const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
+const AnswersTab = async ({ searchParams, userId }: Props) => {
   const res = await getUserAnswers({
     userId,
     page: searchParams.page ? +searchParams.page : 1,
@@ -19,7 +19,7 @@ const AnswersTab = async ({ searchParams, userId, clerkId }: Props) => {
       {res?.userAnswers.map((answer) => (
         <AnswerCard
           key={answer._id}
-          clerkId={clerkId}
+          userId={userId}
           _id={answer._id}
           author={answer.author}
           upvotes={answer.upvotes}

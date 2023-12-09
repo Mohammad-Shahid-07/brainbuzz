@@ -126,12 +126,12 @@ export async function getQuestionById({ questionId }: GetQuestionByIdParams) {
   try {
     connectToDatabase();
 
-    const question = await Question.findById(questionId)
+    const question = await Question.findOne({ _id: questionId })
       .populate({ path: "tags", model: Tags, select: "_id name" })
       .populate({
         path: "author",
         model: User,
-        select: "username clerkId name picture",
+        select: "username _id name picture",
       });
 
     return question;
@@ -250,7 +250,7 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     connectToDatabase();
-    const { clerkId, searchQuery, filter, page = 1, pageSize = 1 } = params;
+    const { userId, searchQuery, filter, page = 1, pageSize = 1 } = params;
 
     const skipAmount = (page - 1) * pageSize;
 
@@ -281,7 +281,7 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
         break;
     }
 
-    const user = await User.findOne({ clerkId }).populate({
+    const user = await User.findOne({ _id: userId }).populate({
       path: "saved",
       model: Question,
       match: query,
@@ -295,7 +295,7 @@ export async function getSavedQuestions(params: GetSavedQuestionsParams) {
         {
           path: "author",
           model: User,
-          select: "username clerkId name picture",
+          select: "username _id name picture",
         },
       ],
     });
@@ -385,7 +385,7 @@ export async function getRecommendedQuestions(params: RecommendedParams) {
     const { userId, page = 1, pageSize = 20, searchQuery } = params;
 
     // find user
-    const user = await User.findOne({ clerkId: userId });
+    const user = await User.findOne({ _id: userId });
 
     if (!user) {
       throw new Error("user not found");

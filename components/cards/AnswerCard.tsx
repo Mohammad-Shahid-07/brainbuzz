@@ -2,11 +2,12 @@ import Link from "next/link";
 
 import { formatLargeNumber, getTimeStamp } from "@/lib/utils";
 import Matric from "../shared/Matric";
-import { SignedIn } from "@clerk/nextjs";
 import EditDeleteAction from "../shared/EditDeleteAction";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 interface Props {
-  clerkId?: string | null;
+  userId?: string | null;
   _id: string;
   question: {
     _id: string;
@@ -15,9 +16,9 @@ interface Props {
   };
   author: [
     {
-      clerkId: string;
+      _id: string;
       name: string;
-      picture: string;
+      image: string;
       username: string;
     },
   ];
@@ -25,16 +26,22 @@ interface Props {
   createdAt: Date;
 }
 
-const AnswerCard = ({
-  clerkId,
+const AnswerCard = async ({
+  userId,
   _id,
   question,
   author,
   upvotes,
   createdAt,
 }: Props) => {
-  const showActionButtons = clerkId && clerkId === author[0]?.clerkId;
-
+  const showActionButtons = userId && userId === author[0]?._id.toString();
+  const session = await getServerSession(authOptions);
+  let SignedIn;
+  if (session) {
+    SignedIn = true;
+  } else {
+    SignedIn = false;
+  }
   return (
     <Link
       href={`/question/${question.slug}/${question._id}/#${_id}`}
@@ -49,16 +56,15 @@ const AnswerCard = ({
             {question.title}
           </h3>
         </div>
-        <SignedIn>
-          {showActionButtons && (
-            <EditDeleteAction type="Answer" itemId={JSON.stringify(_id)} />
-          )}
-        </SignedIn>
+
+        {SignedIn && showActionButtons && (
+          <EditDeleteAction type="Answer" itemId={JSON.stringify(_id)} />
+        )}
       </div>
 
       <div className="flex-between mt-6 w-full flex-wrap gap-3">
         <Matric
-          imgURL={author[0]?.picture}
+          imgURL={author[0]?.image}
           alt="user avatar"
           value={author[0].name}
           title={`asked ${getTimeStamp(createdAt)}`}

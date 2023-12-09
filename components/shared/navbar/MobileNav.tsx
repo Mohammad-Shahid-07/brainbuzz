@@ -7,13 +7,12 @@ import {
 } from "@/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
-
-import { SignedOut } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { sidebarLinks } from "@/constants";
 import { usePathname } from "next/navigation";
 const NavContent = () => {
   const path = usePathname();
+
   return (
     <section className="flex h-full w-full flex-col gap-6 pt-16">
       {sidebarLinks.map((link) => {
@@ -47,7 +46,12 @@ const NavContent = () => {
     </section>
   );
 };
-const MobileNav = () => {
+interface Props {
+  SignedIn: boolean;
+}
+const MobileNav = ({SignedIn} : Props) => {
+ console.log(SignedIn);
+ 
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -78,7 +82,7 @@ const MobileNav = () => {
           <SheetClose asChild>
             <NavContent />
           </SheetClose>
-          <SignedOut>
+          {!SignedIn && (
             <div className="mb-5 flex flex-col gap-3">
               <SheetClose asChild>
                 <Link href="/sign-in">
@@ -95,7 +99,7 @@ const MobileNav = () => {
                 </Link>
               </SheetClose>
             </div>
-          </SignedOut>
+          )}
         </div>
       </SheetContent>
     </Sheet>

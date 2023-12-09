@@ -7,19 +7,17 @@ import NoResults from "./NoResults";
 
 interface Props extends SearchParamsProps {
   userId: string;
-  clerkId?: string;
   route?: string;
 }
 const QuestionsTab = async ({
   searchParams,
   userId,
-  clerkId,
   route,
 }: Props) => {
   let res;
   if (route === "/collection") {
     res = await getSavedQuestions({
-      clerkId: clerkId || "",
+      userId: userId || "",
       page: searchParams.page ? +searchParams.page : 1,
     });
   } else {
@@ -36,7 +34,7 @@ const QuestionsTab = async ({
           <QuestionCard
             key={question._id}
             _id={question._id}
-            clerkId={clerkId}
+            userId={userId}
             title={question.title}
             tags={question.tags}
             author={question.author}

@@ -18,11 +18,11 @@ import { ProfileSchema } from "@/lib/validations";
 import { usePathname, useRouter } from "next/navigation";
 import { updateUser } from "@/lib/actions/user.action";
 interface Props {
-  clerkId: string;
+  userId: string;
   user: string;
 }
 
-const Profile = ({ clerkId, user }: Props) => {
+const Profile = ({ userId, user }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -46,7 +46,7 @@ const Profile = ({ clerkId, user }: Props) => {
     setIsSubmitting(true);
     try {
       await updateUser({
-        clerkId,
+        userId,
         updateData: {
           name: values.name,
           username: values.username,

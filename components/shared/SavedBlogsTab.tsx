@@ -6,11 +6,11 @@ import NoResults from "./NoResults";
 
 interface Props extends SearchParamsProps {
   userId: string;
-  clerkId?: string;
+
 }
-const SavedBlogsTab = async ({ searchParams, userId, clerkId }: Props) => {
+const SavedBlogsTab = async ({ searchParams, userId,  }: Props) => {
   const res = await getSavedBlogs({
-    clerkId: clerkId || "",
+    userId: userId || "",
     searchQuery: searchParams.q,
     filter: searchParams.filter,
     page: searchParams.page ? +searchParams.page : 1,
@@ -21,7 +21,7 @@ const SavedBlogsTab = async ({ searchParams, userId, clerkId }: Props) => {
         res?.blogs.map((blog: any) => (
           <BlogsCard
             key={blog._id}
-            clerkId={clerkId}
+         
             title={blog.title}
             tags={blog.tags}
             author={blog.author}

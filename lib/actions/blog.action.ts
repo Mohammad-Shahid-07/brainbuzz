@@ -17,7 +17,6 @@ import User from "@/database/user.model";
 import { revalidatePath } from "next/cache";
 import Interaction from "@/database/interaction.model";
 
-
 export async function createBlog(params: CreateBlogParams) {
   try {
     connectToDatabase();
@@ -113,7 +112,7 @@ export async function getBlogBySlug(params: GetBlogBySlugParams) {
       .populate({
         path: "author",
         model: User,
-        select: "username clerkId name picture",
+        select: "username _id name picture",
       });
     return blog;
   } catch (error) {
@@ -268,7 +267,7 @@ export async function toggleSaveBlog(params: ToggleSaveBlogParams) {
 export async function getSavedBlogs(params: GetSavedBlogsParams) {
   try {
     connectToDatabase();
-    const { clerkId, searchQuery, filter, page = 1, pageSize = 10 } = params;
+    const { userId, searchQuery, filter, page = 1, pageSize = 10 } = params;
 
     const skipAmount = (page - 1) * pageSize;
 
@@ -299,7 +298,7 @@ export async function getSavedBlogs(params: GetSavedBlogsParams) {
         break;
     }
 
-    const user = await User.findOne({ clerkId }).populate({
+    const user = await User.findOne({ _id: userId }).populate({
       path: "savedBlogs",
       model: Blog,
       match: query,
@@ -313,7 +312,7 @@ export async function getSavedBlogs(params: GetSavedBlogsParams) {
         {
           path: "author",
           model: User,
-          select: "username clerkId name picture",
+          select: "username _id name picture",
         },
       ],
     });
@@ -330,5 +329,3 @@ export async function getSavedBlogs(params: GetSavedBlogsParams) {
     throw error;
   }
 }
-
-

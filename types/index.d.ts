@@ -1,4 +1,5 @@
 import { BADGE_CRITERIA } from "@/constants";
+import { DefaultSession } from "next-auth";
 
 export interface SidebarLink {
   imgURL: string;
@@ -41,7 +42,6 @@ export interface SearchParamsProps {
 export interface URLProps {
   params: {
     id: string;
-    
   };
   searchParams: {
     [key: string]: string | undefined;
@@ -56,4 +56,12 @@ export interface BadgeCounts {
 
 export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;
 
-
+declare module "next-auth" {
+  // eslint-disable-next-line no-unused-vars
+  interface Session {
+    user: {
+      id?: string | undefined;
+      username?: string | undefined;
+    } & DefaultSession["user"];
+  }
+}

@@ -9,14 +9,12 @@ import { HomePageFilters } from "@/constants/filters";
 import { getAllBlogs } from "@/lib/actions/blog.action";
 import { SearchParamsProps } from "@/types";
 
-
 export default async function Home({ searchParams }: SearchParamsProps) {
   const res = await getAllBlogs({
     searchQuery: searchParams.q,
     filter: searchParams.filter,
     page: searchParams.page ? +searchParams.page : 1,
   });
-
 
   return (
     <>

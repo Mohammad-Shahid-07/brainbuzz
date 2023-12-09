@@ -13,11 +13,10 @@ interface Props {
     name: string;
     picture: string;
     username: string;
-    clerkId: string;
   };
   upvotes: string[];
   views: number;
-  clerkId?: string;
+
   slug: string;
   comments: Array<{}>;
   createdAt: Date;
@@ -26,7 +25,6 @@ const BlogsCard = ({
   title,
   tags,
   author,
-  clerkId,
   upvotes,
   slug,
   views,
@@ -62,7 +60,7 @@ const BlogsCard = ({
         </Link>
         <div className="flex-between mt-6 w-full flex-wrap gap-3">
           <Matric
-            imgURL={author?.picture}
+            imgURL={author?.image}
             alt="User"
             value={author?.name}
             title={`- asked `}

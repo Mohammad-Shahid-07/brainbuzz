@@ -5,10 +5,11 @@ import Votes from "@/components/shared/Votes";
 import { getBlogBySlug } from "@/lib/actions/blog.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { formatLargeNumber, getTimeStamp } from "@/lib/utils";
-import { URLProps } from "@/types";
-import { auth } from "@clerk/nextjs";
+import { URLProps } from "@/types"
 import Image from "next/image";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function generateMetadata({
   params,
@@ -45,8 +46,12 @@ export async function generateMetadata({
 const Page = async ({ params, searchParams }: URLProps) => {
   const res = await getBlogBySlug({ slug: params.id });
 
-  const { userId } = auth();
+  const session = await getServerSession(authOptions);
+
+  const userId = session?.user?.id || "";
   const mongoUser = await getUserById(userId);
+  
+  
 
   return (
     <>
@@ -57,7 +62,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
             className="flex items-center justify-start gap-1"
           >
             <Image
-              src={res?.author?.picture}
+              src={res?.author?.image}
               alt="Picture of the author"
               width={40}
               height={40}

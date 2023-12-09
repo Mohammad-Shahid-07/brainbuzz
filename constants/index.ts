@@ -69,3 +69,29 @@ export const BADGE_CRITERIA = {
     GOLD: 100000,
   },
 };
+
+type ProfileUrl = string;
+
+const ProfileUrls: ProfileUrl[] = [
+  "https://i.postimg.cc/BnCyJ853/1.jpg",
+  "https://i.postimg.cc/zXg0GLrM/10.jpg",
+  "https://i.postimg.cc/hjY1Sn3c/11.jpg",
+  "https://i.postimg.cc/GtsJtfZY/12.jpg",
+  "https://i.postimg.cc/W3z7Lz85/13.jpg",
+  "https://i.postimg.cc/3xQ94Krw/14.jpg",
+  "https://i.postimg.cc/7Pc53yP0/15.jpg",
+  "https://i.postimg.cc/PJByMHm2/16.jpg",
+  "https://i.postimg.cc/FHv8tbLG/2.jpg",
+  "https://i.postimg.cc/15w2Y7ff/3.jpg",
+  "https://i.postimg.cc/mZ0KjWZv/4.jpg",
+  "https://i.postimg.cc/jqWGyST6/5.jpg",
+  "https://i.postimg.cc/SjFLMrhP/6.jpg",
+  "https://i.postimg.cc/mr8S5CYc/7.jpg",
+  "https://i.postimg.cc/cJsmhXny/8.jpg",
+  "https://i.postimg.cc/RZ1dwjqL/9jpg.jpg",
+];
+
+export function getRandomProfileUrl(): ProfileUrl {
+  const randomIndex = Math.floor(Math.random() * ProfileUrls.length);
+  return ProfileUrls[randomIndex];
+}

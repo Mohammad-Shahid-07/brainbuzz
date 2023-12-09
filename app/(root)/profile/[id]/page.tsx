@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { getUserInfo } from "@/lib/actions/user.action";
 import { URLProps } from "@/types";
-import { SignedIn, auth } from "@clerk/nextjs";
+
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -11,6 +11,8 @@ import ProfileLink from "@/components/shared/ProfileLink";
 import Stats from "@/components/shared/Stats";
 import QuestionsTab from "@/components/shared/QuestionsTab";
 import AnswersTab from "@/components/shared/AnswersTab";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function generateMetadata({
   params,
@@ -44,16 +46,23 @@ export async function generateMetadata({
   }
 }
 const Page = async ({ params, searchParams }: URLProps) => {
-  const { userId: clerkId } = auth();
-
   const userInfo = await getUserInfo({ userId: params.id });
+  const session = await getServerSession(authOptions);
+
+  let SignedIn;
+  if (session) {
+    SignedIn = true;
+  } else {
+    SignedIn = false;
+  }
+  const userId = session?.user?.id || null;
 
   return (
     <>
       <div className="flex flex-col-reverse items-start justify-between sm:flex-row">
         <div className="flex flex-col items-start gap-4 lg:flex-row">
           <Image
-            src={userInfo?.user.picture}
+            src={userInfo?.user?.image}
             alt="profile-picture"
             width={140}
             height={140}
@@ -99,15 +108,13 @@ const Page = async ({ params, searchParams }: URLProps) => {
         </div>
 
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
-          <SignedIn>
-            {clerkId === userInfo.user.clerkId && (
-              <Link href="/profile/edit">
-                <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-3">
-                  Edit Profile
-                </Button>
-              </Link>
-            )}
-          </SignedIn>
+          {SignedIn && userId === userInfo.user._id.toString() && (
+            <Link href="/profile/edit">
+              <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-3">
+                Edit Profile
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -132,17 +139,14 @@ const Page = async ({ params, searchParams }: URLProps) => {
             className="mt-5 flex w-full flex-col gap-6"
           >
             <QuestionsTab
-              clerkId={clerkId || ""}
               searchParams={searchParams}
               userId={userInfo.user._id}
-             
             />
           </TabsContent>
           <TabsContent value="answers" className="flex w-full flex-col gap-6">
             <AnswersTab
               searchParams={searchParams}
               userId={userInfo.user._id}
-              clerkId={clerkId}
             />
           </TabsContent>
         </Tabs>
