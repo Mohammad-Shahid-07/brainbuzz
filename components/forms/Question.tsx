@@ -31,8 +31,9 @@ type Props = {
   mongoUserId: string;
   type?: string;
   questionDetails?: string;
+  isVerified?: boolean;
 };
-const Question = ({ mongoUserId, type, questionDetails }: Props) => {
+const Question = ({ mongoUserId, type, questionDetails,  isVerified }: Props) => {
   const editorRef = useRef(null);
   const { mode } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -122,6 +123,14 @@ const Question = ({ mongoUserId, type, questionDetails }: Props) => {
    
 
     try {
+      if (isVerified === false) {
+        toast({
+          title: "Your email is not verified",
+          description: "Please verify your email first.",
+          variant: "destructive",
+        });
+        return;
+      }
       if (type === "Edit") {
         const slug = await editQuestion({
           questionId: parsedQuestionDetails._id,

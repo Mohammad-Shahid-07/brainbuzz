@@ -53,7 +53,6 @@ const Password = ({ userId, type }: Props) => {
               description: "Passowrd set successfully.",
             });
           });
-          console.log(values);
           router.back();
         } else {
           toast({

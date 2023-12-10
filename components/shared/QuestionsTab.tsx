@@ -9,11 +9,7 @@ interface Props extends SearchParamsProps {
   userId: string;
   route?: string;
 }
-const QuestionsTab = async ({
-  searchParams,
-  userId,
-  route,
-}: Props) => {
+const QuestionsTab = async ({ searchParams, userId, route }: Props) => {
   let res;
   if (route === "/collection") {
     res = await getSavedQuestions({

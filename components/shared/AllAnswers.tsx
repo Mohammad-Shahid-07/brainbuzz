@@ -10,6 +10,7 @@ import ParseHTML from "./ParseHTML";
 import Votes from "./Votes";
 import Pagination from "./Pagination";
 import { SearchParamsProps } from "@/types";
+import { getUserById } from "@/lib/actions/user.action";
 
 interface Props extends SearchParamsProps {
   questionId: string;
@@ -30,6 +31,7 @@ const AllAnswers = async ({
     page: searchParams?.page ? +searchParams.page : 1,
     sortBy: filter || "newest",
   });
+  const mongoUser = await getUserById(userId);
 
   return (
     <div className="mt-11 ">
@@ -73,6 +75,7 @@ const AllAnswers = async ({
                   downvotes={answer.downvotes.length}
                   hasDownvoted={answer.downvotes.includes(userId)}
                   itemId={JSON.stringify(answer._id)}
+                  isVerified={mongoUser?.isVerified}
                   userId={JSON.stringify(userId)}
                 />
               </div>

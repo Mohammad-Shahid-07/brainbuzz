@@ -56,6 +56,7 @@ export async function createUser(userData: CreateUserParams) {
   try {
     connectToDatabase();
     const { name, username, email, password, path } = userData;
+
     const existing = await User.findOne({ email });
     if (existing) {
       return { message: "Email already exists" };
@@ -96,8 +97,11 @@ export async function sendverifyEmail(email: string) {
     user.emailVerificationToken = emailVericationToken;
     user.emailVerificationTokenExpiresAt = emailVerificationTokenExpiresAt;
     const resetUrl = `${process.env.NEXTAUTH_URL}/signup/verify/${verificationToken}`;
+
     sendEmail(email, resetUrl, "Email Verification");
+
     await user.save();
+    return true;
   } catch (error) {
     console.error(error);
     throw error; // Re-throw the error to handle it in the calling code
@@ -359,7 +363,6 @@ export async function updateUserImage(params: UpdateUserImageParams) {
 }
 export async function setNewPass(params: any) {
   const { userId, newPassword, path } = params;
-  console.log(params);
 
   try {
     connectToDatabase();
@@ -406,9 +409,6 @@ export async function deleteUser(params: DeleteUserParams) {
       throw new Error("User not found");
     }
 
-    // const userQuestionIds = await Question.find({ author: user._id }).distinct(
-    //   "_id",
-    // );
     await Question.deleteMany({ author: user._id });
 
     // TODO: Delete all the questions and answers of the user

@@ -42,19 +42,37 @@ const Signup = () => {
   async function onSubmit(values: z.infer<typeof UserSchema>) {
     try {
       setLoading(true);
+      const regex = /^[a-zA-Z][a-zA-Z0-9_]{2,20}$/;
+      if (!regex.test(values.username)) {
+        // Handle the error (e.g., display a message to the user)
+        return toast({
+          title: "Invalid Username",
+          description:
+            "Please use only letters, numbers, and underscores. It should start with a letter and be between 3 to 20 characters long.",
+          variant: "destructive",
+        });
+      }
       await createUser({
         name: values.name,
         username: values.username,
         email: values.email,
         password: values.password,
         path: pathname,
+      }).then((res) => {
+        if (res?.message) {
+          return toast({
+            title: "Error",
+            description: res.message,
+            variant: "destructive",
+          });
+        }
+
+        return toast({
+          title: "Verification Email Sent",
+          description:
+            "We've sent a verification email to your registered email address. Please check your inbox and follow the instructions to complete the verification process.",
+        });
       });
-      return toast({
-        title: "Verification Email Sent",
-        description: "We've sent a verification email to your registered email address. Please check your inbox and follow the instructions to complete the verification process.",
-      });
-      
-      
     } catch (error) {
       console.log(error);
     } finally {

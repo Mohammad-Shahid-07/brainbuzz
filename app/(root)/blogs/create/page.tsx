@@ -16,7 +16,11 @@ const Page = async () => {
     <div>
       <h1 className="h1-bold text-dark100_light900">Write A blog</h1>
       <div className="mt-9">
-        <Question mongoUserId={JSON.stringify(user?._id)} type="Blog" />
+        <Question
+          mongoUserId={JSON.stringify(user?._id)}
+          isVerified={user?.isVerified}
+          type="Blog"
+        />
       </div>
     </div>
   );

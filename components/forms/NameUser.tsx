@@ -50,6 +50,7 @@ const NameUser = ({ name, username, type }: Props) => {
             title: "Invalid Username",
             description:
               "Please use only letters, numbers, and underscores. It should start with a letter and be between 3 to 20 characters long.",
+            variant: "destructive",  
           });
         }
         await addUsername({
