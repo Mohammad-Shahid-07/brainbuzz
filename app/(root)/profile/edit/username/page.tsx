@@ -1,6 +1,5 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import NameUser from "@/components/forms/NameUser";
-import ChooseAvatar from "@/components/shared/ChooseAvatar";
 import { getUserById } from "@/lib/actions/user.action";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
@@ -18,12 +17,9 @@ const Page = async () => {
     <section>
       <div>
         <h1 className="h1-bold text-dark100_light900">Profile</h1>
-        <NameUser name={mongoUser?.name} type="Name" />
+        <NameUser username={mongoUser?.username} type="Username" />
       </div>
-      <div>
-        <h1 className="h1-bold text-dark100_light900">Choose an avatar</h1>
-        <ChooseAvatar />
-      </div>
+      
     </section>
   );
 };

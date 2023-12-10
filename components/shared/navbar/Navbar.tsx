@@ -6,12 +6,17 @@ import MobileNav from "./MobileNav";
 import GlobalSearch from "../search/GlobalSearch";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getUserById } from "@/lib/actions/user.action";
+import ProfileMenu from "../ProfileMenu";
 const Navbar = async () => {
   const session = await getServerSession(authOptions);
 
   let SignedIn;
+  const userId = session?.user?.id || "";
+  let mongoUser;
   if (session) {
     SignedIn = true;
+    mongoUser = await getUserById(userId);
   } else {
     SignedIn = false;
   }
@@ -34,13 +39,7 @@ const Navbar = async () => {
         <Theme />
 
         {SignedIn && (
-          <Image
-            src={session?.user?.image!}
-            alt="sign up"
-            width={30}
-            height={30}
-            className="rounded-full"
-          />
+        <ProfileMenu user={JSON.stringify(mongoUser)} />
         )}
         <MobileNav SignedIn={SignedIn} />
       </div>

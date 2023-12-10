@@ -15,8 +15,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "../ui/textarea";
 import { useState } from "react";
 import { ProfileSchema } from "@/lib/validations";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { updateUser } from "@/lib/actions/user.action";
+import { toast } from "../ui/use-toast";
 interface Props {
   userId: string;
   user: string;
@@ -25,7 +26,6 @@ interface Props {
 const Profile = ({ userId, user }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const pathname = usePathname();
-  const router = useRouter();
   const parsedUser = JSON.parse(user);
 
   // 1. Define your form.
@@ -53,9 +53,17 @@ const Profile = ({ userId, user }: Props) => {
         },
         path: pathname,
       });
-      router.back();
+      toast({
+        title: "Success👻",
+        description: "Profile updated successfully.",
+      });
     } catch (error) {
       console.log(error);
+      toast({
+        title: "Failed 👻",
+        description: "Profile updated Failed.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }

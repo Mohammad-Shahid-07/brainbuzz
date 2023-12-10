@@ -2,15 +2,17 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 interface Props {
-  user: {
-    id?: string;
-    name?: string;
-    username?: string;
-    image?: string;
-    email?: string;
-  };
+  mongoUser: string;
 }
-const UserAccount = ({ user }: Props) => {
+interface User {
+  _id: string;
+  name: string;
+  username: string;
+  image: string;
+}
+const UserAccount = ({ mongoUser }: Props) => {
+  const user = JSON.parse(mongoUser) as User;
+
   return (
     <div>
       {" "}

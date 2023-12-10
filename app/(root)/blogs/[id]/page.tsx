@@ -5,7 +5,7 @@ import Votes from "@/components/shared/Votes";
 import { getBlogBySlug } from "@/lib/actions/blog.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { formatLargeNumber, getTimeStamp } from "@/lib/utils";
-import { URLProps } from "@/types"
+import { URLProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
@@ -49,9 +49,10 @@ const Page = async ({ params, searchParams }: URLProps) => {
   const session = await getServerSession(authOptions);
 
   const userId = session?.user?.id || "";
-  const mongoUser = await getUserById(userId);
-  
-  
+  let mongoUser;
+  if (userId) {
+    mongoUser = await getUserById(userId);
+  }
 
   return (
     <>

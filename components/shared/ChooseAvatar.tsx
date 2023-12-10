@@ -5,14 +5,24 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { toast } from "../ui/use-toast";
+import { useSession } from "next-auth/react";
 
 const ChooseAvatar = () => {
   const [loading, setLoading] = useState(false);
+  const { data: session, update } = useSession();
   const path = usePathname();
   const handleImageChange = async (img: string) => {
     try {
       setLoading(true);
       await updateUserImage({ image: img, path });
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          image: `${img}`,
+        },
+      });
+
       toast({
         title: "Success",
         description: "Profile picture updated successfully.",
@@ -25,7 +35,7 @@ const ChooseAvatar = () => {
   };
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-10 transition-all ">
+      <div className="mt-10 flex flex-wrap items-center justify-between gap-10 transition-all ">
         {ProfileUrls.map((img) => (
           <div
             key={img}

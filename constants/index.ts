@@ -88,7 +88,11 @@ export const ProfileUrls: ProfileUrl[] = [
   "https://i.postimg.cc/SjFLMrhP/6.jpg",
   "https://i.postimg.cc/mr8S5CYc/7.jpg",
   "https://i.postimg.cc/cJsmhXny/8.jpg",
-  "https://i.postimg.cc/RZ1dwjqL/9jpg.jpg"
+  "https://i.postimg.cc/RZ1dwjqL/9jpg.jpg",
+  "https://i.postimg.cc/XvNYxbp5/1.jpg",
+  "https://i.postimg.cc/zfdXccgc/2.jpg",
+  "https://i.postimg.cc/MTvK2m0K/3.jpg"
+
 ];
 
 export function getRandomProfileUrl(): ProfileUrl {

@@ -26,7 +26,6 @@ import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { sendEmail } from "../mailer";
 import { getRandomProfileUrl } from "@/constants";
-import path from "path";
 
 export async function getUserById(id?: string) {
   try {
@@ -351,9 +350,7 @@ export async function updateUserImage(params: UpdateUserImageParams) {
     }
     user.image = image;
     await user.save();
-    session.user.image = image;
-    console.log("image updated",session.user.image, image );
-    
+    // session.user.image = image;
     revalidatePath(path);
   } catch (error) {
     console.log(error);
@@ -425,65 +422,70 @@ export async function getAllUsers(params: GetAllUsersParams) {
 }
 
 export async function getUserInfo(params: GetUserByIdParams) {
-  try {
-    connectToDatabase();
+  const session: any = await getServerSession(authOptions);
+  if (session?.user?.id) {
+    try {
+      connectToDatabase();
 
-    const { userId } = params;
+      const { userId } = params;
 
-    const user = await User.findOne({ username: userId });
+      const user = await User.findOne({ username: userId });
 
-    if (!user) {
-      throw new Error("User not found");
+      if (!user) {
+        throw new Error("User not found");
+      }
+      const totalQuestions = await Question.countDocuments({
+        author: user._id,
+      });
+      const totalAnswers = await Answer.countDocuments({ author: user._id });
+
+      const [questionUpvotes] = await Question.aggregate([
+        {
+          $match: { author: user._id },
+        },
+        { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+        { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
+      ]);
+
+      const [answerUpvotes] = await Answer.aggregate([
+        {
+          $match: { author: user._id },
+        },
+        { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+        { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
+      ]);
+
+      const [QuestionVeiws] = await Question.aggregate([
+        {
+          $match: { author: user._id },
+        },
+        { $group: { _id: null, totalviews: { $sum: "$views" } } },
+      ]);
+
+      const criteria = [
+        { type: "QUESTION_COUNT" as BadgeCriteriaType, count: totalQuestions },
+        { type: "ANSWER_COUNT" as BadgeCriteriaType, count: totalAnswers },
+        {
+          type: "QUESTION_UPVOTES" as BadgeCriteriaType,
+          count: questionUpvotes?.totalUpvotes || 0,
+        },
+        {
+          type: "ANSWER_UPVOTES" as BadgeCriteriaType,
+          count: answerUpvotes?.totalUpvotes || 0,
+        },
+        {
+          type: "TOTAL_VIEWS" as BadgeCriteriaType,
+          count: QuestionVeiws?.totalviews || 0,
+        },
+      ];
+
+      const badgeCounts = assignBadge({ criteria });
+      return { user, totalAnswers, totalQuestions, badgeCounts };
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
-    const totalQuestions = await Question.countDocuments({ author: user._id });
-    const totalAnswers = await Answer.countDocuments({ author: user._id });
-
-    const [questionUpvotes] = await Question.aggregate([
-      {
-        $match: { author: user._id },
-      },
-      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
-      { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
-    ]);
-
-    const [answerUpvotes] = await Answer.aggregate([
-      {
-        $match: { author: user._id },
-      },
-      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
-      { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
-    ]);
-
-    const [QuestionVeiws] = await Question.aggregate([
-      {
-        $match: { author: user._id },
-      },
-      { $group: { _id: null, totalviews: { $sum: "$views" } } },
-    ]);
-
-    const criteria = [
-      { type: "QUESTION_COUNT" as BadgeCriteriaType, count: totalQuestions },
-      { type: "ANSWER_COUNT" as BadgeCriteriaType, count: totalAnswers },
-      {
-        type: "QUESTION_UPVOTES" as BadgeCriteriaType,
-        count: questionUpvotes?.totalUpvotes || 0,
-      },
-      {
-        type: "ANSWER_UPVOTES" as BadgeCriteriaType,
-        count: answerUpvotes?.totalUpvotes || 0,
-      },
-      {
-        type: "TOTAL_VIEWS" as BadgeCriteriaType,
-        count: QuestionVeiws?.totalviews || 0,
-      },
-    ];
-
-    const badgeCounts = assignBadge({ criteria });
-    return { user, totalAnswers, totalQuestions, badgeCounts };
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
+  } 
 }
 
 export async function getUserQuestions(params: GetUserStatsParams) {

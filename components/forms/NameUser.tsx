@@ -65,11 +65,9 @@ const NameUser = ({ name, username, type }: Props) => {
           ...session,
           user: {
             ...session?.user,
-            username,
+            username : values.username,
           },
-        }).then(() => {
-          console.log("updated", session?.user);
-        });
+        })
         router.back();
       } else if (type === "Name") {
         await addName({
@@ -86,11 +84,9 @@ const NameUser = ({ name, username, type }: Props) => {
           ...session,
           user: {
             ...session?.user,
-            name: username,
+            name: values.username,
           },
-        }).then(() => {
-          console.log("updated", session?.user);
-        });
+        })
       }
     } catch (error) {
       console.log(error);
