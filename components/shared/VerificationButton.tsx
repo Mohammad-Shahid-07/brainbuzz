@@ -6,8 +6,9 @@ import { toast } from "../ui/use-toast";
 
 const VerificationButton = ({
   email,
+  classes,
 }: {
-
+  classes?: string;
   email: string;
 }) => {
   const handleEmailSent = async () => {
@@ -15,14 +16,12 @@ const VerificationButton = ({
       await sendverifyEmail(email).then((res) => {
         console.log(res);
       });
-    
-      
+
       toast({
         title: "Email Sent",
         description: "Please check your email for verification link.",
         variant: "success",
       });
-      
     } catch (error) {
       console.log(error);
       toast({
@@ -31,10 +30,9 @@ const VerificationButton = ({
         variant: "destructive",
       });
     }
-
   };
   return (
-    <div className="mx-5">
+    <div className={classes}>
       <Button
         onClick={() => handleEmailSent()}
         className="rounded bg-red-500 px-4 py-2 font-bold text-white hover:bg-red-700"

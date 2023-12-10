@@ -25,7 +25,7 @@ export interface IUser extends Document {
     id_token?: string;
   }[];
 
-  emailVerificationTokenExpiry: Date;
+  emailVerificationTokenExpiry?: Date;
   emailVerificationToken?: string;
   isVerified: boolean;
   passwordResetToken?: string;
@@ -63,10 +63,7 @@ const UserSchema = new Schema({
     },
   ],
 
-  emailVerificationTokenExpiry: {
-    type: Date,
-    default: () => new Date(Date.now() + 24 * 60 * 60 * 1000),
-  },
+  emailVerificationTokenExpiry: Date,
 
   emailVerificationToken: String,
 

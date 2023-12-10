@@ -41,6 +41,7 @@ const Password = ({ userId, type }: Props) => {
   async function onSubmit(values: z.infer<typeof SetPasswordSchema>) {
     try {
       setLoading(true);
+    
       if (type === "New Password") {
         if (values.newPassword === values.confirmNewPassword) {
           await setNewPass({

@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "@/components/ui/use-toast";
+import VerificationButton from "@/components/shared/VerificationButton";
 
 const page = async ({ params }: URLProps) => {
   const session = await getServerSession(authOptions);
@@ -28,7 +29,7 @@ const page = async ({ params }: URLProps) => {
   return (
     <>
       <section>
-       
+        <VerificationButton email={mongoUser?.email} classes="my-5" />
         <UserAccount mongoUser={JSON.stringify(mongoUser)} />
         <div className="mt-9">
           <Profile userId={userId} user={JSON.stringify(mongoUser)} />
