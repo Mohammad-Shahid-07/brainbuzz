@@ -81,14 +81,14 @@ const Page = async ({ params, searchParams }: URLProps) => {
               {userInfo?.user.location && (
                 <ProfileLink
                   imgUrl="/assets/icons/location.svg"
-                  title={userInfo.user.location}
+                  title={userInfo?.user?.location}
                 />
               )}
 
-              {userInfo.user.portfolioWebsite && (
+              {userInfo?.user?.portfolioWebsite && (
                 <ProfileLink
                   imgUrl="/assets/icons/link.svg"
-                  href={userInfo.user.portfolioWebsite}
+                  href={userInfo?.user?.portfolioWebsite}
                   title="Portfolio"
                 />
               )}
@@ -99,16 +99,16 @@ const Page = async ({ params, searchParams }: URLProps) => {
               />
             </div>
 
-            {userInfo.user.bio && (
+            {userInfo?.user?.bio && (
               <p className="paragraph-regular text-dark400_light800 mt-8">
-                {userInfo.user.bio}
+                {userInfo?.user?.bio}
               </p>
             )}
           </div>
         </div>
 
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
-          {SignedIn && userId === userInfo.user._id.toString() && (
+          {SignedIn && userId === userInfo?.user?._id.toString() && (
             <Link href="/profile/edit">
               <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-3">
                 Edit Profile
@@ -119,9 +119,9 @@ const Page = async ({ params, searchParams }: URLProps) => {
       </div>
 
       <Stats
-        totalQuestions={userInfo.totalQuestions}
-        totalAnswers={userInfo.totalAnswers}
-        badges={userInfo.badgeCounts}
+        totalQuestions={userInfo?.totalQuestions!}
+        totalAnswers={userInfo?.totalAnswers!}
+        badges={userInfo?.badgeCounts!}
       />
 
       <div className="mt-10 flex gap-10">
@@ -140,13 +140,13 @@ const Page = async ({ params, searchParams }: URLProps) => {
           >
             <QuestionsTab
               searchParams={searchParams}
-              userId={userInfo.user._id}
+              userId={userInfo?.user?._id}
             />
           </TabsContent>
           <TabsContent value="answers" className="flex w-full flex-col gap-6">
             <AnswersTab
               searchParams={searchParams}
-              userId={userInfo.user._id}
+              userId={userInfo?.user?._id}
             />
           </TabsContent>
         </Tabs>

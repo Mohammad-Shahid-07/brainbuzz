@@ -8,6 +8,7 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "@/components/ui/menubar";
+
 import Image from "next/image";
 import { themes } from "@/constants";
 
@@ -15,6 +16,7 @@ const Theme = () => {
   const { mode, setMode } = useTheme();
 
   return (
+    
     <Menubar className="relative border-none bg-transparent shadow-none">
       <MenubarMenu>
         <MenubarTrigger className="focus:bg-light-900 data-[state-opne]:bg-light-900 dark:focus:bg-dark-200 dark:data-[state-open]:bg-dark-200">

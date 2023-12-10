@@ -357,6 +357,46 @@ export async function updateUserImage(params: UpdateUserImageParams) {
     throw error;
   }
 }
+export async function setNewPass(params: any) {
+  const { userId, newPassword, path } = params;
+  console.log(params);
+
+  try {
+    connectToDatabase();
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.hashedPassword = hashedPassword;
+    await user.save();
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+export async function changePass(params: any) {
+  const { userId, newPassword, oldPassword, path } = params;
+  try {
+    connectToDatabase();
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    const isMatch = await bcrypt.compare(oldPassword, user.hashedPassword);
+    if (!isMatch) {
+      throw new Error("Old password is incorrect");
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.hashedPassword = hashedPassword;
+    await user.save();
+    revalidatePath(path);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 export async function deleteUser(params: DeleteUserParams) {
   try {
     connectToDatabase();
@@ -422,70 +462,67 @@ export async function getAllUsers(params: GetAllUsersParams) {
 }
 
 export async function getUserInfo(params: GetUserByIdParams) {
-  const session: any = await getServerSession(authOptions);
-  if (session?.user?.id) {
-    try {
-      connectToDatabase();
+  try {
+    connectToDatabase();
 
-      const { userId } = params;
+    const { userId } = params;
 
-      const user = await User.findOne({ username: userId });
+    const user = await User.findOne({ username: userId });
 
-      if (!user) {
-        throw new Error("User not found");
-      }
-      const totalQuestions = await Question.countDocuments({
-        author: user._id,
-      });
-      const totalAnswers = await Answer.countDocuments({ author: user._id });
-
-      const [questionUpvotes] = await Question.aggregate([
-        {
-          $match: { author: user._id },
-        },
-        { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
-        { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
-      ]);
-
-      const [answerUpvotes] = await Answer.aggregate([
-        {
-          $match: { author: user._id },
-        },
-        { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
-        { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
-      ]);
-
-      const [QuestionVeiws] = await Question.aggregate([
-        {
-          $match: { author: user._id },
-        },
-        { $group: { _id: null, totalviews: { $sum: "$views" } } },
-      ]);
-
-      const criteria = [
-        { type: "QUESTION_COUNT" as BadgeCriteriaType, count: totalQuestions },
-        { type: "ANSWER_COUNT" as BadgeCriteriaType, count: totalAnswers },
-        {
-          type: "QUESTION_UPVOTES" as BadgeCriteriaType,
-          count: questionUpvotes?.totalUpvotes || 0,
-        },
-        {
-          type: "ANSWER_UPVOTES" as BadgeCriteriaType,
-          count: answerUpvotes?.totalUpvotes || 0,
-        },
-        {
-          type: "TOTAL_VIEWS" as BadgeCriteriaType,
-          count: QuestionVeiws?.totalviews || 0,
-        },
-      ];
-
-      const badgeCounts = assignBadge({ criteria });
-      return { user, totalAnswers, totalQuestions, badgeCounts };
-    } catch (error) {
-      console.log(error);
-      throw error;
+    if (!user) {
+      throw new Error("User not found");
     }
-  } 
+    const totalQuestions = await Question.countDocuments({
+      author: user._id,
+    });
+    const totalAnswers = await Answer.countDocuments({ author: user._id });
+
+    const [questionUpvotes] = await Question.aggregate([
+      {
+        $match: { author: user._id },
+      },
+      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+      { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
+    ]);
+
+    const [answerUpvotes] = await Answer.aggregate([
+      {
+        $match: { author: user._id },
+      },
+      { $project: { _id: 0, upvotes: { $size: "$upvotes" } } },
+      { $group: { _id: null, totalUpvotes: { $sum: "$upvotes" } } },
+    ]);
+
+    const [QuestionVeiws] = await Question.aggregate([
+      {
+        $match: { author: user._id },
+      },
+      { $group: { _id: null, totalviews: { $sum: "$views" } } },
+    ]);
+
+    const criteria = [
+      { type: "QUESTION_COUNT" as BadgeCriteriaType, count: totalQuestions },
+      { type: "ANSWER_COUNT" as BadgeCriteriaType, count: totalAnswers },
+      {
+        type: "QUESTION_UPVOTES" as BadgeCriteriaType,
+        count: questionUpvotes?.totalUpvotes || 0,
+      },
+      {
+        type: "ANSWER_UPVOTES" as BadgeCriteriaType,
+        count: answerUpvotes?.totalUpvotes || 0,
+      },
+      {
+        type: "TOTAL_VIEWS" as BadgeCriteriaType,
+        count: QuestionVeiws?.totalviews || 0,
+      },
+    ];
+
+    const badgeCounts = assignBadge({ criteria });
+    return { user, totalAnswers, totalQuestions, badgeCounts };
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 }
 
 export async function getUserQuestions(params: GetUserStatsParams) {

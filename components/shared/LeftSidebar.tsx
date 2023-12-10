@@ -63,7 +63,7 @@ const LeftSidebar = ({ SignedIn, username }: Props) => {
       <NavContent />
       {!SignedIn ? (
         <div className="flex flex-col gap-3">
-          <Link href="/sign-in">
+          <Link href="/signin">
             <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
               <span className="primary-text-gradient max-lg:hidden">
                 Log In
@@ -78,11 +78,11 @@ const LeftSidebar = ({ SignedIn, username }: Props) => {
             </Button>
           </Link>
 
-          <Link href="/sign-up">
+          <Link href="/signup">
             <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
               <span className=" max-lg:hidden">Sign up</span>
               <Image
-                src="/assets/icons/sign-up.svg"
+                src="/assets/icons/signup.svg"
                 alt="sign up"
                 width={20}
                 height={20}

@@ -101,7 +101,7 @@ const Votes = ({
       } 
       return toast({
         title: `Upvote ${!hasUpvoted ? "Successull" : "Removed"}`,
-        variant: !hasUpvoted ? "default" : "destructive",
+        variant: !hasUpvoted ? "success" : "destructive",
       });
     }
     if (voteType === "downvote") {

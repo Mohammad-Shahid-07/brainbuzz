@@ -3,17 +3,15 @@ import { getQuestionById } from "@/lib/actions/question.action";
 import { getUserById } from "@/lib/actions/user.action";
 import { URLProps } from "@/types";
 
-
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 
-  const page = async ({ params }: URLProps) => {
+const page = async ({ params }: URLProps) => {
   const session = await getServerSession(authOptions);
 
   const userId = session?.user?.id || null;
-  if (!userId) redirect("/sign-in");
- 
+  if (!userId) redirect("/signin");
 
   const mongoUser = await getUserById(userId);
   const res = await getQuestionById({ questionId: params.id });

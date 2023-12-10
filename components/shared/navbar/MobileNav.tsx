@@ -49,9 +49,7 @@ const NavContent = () => {
 interface Props {
   SignedIn: boolean;
 }
-const MobileNav = ({SignedIn} : Props) => {
-
- 
+const MobileNav = ({ SignedIn }: Props) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -85,14 +83,14 @@ const MobileNav = ({SignedIn} : Props) => {
           {!SignedIn && (
             <div className="mb-5 flex flex-col gap-3">
               <SheetClose asChild>
-                <Link href="/sign-in">
+                <Link href="/signin">
                   <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
                     <span className="primary-text-gradient">Log In</span>
                   </Button>
                 </Link>
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/sign-up">
+                <Link href="/signup">
                   <Button className="small-medium btn-tertiary light-border-2 min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
                     <span className="primary-text-gradient">Sign Up</span>
                   </Button>

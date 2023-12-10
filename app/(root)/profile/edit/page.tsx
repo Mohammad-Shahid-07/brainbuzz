@@ -5,6 +5,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import UserAccount from "@/components/shared/UserAccount";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 
 const page = async ({ params }: URLProps) => {
   const session = await getServerSession(authOptions);
@@ -19,7 +21,7 @@ const page = async ({ params }: URLProps) => {
   return (
     <>
       <section>
-        <UserAccount mongoUser={JSON.stringify(mongoUser)}/>
+        <UserAccount mongoUser={JSON.stringify(mongoUser)} />
         <div className="mt-9">
           <Profile userId={userId} user={JSON.stringify(mongoUser)} />
         </div>
@@ -29,6 +31,36 @@ const page = async ({ params }: URLProps) => {
         <p className="text-dark200_light800">
           Manage your security preferences
         </p>
+        <p className="paragraph-semibold text-dark400_light800 mt-3">
+          Password
+        </p>
+        {mongoUser.hashedPassword ? (
+          <Link
+            href="/profile/edit/change-password"
+            className="ml-2 flex items-center gap-2 rounded-lg p-2  transition-all hover:-translate-y-1 hover:bg-[#94a4de50] motion-reduce:transition-none motion-reduce:hover:transform-none"
+          >
+            <Image
+              src="/assets/icons/edit.svg"
+              alt="arrow"
+              width={15}
+              height={15}
+            />
+            <p className="subtle-regular text-blue-500">Change Password</p>
+          </Link>
+        ) : (
+          <Link
+            href="/profile/edit/set-password"
+            className="ml-2 flex items-center gap-2 rounded-lg p-2  transition-all hover:-translate-y-1 hover:bg-[#94a4de50] motion-reduce:transition-none motion-reduce:hover:transform-none"
+          >
+            <Image
+              src="/assets/icons/edit.svg"
+              alt="arrow"
+              width={15}
+              height={15}
+            />
+            <p className="subtle-regular text-blue-500">Set Password</p>
+          </Link>
+        )}
       </section>
     </>
   );

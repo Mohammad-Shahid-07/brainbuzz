@@ -6,7 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 const Page = async () => {
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id || null;
-  if (!userId) redirect("/sign-in");
+  if (!userId) redirect("/signin");
 
   const user = await getUserById(userId);
 

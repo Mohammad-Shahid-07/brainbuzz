@@ -71,3 +71,25 @@ export const AddUsernameSchema = z.object({
     message: "Please enter a valid username.",
   }),
 });
+export const SetPasswordSchema = z.object({
+  oldPassword: z
+    .string()
+    .min(6, {
+      message: "Please use at least 6 characters.",
+    })
+    .max(32)
+    .optional()
+    .or(z.literal("")),
+  newPassword: z
+    .string()
+    .min(6, {
+      message: "Please use at least 6 characters.",
+    })
+    .max(32),
+  confirmNewPassword: z
+    .string()
+    .min(6, {
+      message: "Please use at least 6 characters.",
+    })
+    .max(32),
+});
