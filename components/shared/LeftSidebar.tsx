@@ -93,7 +93,7 @@ const LeftSidebar = ({ SignedIn, username }: Props) => {
         </div>
       ) : (
         <Button
-          className="small-medium btn-secondary  hover:scale-105 transition-transform text-light-850  h min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none"
+          className="small-medium btn-secondary  h min-h-[41px] w-full  rounded-lg px-4 py-3 text-light-850 shadow-none transition-transform hover:scale-105"
           onClick={() => signOut()}
         >
           <Image

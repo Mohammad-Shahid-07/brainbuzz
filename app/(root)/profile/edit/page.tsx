@@ -29,7 +29,7 @@ const page = async ({ params }: URLProps) => {
   return (
     <>
       <section>
-        <VerificationButton email={mongoUser?.email} classes="my-5" />
+      {mongoUser?.isVerified &&   <VerificationButton email={mongoUser?.email} classes="my-5" />}
         <UserAccount mongoUser={JSON.stringify(mongoUser)} />
         <div className="mt-9">
           <Profile userId={userId} user={JSON.stringify(mongoUser)} />

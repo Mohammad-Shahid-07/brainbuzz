@@ -17,7 +17,7 @@ const Page = async () => {
     <div>
       <h1 className="h1-bold text-dark100_light900">Ask a Question</h1>
       <div className="mt-9">
-        <VerificationButton email={user?.email}  classes='mb-5'/>
+      {user?.isVerified &&  <VerificationButton email={user?.email}  classes='mb-5'/>}
         <Question
           mongoUserId={JSON.stringify(user?._id)}
           isVerified={user?.isVerified}

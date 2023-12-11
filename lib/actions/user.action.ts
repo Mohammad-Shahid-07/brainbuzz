@@ -43,16 +43,7 @@ export async function getUserById(id?: string) {
     throw error;
   }
 }
-export async function getUserByClerkId(userId: string) {
-  try {
-    connectToDatabase();
-    const user = await User.findOne({ _id: userId }).select("username _id");
-    return user.username;
-  } catch (error) {
-    console.log(error);
-    throw error;
-  }
-}
+
 
 export async function createUser(userData: CreateUserParams) {
   try {
