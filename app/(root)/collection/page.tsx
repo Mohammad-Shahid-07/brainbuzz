@@ -9,12 +9,13 @@ import SavedBlogsTab from "@/components/shared/SavedBlogsTab";
 import { getUserById} from "@/lib/actions/user.action";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   
   const session = await getServerSession(authOptions);
   const userId = session?.user?.id || "";
-  if (!userId) return null;
+  if (!userId) redirect('/signin');
   const userInfo = await getUserById(userId);
 
 
