@@ -37,8 +37,8 @@ const Signin = () => {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof LoginSchema>) {
+    setLoading(true);
     try {
-      setLoading(true);
       signIn("credentials", {
         email: values.email,
         password: values.password,
@@ -131,7 +131,7 @@ const Signin = () => {
 
         <span className="text-light-400">
           Don&rsquo;t have a account yet?{" "}
-          <Link href="/signin" className="text-primary-500 hover:text-blue-500">
+          <Link href="/signup" className="text-primary-500 hover:text-blue-500">
             Sign up
           </Link>
         </span>
@@ -141,7 +141,16 @@ const Signin = () => {
           disabled={loading}
           className=" mb-2  w-full rounded-lg bg-primary-500/90 px-5 py-2.5 text-center text-sm font-medium text-light-850 hover:shadow-primary-500/30"
         >
-          Sign in
+          {loading && (
+            <Image
+              src="/assets/icons/loading-fill.svg"
+              alt="check"
+              width={20}
+              height={20}
+              className="mx-auto animate-spin text-center"
+            />
+          )}
+          {!loading && "Sign in"}
         </Button>
       </form>
     </Form>

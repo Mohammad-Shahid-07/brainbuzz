@@ -111,7 +111,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
           {SignedIn && userId === userInfo?.user?._id.toString() && (
             <>
-              {userInfo?.user?.isVerified &&  
+              {!userInfo?.user?.isVerified &&  
                  <VerificationButton
                 email={userInfo?.user?.email}
                 classes="mx-5"
