@@ -73,26 +73,22 @@ export const BADGE_CRITERIA = {
 type ProfileUrl = string;
 
 export const ProfileUrls: ProfileUrl[] = [
-  "https://i.postimg.cc/BnCyJ853/1.jpg",
-  "https://i.postimg.cc/zXg0GLrM/10.jpg",
-  "https://i.postimg.cc/hjY1Sn3c/11.jpg",
-  "https://i.postimg.cc/GtsJtfZY/12.jpg",
-  "https://i.postimg.cc/W3z7Lz85/13.jpg",
-  "https://i.postimg.cc/3xQ94Krw/14.jpg",
-  "https://i.postimg.cc/7PcK43p0/15.jpg",
-  "https://i.postimg.cc/PJByMHm2/16.jpg",
-  "https://i.postimg.cc/FHv8tbLG/2.jpg",
-  "https://i.postimg.cc/15w2Y7ff/3.jpg",
-  "https://i.postimg.cc/mZ0KjWZv/4.jpg",
-  "https://i.postimg.cc/jqWGyST6/5.jpg",
-  "https://i.postimg.cc/SjFLMrhP/6.jpg",
-  "https://i.postimg.cc/mr8S5CYc/7.jpg",
-  "https://i.postimg.cc/cJsmhXny/8.jpg",
-  "https://i.postimg.cc/RZ1dwjqL/9jpg.jpg",
-  "https://i.postimg.cc/XvNYxbp5/1.jpg",
-  "https://i.postimg.cc/zfdXccgc/2.jpg",
-  "https://i.postimg.cc/MTvK2m0K/3.jpg"
-
+  "https://photos.app.goo.gl/BL772yoiTPPQbPyH8",
+  "https://photos.app.goo.gl/wuQ8rtA73V5AbamVA",
+  "https://photos.app.goo.gl/R4xtMdWqw9N8JUun6",
+  "https://photos.app.goo.gl/pT66gTqD5RMjyC338",
+  "https://photos.app.goo.gl/gJjyTJK5P8banWty6",
+  "https://photos.app.goo.gl/ZYhSN74TzSv1k1YX7",
+  "https://photos.app.goo.gl/khLx9u1CJQwWzsfd7",
+  "https://photos.app.goo.gl/fayhs3ZuBaFzhNrS6",
+  "https://photos.app.goo.gl/fayhs3ZuBaFzhNrS6",
+  "https://photos.app.goo.gl/xeejMh5pSXaJ31wq8",
+  "https://photos.app.goo.gl/FcDdHLpqhjdnhtin7",
+  "https://photos.app.goo.gl/NAqshLjwLeide14g7",
+  "https://photos.app.goo.gl/8CmwhwUtaFrj7b277",
+  "https://photos.app.goo.gl/9ujm6AmFVbK1H7Ly5",
+  "https://photos.app.goo.gl/hsr6AGGDm8Wxvwrq6",
+  "https://photos.app.goo.gl/joAUGjtLrifvoKKZ7",
 ];
 
 export function getRandomProfileUrl(): ProfileUrl {
