@@ -31,6 +31,7 @@ const AllAnswers = async ({
     page: searchParams?.page ? +searchParams.page : 1,
     sortBy: filter || "newest",
   });
+  
   const mongoUser = await getUserById(userId);
 
   return (

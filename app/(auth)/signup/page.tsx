@@ -176,7 +176,7 @@ const Signup = () => {
         />
         <span className="text-light-400">
           Already have an account?{" "}
-          <Link href="/signup" className="text-primary-500 hover:text-blue-500">
+          <Link href="/signin" className="text-primary-500 hover:text-blue-500">
             Sign in
           </Link>
         </span>

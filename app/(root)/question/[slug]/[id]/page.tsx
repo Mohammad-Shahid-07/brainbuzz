@@ -47,8 +47,12 @@ export async function generateMetadata({
 const Page = async ({ params, searchParams }: URLProps) => {
   const res = await getQuestionById({ questionId: params.id });
   const session = await getServerSession(authOptions);
-  const userId = session?.user?.id; 
-  const mongoUser = await getUserById(userId);
+  const userId = session?.user?.id;
+  let mongoUser;
+  if (session?.user) {
+    mongoUser = await getUserById(userId);
+  }
+
   return (
     <>
       <div className="flex-start w-full flex-col">

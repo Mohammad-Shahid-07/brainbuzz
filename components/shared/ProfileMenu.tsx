@@ -14,13 +14,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 const ProfileMenu = ({ user }: { user: string }) => {
+  
   const mongoUser = JSON.parse(user);
   return (
     <Menubar className="relative border-none bg-transparent shadow-none">
       <MenubarMenu>
         <MenubarTrigger className="focus:bg-light-900 data-[state-opne]:bg-light-900 dark:focus:bg-dark-200 dark:data-[state-open]:bg-dark-200">
           <Image
-            src={mongoUser.image}
+            src={mongoUser?.image}
             alt="profile"
             height={40}
             width={40}
@@ -31,7 +32,7 @@ const ProfileMenu = ({ user }: { user: string }) => {
           <MenubarItem>
             <div className="text-dark500_light500 flex items-center gap-3 dark:hover:bg-dark-400">
               <Image
-                src={mongoUser.image}
+                src={mongoUser?.image}
                 alt="profile"
                 height={40}
                 width={40}
@@ -39,10 +40,10 @@ const ProfileMenu = ({ user }: { user: string }) => {
               />
               <div>
                 <p className="body-semibold text-dark200_light900">
-                  {mongoUser.username}
+                  {mongoUser?.username}
                 </p>
                 <p className="subtle-regular text-light400_light500">
-                  {mongoUser.name}
+                  {mongoUser?.name}
                 </p>
               </div>
             </div>

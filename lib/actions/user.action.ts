@@ -30,7 +30,9 @@ import { getRandomProfileUrl } from "@/constants";
 export async function getUserById(id?: string) {
   try {
     connectToDatabase();
-
+    if (!id) {
+      return null;
+    }
     const user = await User.findOne({ _id: id });
     if (!user) {
       return null;
