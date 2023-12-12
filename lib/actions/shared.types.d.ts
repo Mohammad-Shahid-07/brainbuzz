@@ -124,8 +124,10 @@ export interface CreateUserParams {
 }
 
 export interface GetUserByIdParams {
-  userId: string;
+  userId?: string;
+  username?: string;
 }
+
 
 export interface GetAllUsersParams {
   page?: number;

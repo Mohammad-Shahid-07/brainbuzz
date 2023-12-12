@@ -32,13 +32,14 @@ let initialized = false;
 
 let userSession: Session | null;
 
-async function initSession() {
+export async function initSession() {
   if (initialized) return;
 
   const session = await getServerSession(authOptions);
   userSession = session;
 
   initialized = true;
+  return session;
 }
 
 export async function getUserById(id?: string) {
@@ -477,14 +478,14 @@ export async function getAllUsers(params: GetAllUsersParams) {
 
 export async function getUserInfo(params: GetUserByIdParams) {
   try {
+    const { username } = params;
+    if (username === "4f64eaa44708eacdfb67703150ce5f05.jpg") return;
     connectToDatabase();
 
-    const { userId } = params;
-
-    const user = await User.findOne({ username: userId });
+    const user = await User.findOne({ username });
 
     if (!user) {
-      throw new Error("User not found");
+      return;
     }
     const totalQuestions = await Question.countDocuments({
       author: user._id,

@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { getUserInfo } from "@/lib/actions/user.action";
+import { getUserInfo, initSession } from "@/lib/actions/user.action";
 import { URLProps } from "@/types";
 
 import Image from "next/image";
@@ -11,19 +11,18 @@ import ProfileLink from "@/components/shared/ProfileLink";
 import Stats from "@/components/shared/Stats";
 import QuestionsTab from "@/components/shared/QuestionsTab";
 import AnswersTab from "@/components/shared/AnswersTab";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
 import VerificationButton from "@/components/shared/VerificationButton";
 
 export async function generateMetadata({
   params,
 }: {
   params: {
-    id: string;
+    username: string;
   };
 }) {
   try {
-    const userInfo = await getUserInfo({ userId: params.id });
+    const userInfo = await getUserInfo({ username: params.username });
 
     if (!userInfo)
       return {
@@ -35,7 +34,7 @@ export async function generateMetadata({
       title: userInfo?.user.name,
       description: userInfo?.user.bio,
       alternates: {
-        canonical: `/profile/${params.id}`,
+        canonical: `/profile/${params.username}`,
       },
     };
   } catch (error) {
@@ -47,18 +46,12 @@ export async function generateMetadata({
   }
 }
 const Page = async ({ params, searchParams }: URLProps) => {
-  const session = await getServerSession(authOptions);
-
-  let SignedIn;
-  if (session) {
-    SignedIn = true;
-  } else {
-    SignedIn = false;
-  }
+  const session = await initSession();
 
   const userId = session?.user?.id || null;
-  const userInfo = await getUserInfo({ userId: params.id });
 
+  const userInfo = await getUserInfo({ username: params.username });
+  if (!userInfo) return null;
   return (
     <>
       <div className="flex flex-col-reverse items-start justify-between sm:flex-row">
@@ -97,7 +90,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
 
               <ProfileLink
                 imgUrl="/assets/icons/calendar.svg"
-                title={formatMonthYear(userInfo.user.joinedAt)}
+                title={formatMonthYear(userInfo?.user?.joinedAt)}
               />
             </div>
 
@@ -110,7 +103,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
         </div>
 
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
-          {SignedIn && userId === userInfo?.user?._id.toString() && (
+          {userId === userInfo?.user?._id.toString() && (
             <>
               {!userInfo?.user?.isVerified && (
                 <VerificationButton
