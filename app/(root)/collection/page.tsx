@@ -6,19 +6,10 @@ import { SearchParamsProps } from "@/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import QuestionsTab from "@/components/shared/QuestionsTab";
 import SavedBlogsTab from "@/components/shared/SavedBlogsTab";
-import { getUserById} from "@/lib/actions/user.action";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
+import { getUserById } from "@/lib/actions/user.action";
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-  
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id || "";
-  if (!userId) redirect('/signin');
-  const userInfo = await getUserById(userId);
-
-
+  const userInfo = await getUserById(true);
 
   return (
     <>
@@ -42,7 +33,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
         <Tabs defaultValue="questions" className="flex-1">
           <TabsList className="background-light800_dark400 min-h-[42px] p-1">
             <TabsTrigger value="questions" className="tab">
-             Saved Questions
+              Saved Questions
             </TabsTrigger>
             <TabsTrigger value="blogs" className="tab">
               Saved Blogs
@@ -53,23 +44,16 @@ export default async function Home({ searchParams }: SearchParamsProps) {
             className="mt-5 flex w-full flex-col gap-6"
           >
             <QuestionsTab
-        
               searchParams={searchParams}
               userId={userInfo?._id}
-              route='/collection'
+              route="/collection"
             />
           </TabsContent>
           <TabsContent value="blogs" className="flex w-full flex-col gap-6">
-            <SavedBlogsTab
-              searchParams={searchParams}
-              userId={userInfo?._id}
-             
-            />
+            <SavedBlogsTab searchParams={searchParams} userId={userInfo?._id} />
           </TabsContent>
         </Tabs>
       </div>
-      
-     
     </>
   );
 }

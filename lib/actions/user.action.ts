@@ -42,8 +42,14 @@ export async function initSession() {
   return session;
 }
 
-export async function getUserById(id?: string) {
+export async function getUserById(redirectURL: boolean) {
+  await initSession();
+
+  if (!userSession && redirectURL) {
+    redirect("/signin");
+  }
   try {
+    const id = userSession?.user?.id;
     connectToDatabase();
     if (!id) {
       return null;

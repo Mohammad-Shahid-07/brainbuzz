@@ -1,5 +1,4 @@
 import { AnswerFilters } from "@/constants/filters";
-
 import React from "react";
 import Filters from "./Filter";
 import { getAnswers } from "@/lib/actions/answer.action";
@@ -32,7 +31,7 @@ const AllAnswers = async ({
     sortBy: filter || "newest",
   });
   
-  const mongoUser = await getUserById(userId);
+  const mongoUser = await getUserById(false);
 
   return (
     <div className="mt-11 ">

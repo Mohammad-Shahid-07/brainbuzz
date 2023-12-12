@@ -1,24 +1,16 @@
 import Profile from "@/components/forms/Profile";
 import { getUserById } from "@/lib/actions/user.action";
 import { URLProps } from "@/types";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import UserAccount from "@/components/shared/UserAccount";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { toast } from "@/components/ui/use-toast";
 import VerificationButton from "@/components/shared/VerificationButton";
 
 const page = async ({ params }: URLProps) => {
-  const session = await getServerSession(authOptions);
 
-  const userId = session?.user?.id || null;
-  if (!userId) {
-    return redirect("/signin");
-  }
 
-  const mongoUser = await getUserById(userId);
+  const mongoUser = await getUserById(true);
   if (!mongoUser.isVerified) {
     toast({
       title: "Your email is not verified",
@@ -32,7 +24,7 @@ const page = async ({ params }: URLProps) => {
       {!mongoUser?.isVerified &&   <VerificationButton email={mongoUser?.email} classes="my-5" />}
         <UserAccount mongoUser={JSON.stringify(mongoUser)} />
         <div className="mt-9">
-          <Profile userId={userId} user={JSON.stringify(mongoUser)} />
+          <Profile userId={JSON.stringify(mongoUser._id)} user={JSON.stringify(mongoUser)} />
         </div>
       </section>
       <section className="mt-9">

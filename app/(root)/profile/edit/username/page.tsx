@@ -1,17 +1,11 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
 import NameUser from "@/components/forms/NameUser";
 import { getUserById } from "@/lib/actions/user.action";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
+
 
 const Page = async () => {
-  const session = await getServerSession(authOptions);
-  const user = session?.user || null;
-  if (!user) {
-    redirect("/signin");
-  }
-  const userId = session?.user?.id ;
-  const mongoUser = await getUserById(userId);
+ 
+  const mongoUser = await getUserById(true);
 
   return (
     <section>

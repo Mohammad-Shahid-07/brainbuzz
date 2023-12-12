@@ -33,7 +33,12 @@ type Props = {
   questionDetails?: string;
   isVerified?: boolean;
 };
-const Question = ({ mongoUserId, type, questionDetails,  isVerified }: Props) => {
+const Question = ({
+  mongoUserId,
+  type,
+  questionDetails,
+  isVerified,
+}: Props) => {
   const editorRef = useRef(null);
   const { mode } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -120,7 +125,6 @@ const Question = ({ mongoUserId, type, questionDetails,  isVerified }: Props) =>
 
   async function onSubmit(values: z.infer<typeof QuestionsSchema>) {
     setIsSubmitting(true);
-   
 
     try {
       if (isVerified === false) {
@@ -151,7 +155,6 @@ const Question = ({ mongoUserId, type, questionDetails,  isVerified }: Props) =>
         });
         router.push("/blogs");
       } else if (type === "Question") {
-      
         await createQuestion({
           title: values.title,
           content: values.explanation,

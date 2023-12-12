@@ -8,8 +8,6 @@ import { formatLargeNumber, getTimeStamp } from "@/lib/utils";
 import { URLProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export async function generateMetadata({
   params,
@@ -46,14 +44,9 @@ export async function generateMetadata({
 const Page = async ({ params, searchParams }: URLProps) => {
   const res = await getBlogBySlug({ slug: params.id });
 
-  const session = await getServerSession(authOptions);
 
-  const userId = session?.user?.id || "";
-  let mongoUser;
-  if (userId) {
-    mongoUser = await getUserById(userId);
-  }
-
+  const mongoUser = await getUserById(false);
+  
   return (
     <>
       <div className="flex-start w-full flex-col">

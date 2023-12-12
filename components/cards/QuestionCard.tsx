@@ -39,13 +39,7 @@ const QuestionCard = async ({
   const session = await getServerSession(authOptions);
   const user = session?.user?.id || null;
   const showActionButtons = user && user === author?._id.toString();
-  let SignedIn;
-  if (session) {
-    SignedIn = true;
-  } else {
-    SignedIn = false;
-  }
-
+  
   return (
     <div className="card-wrapper rounded-[10px] p-9 shadow-xl sm:px-11">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row ">
@@ -60,7 +54,7 @@ const QuestionCard = async ({
           </Link>
         </div>
 
-        {SignedIn && showActionButtons && (
+        {session && showActionButtons && (
           <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
         )}
       </div>

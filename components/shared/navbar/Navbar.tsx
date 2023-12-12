@@ -11,15 +11,7 @@ import ProfileMenu from "../ProfileMenu";
 const Navbar = async () => {
   const session = await getServerSession(authOptions);
 
-  let SignedIn;
-  const userId = session?.user?.id || "";
-  let mongoUser;
-  if (session) {
-    SignedIn = true;
-    mongoUser = await getUserById(userId);
-  } else {
-    SignedIn = false;
-  }
+  const mongoUser = await getUserById(false);
 
   return (
     <nav className="flex-between background-light900_dark200 fixed z-50 w-full gap-5 p-6 shadow-light-300 dark:shadow-none sm:px-12 ">
@@ -38,10 +30,8 @@ const Navbar = async () => {
       <div className="flex-between gap-5">
         <Theme />
 
-        {SignedIn && (
-        <ProfileMenu user={JSON.stringify(mongoUser)} />
-        )}
-        <MobileNav SignedIn={SignedIn} />
+        {session && <ProfileMenu user={JSON.stringify(mongoUser)} />}
+        <MobileNav SignedIn={!!session} />
       </div>
     </nav>
   );
