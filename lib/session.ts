@@ -8,11 +8,9 @@ export let userSession: Session | null;
 async function initSession() {
   if (initialized) return;
 
-   await new Promise((resolve) => setTimeout(resolve, 200));
+  await new Promise((resolve) => setTimeout(resolve, 200));
 
   const session = await getServerSession(authOptions);
-  console.log(session);
-
   userSession = session;
 
   initialized = true;
