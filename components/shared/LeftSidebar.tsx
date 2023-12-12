@@ -82,7 +82,7 @@ const LeftSidebar = ({ SignedIn, username }: Props) => {
             <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
               <span className=" max-lg:hidden">Sign up</span>
               <Image
-                src="/assets/icons/signup.svg"
+                src="/assets/icons/sign-up.svg"
                 alt="sign up"
                 width={20}
                 height={20}
