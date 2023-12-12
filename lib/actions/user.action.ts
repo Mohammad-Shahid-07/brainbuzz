@@ -28,18 +28,13 @@ import crypto from "crypto";
 import { sendEmail } from "../mailer";
 import { getRandomProfileUrl } from "@/constants";
 
-let initialized = false;
 
-let userSession: Session | null;
-
+let userSession: Session | null ;
 export async function initSession() {
-  if (initialized) return;
 
-  const session = await getServerSession(authOptions);
-  userSession = session;
-
-  initialized = true;
-  return session;
+  const userSession = await getServerSession(authOptions);
+ 
+  return userSession;
 }
 
 export async function getUserById(redirectURL: boolean) {
