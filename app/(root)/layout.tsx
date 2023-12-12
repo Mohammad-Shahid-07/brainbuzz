@@ -6,7 +6,6 @@ import React from "react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(authOptions);
 
@@ -16,6 +15,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
   } else {
     SignedIn = false;
   }
+
 
   return (
     <main className="background-light850_dark100 relative">
