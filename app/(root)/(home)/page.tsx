@@ -14,7 +14,7 @@ import { SearchParamsProps } from "@/types";
 import Link from "next/link";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import { redirect } from "next/navigation";
+
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   let res;
@@ -42,9 +42,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       page: searchParams.page ? +searchParams.page : 1,
     });
   }
-  if (session && session?.user?.username === session?.user?.email) {
-    redirect("/profile/edit/username");
-  }
+
   return (
     <>
       <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center ">
