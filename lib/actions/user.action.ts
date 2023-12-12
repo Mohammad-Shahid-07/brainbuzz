@@ -32,7 +32,7 @@ import { getRandomProfileUrl } from "@/constants";
 let userSession: Session | null ;
 export async function initSession() {
 
-  const userSession = await getServerSession(authOptions);
+   userSession = await getServerSession(authOptions);
  
   return userSession;
 }
