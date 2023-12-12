@@ -42,7 +42,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
       page: searchParams.page ? +searchParams.page : 1,
     });
   }
-  if (session?.user?.username === session?.user?.email) {
+  if (session && session?.user?.username === session?.user?.email) {
     redirect("/profile/edit/username");
   }
   return (
