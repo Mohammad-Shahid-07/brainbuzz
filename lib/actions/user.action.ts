@@ -44,7 +44,6 @@ export async function getUserById(id?: string) {
   }
 }
 
-
 export async function createUser(userData: CreateUserParams) {
   try {
     connectToDatabase();
@@ -216,7 +215,6 @@ export async function createUserWithProvider(
     });
     if (existingUser) {
       // User exists, update the accounts array
-
       await User.updateOne(
         { "accounts.providerAccountId": account.providerAccountId },
         {
@@ -238,7 +236,6 @@ export async function createUserWithProvider(
       // Check if the user has a username
     } else {
       // User does not exist, create a new user
-
       const newUser = new User({
         name: user.name,
         email: user.email,
@@ -260,6 +257,7 @@ export async function createUserWithProvider(
       });
       await newUser.save();
     }
+    return true;
   } catch (error) {
     console.log(error);
   }
@@ -279,7 +277,7 @@ export async function addUsername(params: { username: string; path: string }) {
     if (!user) {
       throw new Error("User not found");
     }
-    const existingUserWithUsername = await User.findOne({username});
+    const existingUserWithUsername = await User.findOne({ username });
 
     if (existingUserWithUsername) {
       throw new Error("Username is already taken");
