@@ -48,8 +48,7 @@ export async function generateMetadata({
 }
 const Page = async ({ params, searchParams }: URLProps) => {
   const session = await getServerSession(authOptions);
-  console.log(params);
-  
+
   let SignedIn;
   if (session) {
     SignedIn = true;
