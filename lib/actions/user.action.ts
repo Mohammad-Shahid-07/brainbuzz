@@ -270,18 +270,16 @@ export async function createUserWithProvider(
 }
 export async function addUsername(params: { username: string; path: string }) {
   try {
-    const session: any = await getServerSession(authOptions);
     connectToDatabase();
+    const session: any = await getServerSession(authOptions);
     const { username, path } = params;
     // Check if the username is already taken
-    const user = await User.findOne({ email: session.user.email });
+    const user = await User.findOne({ email: session?.user?.email });
 
     if (!user) {
       throw new Error("User not found");
     }
-    const existingUserWithUsername = await User.findOne({
-      username,
-    });
+    const existingUserWithUsername = await User.findOne({username});
 
     if (existingUserWithUsername) {
       throw new Error("Username is already taken");

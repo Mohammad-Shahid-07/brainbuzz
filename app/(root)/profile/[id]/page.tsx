@@ -47,16 +47,18 @@ export async function generateMetadata({
   }
 }
 const Page = async ({ params, searchParams }: URLProps) => {
-  const userInfo = await getUserInfo({ userId: params.id });
   const session = await getServerSession(authOptions);
-
+  console.log(params);
+  
   let SignedIn;
   if (session) {
     SignedIn = true;
   } else {
     SignedIn = false;
   }
+
   const userId = session?.user?.id || null;
+  const userInfo = await getUserInfo({ userId: params.id });
 
   return (
     <>
@@ -111,12 +113,12 @@ const Page = async ({ params, searchParams }: URLProps) => {
         <div className="flex justify-end max-sm:mb-5 max-sm:w-full sm:mt-3">
           {SignedIn && userId === userInfo?.user?._id.toString() && (
             <>
-              {!userInfo?.user?.isVerified &&  
-                 <VerificationButton
-                email={userInfo?.user?.email}
-                classes="mx-5"
-              />
-              }
+              {!userInfo?.user?.isVerified && (
+                <VerificationButton
+                  email={userInfo?.user?.email}
+                  classes="mx-5"
+                />
+              )}
               <Link href="/profile/edit">
                 <Button className="paragraph-medium btn-secondary text-dark300_light900 min-h-[46px] min-w-[175px] px-4 py-3">
                   Edit Profile

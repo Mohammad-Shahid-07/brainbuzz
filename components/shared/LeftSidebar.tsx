@@ -4,12 +4,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "../ui/button";
-import { signOut } from "next-auth/react";
-interface Props {
-  SignedIn: boolean;
-  username?: string;
-}
-const LeftSidebar = ({ SignedIn, username }: Props) => {
+import { signOut, useSession } from "next-auth/react";
+
+const LeftSidebar = () => {
+  const { data: session } = useSession();
+  console.log(session);
+  const username = session?.user?.username;
+  let SignedIn;
+  if (session) {
+    SignedIn = true;
+  } else {
+    SignedIn = false;
+  }
   if (username) {
     sidebarLinks.forEach((link) => {
       if (link.route === "/profile") {
@@ -93,7 +99,7 @@ const LeftSidebar = ({ SignedIn, username }: Props) => {
         </div>
       ) : (
         <Button
-          className="small-medium btn-secondary  h min-h-[41px] w-full  rounded-lg px-4 py-3 text-light-850 shadow-none transition-transform hover:scale-105"
+          className="small-medium btn-secondary min-h-[41px] w-full  rounded-lg px-4 py-3 text-light-850 shadow-none transition-transform hover:scale-105"
           onClick={() => signOut()}
         >
           <Image
