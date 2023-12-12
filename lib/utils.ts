@@ -19,17 +19,17 @@ export const getTimeStamp = (createdAt: Date): string => {
   const years = Math.floor(days / 365);
 
   if (years > 0) {
-    return years === 1 ? 'a year ago' : `${years} years ago`;
+    return years === 1 ? "a year ago" : `${years} years ago`;
   } else if (months > 0) {
-    return months === 1 ? 'a month ago' : `${months} months ago`;
+    return months === 1 ? "a month ago" : `${months} months ago`;
   } else if (days > 0) {
-    return days === 1 ? 'a day ago' : `${days} days ago`;
+    return days === 1 ? "a day ago" : `${days} days ago`;
   } else if (hours > 0) {
-    return hours === 1 ? 'an hour ago' : `${hours} hours ago`;
+    return hours === 1 ? "an hour ago" : `${hours} hours ago`;
   } else if (minutes > 0) {
-    return minutes === 1 ? 'a minute ago' : `${minutes} minutes ago`;
+    return minutes === 1 ? "a minute ago" : `${minutes} minutes ago`;
   } else {
-    return 'just now';
+    return "just now";
   }
 };
 
@@ -85,43 +85,53 @@ export const removeKeysFromQuery = ({
   keysToRemove.forEach((key) => {
     delete currentUrl[key];
   });
-  return qs.stringifyUrl({
-    url: window.location.pathname,
-    query: currentUrl,
-  },
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query: currentUrl,
+    },
     { skipEmptyString: true, skipNull: true },
   );
 };
-
 
 interface BadgeParams {
   criteria: {
     type: keyof typeof BADGE_CRITERIA;
     count: number;
   }[];
- 
-  }
-export const assignBadge = (params : BadgeParams) =>{
+}
+export const assignBadge = (params: BadgeParams) => {
   const badgeCounts: BadgeCounts = {
     GOLD: 0,
     SILVER: 0,
     BRONZE: 0,
   };
- const {criteria} = params;
+  const { criteria } = params;
 
   criteria.forEach((criterion) => {
     const { type, count } = criterion;
-    const badgeLevels : any = BADGE_CRITERIA[type];
-    Object.keys(badgeLevels).forEach((level : any) => {
-    if (count >= badgeLevels[level]) {
-      badgeCounts[level as keyof BadgeCounts]+=1;
-    } 
-  }
- ) 
-});
+    const badgeLevels: any = BADGE_CRITERIA[type];
+    Object.keys(badgeLevels).forEach((level: any) => {
+      if (count >= badgeLevels[level]) {
+        badgeCounts[level as keyof BadgeCounts] += 1;
+      }
+    });
+  });
   return badgeCounts;
-  }
+};
+
+export function processEmailForUsername(email: string) {
+  // Remove everything except letters, numbers, and underscores from the email
+  const processedUsername = email.replace(/[^a-zA-Z0-9_]/g, "-");
+
+  // Ensure the username starts with a letter
+  const finalUsername = processedUsername.replace(/^[^a-zA-Z]*/, "");
+
+  // Ensure the username is between 3 and 20 characters
+  const validatedUsername = finalUsername.slice(0, 20);
+
+  return validatedUsername;
+}
 
 
-  
-  
+

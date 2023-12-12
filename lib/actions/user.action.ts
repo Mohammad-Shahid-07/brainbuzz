@@ -19,7 +19,7 @@ import Answer from "@/database/answer.model";
 import Tags from "@/database/tag.model";
 import { FilterQuery } from "mongoose";
 import { BadgeCriteriaType } from "@/types";
-import { assignBadge } from "../utils";
+import { assignBadge, processEmailForUsername } from "../utils";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import bcrypt from "bcrypt";
@@ -236,11 +236,13 @@ export async function createUserWithProvider(
       // Check if the user has a username
     } else {
       // User does not exist, create a new user
+
+      const username = processEmailForUsername(user.email);
       const newUser = new User({
         name: user.name,
         email: user.email,
         image: user.image,
-        username: user.email,
+        username,
         accounts: [
           {
             provider: account.provider,
