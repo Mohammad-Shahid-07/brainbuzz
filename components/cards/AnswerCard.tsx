@@ -36,12 +36,7 @@ const AnswerCard = async ({
 }: Props) => {
   const showActionButtons = userId && userId === author[0]?._id.toString();
   const session = await getServerSession(authOptions);
-  let SignedIn;
-  if (session) {
-    SignedIn = true;
-  } else {
-    SignedIn = false;
-  }
+
   return (
     <Link
       href={`/question/${question.slug}/${question._id}/#${_id}`}
@@ -57,7 +52,7 @@ const AnswerCard = async ({
           </h3>
         </div>
 
-        {SignedIn && showActionButtons && (
+        {session && showActionButtons && (
           <EditDeleteAction type="Answer" itemId={JSON.stringify(_id)} />
         )}
       </div>

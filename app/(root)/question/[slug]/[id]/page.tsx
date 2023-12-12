@@ -1,5 +1,4 @@
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
 import Answer from "@/components/forms/Answer";
 import AllAnswers from "@/components/shared/AllAnswers";
 import Matric from "@/components/shared/Matric";
@@ -46,12 +45,10 @@ export async function generateMetadata({
 }
 const Page = async ({ params, searchParams }: URLProps) => {
   const res = await getQuestionById({ questionId: params.id });
-  const session = await getServerSession(authOptions);
-  const userId = session?.user?.id;
-  let mongoUser;
-  if (session?.user) {
-    mongoUser = await getUserById(userId);
-  }
+
+
+  const mongoUser = await getUserById(false);
+  
 
   return (
     <>
