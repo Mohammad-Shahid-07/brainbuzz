@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { getUserInfo, initSession } from "@/lib/actions/user.action";
-import { URLProps } from "@/types";
+import { URLProfileProps } from "@/types";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -45,7 +45,7 @@ export async function generateMetadata({
     };
   }
 }
-const Page = async ({ params, searchParams }: URLProps) => {
+const Page = async ({ params, searchParams }: URLProfileProps) => {
   const session = await initSession();
 
   const userId = session?.user?.id || null;

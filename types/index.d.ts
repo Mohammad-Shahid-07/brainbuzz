@@ -39,10 +39,17 @@ export interface SearchParamsProps {
   };
 }
 
+export interface URLProfileProps {
+  params: {
+    username: string;
+  };
+  searchParams: {
+    [key: string]: string | undefined;
+  };
+}
 export interface URLProps {
   params: {
-    id?: string;
-    username?: string;
+    id: string;
   };
   searchParams: {
     [key: string]: string | undefined;
