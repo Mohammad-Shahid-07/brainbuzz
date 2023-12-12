@@ -13,9 +13,7 @@ const VerificationButton = ({
 }) => {
   const handleEmailSent = async () => {
     try {
-      await sendverifyEmail(email).then((res) => {
-        console.log(res);
-      });
+      await sendverifyEmail(email)
 
       toast({
         title: "Email Sent",
