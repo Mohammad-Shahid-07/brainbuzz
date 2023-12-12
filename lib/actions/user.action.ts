@@ -415,7 +415,7 @@ export async function deleteUser(params: DeleteUserParams) {
 export async function getAllUsers(params: GetAllUsersParams) {
   try {
     connectToDatabase();
-    const { page = 1, pageSize = 10, filter, searchQuery } = params;
+    const { page = 1, pageSize = 30, filter, searchQuery } = params;
     const query: FilterQuery<typeof User> = {};
     if (searchQuery) {
       query.$or = [

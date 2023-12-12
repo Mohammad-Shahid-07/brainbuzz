@@ -50,7 +50,7 @@ export async function createAnswer(params: CreateAnswerParams) {
 export async function getAnswers(params: GetAnswersParams) {
   try {
     connectToDatabase();
-    const { questionId, sortBy, page = 1, pageSize = 1 } = params;
+    const { questionId, sortBy, page = 1, pageSize = 10 } = params;
     let sortOptions = {};
     switch (sortBy) {
       case "highestUpvotes":

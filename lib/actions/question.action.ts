@@ -250,7 +250,7 @@ export async function toggleSaveQuestion(params: ToggleSaveQuestionParams) {
 export async function getSavedQuestions(params: GetSavedQuestionsParams) {
   try {
     connectToDatabase();
-    const { userId, searchQuery, filter, page = 1, pageSize = 1 } = params;
+    const { userId, searchQuery, filter, page = 1, pageSize = 10 } = params;
 
     const skipAmount = (page - 1) * pageSize;
 
