@@ -1,4 +1,6 @@
 "use server";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { Session, getServerSession } from "next-auth";
 
 import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
@@ -20,12 +22,24 @@ import Tags from "@/database/tag.model";
 import { FilterQuery } from "mongoose";
 import { BadgeCriteriaType } from "@/types";
 import { assignBadge, processEmailForUsername } from "../utils";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { sendEmail } from "../mailer";
 import { getRandomProfileUrl } from "@/constants";
+
+let initialized = false;
+
+let userSession: Session | null;
+
+async function initSession() {
+  if (initialized) return;
+
+  const session = await getServerSession(authOptions);
+  userSession = session;
+
+  initialized = true;
+}
 
 export async function getUserById(id?: string) {
   try {
@@ -271,10 +285,13 @@ export async function createUserWithProvider(
 export async function addUsername(params: { username: string; path: string }) {
   try {
     connectToDatabase();
-    const session: any = await getServerSession(authOptions);
+    initSession();
+    if (!userSession) {
+      throw new Error("No active session");
+    }
     const { username, path } = params;
     // Check if the username is already taken
-    const user = await User.findOne({ email: session?.user?.email });
+    const user = await User.findOne({ email: userSession?.user?.email });
 
     if (!user) {
       throw new Error("User not found");
@@ -289,8 +306,8 @@ export async function addUsername(params: { username: string; path: string }) {
     user.username = params.username;
     await user.save();
 
-    // Add the new username to the session
-    session.user.username = user.username;
+    // Add the new username to the userSession
+    userSession.user.username = user.username;
     revalidatePath(path);
   } catch (error) {
     console.error(error);
@@ -299,11 +316,14 @@ export async function addUsername(params: { username: string; path: string }) {
 }
 export async function addName(params: { name: string; path: string }) {
   try {
-    const session: any = await getServerSession(authOptions);
+    initSession();
+    if (!userSession) {
+      throw new Error("No active session");
+    }
     connectToDatabase();
     const { name, path } = params;
     // Check if the username is already taken
-    const user = await User.findOne({ email: session?.user?.email });
+    const user = await User.findOne({ email: userSession?.user?.email });
     if (!user) {
       throw new Error("User not found");
     }
@@ -311,8 +331,8 @@ export async function addName(params: { name: string; path: string }) {
     user.name = name;
     await user.save();
 
-    // Add the new username to the session
-    session.user.name = user.name;
+    // Add the new username to the userSession
+    userSession.user.name = user.name;
     revalidatePath(path);
   } catch (error) {
     console.error(error);
@@ -338,14 +358,17 @@ export async function updateUserImage(params: UpdateUserImageParams) {
   try {
     const { image, path } = params;
     connectToDatabase();
-    const session: any = await getServerSession(authOptions);
-    const user = await User.findOne({ email: session?.user?.email });
+    initSession();
+    if (!userSession) {
+      throw new Error("No active session");
+    }
+    const user = await User.findOne({ email: userSession?.user?.email });
     if (!user) {
       throw new Error("User not found");
     }
     user.image = image;
     await user.save();
-    // session.user.image = image;
+    // userSession.user.image = image;
     revalidatePath(path);
   } catch (error) {
     console.log(error);

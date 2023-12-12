@@ -10,18 +10,14 @@ import {
   getQuestions,
   getRecommendedQuestions,
 } from "@/lib/actions/question.action";
+import { userSession } from "@/lib/session";
 import { SearchParamsProps } from "@/types";
 import Link from "next/link";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   let res;
-  const session = await getServerSession(authOptions);
-
-  const userId = session?.user?.id || "";
-
+  const userId = userSession?.user?.id || "";
   if (searchParams?.filter === "recommended") {
     if (userId) {
       res = await getRecommendedQuestions({
