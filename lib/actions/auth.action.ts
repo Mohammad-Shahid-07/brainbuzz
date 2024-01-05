@@ -185,7 +185,9 @@ export async function RegisterUser(values: z.infer<typeof RegisterSchema>) {
       await newUser.save();
     } catch (error) {
       console.log(error);
+      return { error: "Something went wrong" };
     }
+
 
     const verificationToken = await geterateVerificationToken(email);
 
