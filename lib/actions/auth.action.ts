@@ -15,13 +15,14 @@ import { AuthError } from "next-auth";
 import { v4 as uuidv4 } from "uuid";
 
 import crypto from "crypto";
-import User from "@/database/user.model";
+
 import TwoFactorToken, {
   TwoFactorConfimation,
 } from "@/database/verification_tokens/two_factor_token.model";
 import EmailVerification from "@/database/verification_tokens/email_verify.model";
 import ForgotPassword from "@/database/verification_tokens/forgot_pass.model";
 import { sendEmail } from "../mailer";
+import User from "@/database/user.model";
 
 const DEFAULT_LOGIN_REDIRECT = "/";
 export async function LoginUser(values: z.infer<typeof LoginSchema>) {
@@ -36,7 +37,7 @@ export async function LoginUser(values: z.infer<typeof LoginSchema>) {
     const callbackUrl = "/";
     const existingUser = await User.findOne({ email });
     console.log(existingUser);
-    
+
     if (!existingUser || !existingUser.email || !existingUser.password) {
       return { error: "User not found" };
     }
@@ -160,26 +161,36 @@ export async function LoginWithOAuth({ user, account }: any) {
 
 export async function RegisterUser(values: z.infer<typeof RegisterSchema>) {
   try {
-    connectToDatabase();
+    await connectToDatabase();
+
     const validatedFields = RegisterSchema.safeParse(values);
 
     if (!validatedFields.success) {
       return { error: "Please provide a valid email and password" };
     }
     const { name, email, password } = validatedFields.data;
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return { error: "User already exists" };
     }
+
     const newUser = new User({
       name,
       email,
       password: hashedPassword,
     });
-    await newUser.save();
+    try {
+      await newUser.save();
+    } catch (error) {
+      console.log(error);
+    }
+
     const verificationToken = await geterateVerificationToken(email);
+
     const token: string = `${process.env.NEXTAUTH_URL}/verify-email?token=${verificationToken.token}`;
+    console.log({ token });
     await sendEmail(email, token, "Verify Email");
     return { success: "Verification Email Sent!" };
   } catch (error: any) {

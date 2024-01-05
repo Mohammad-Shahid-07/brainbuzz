@@ -12,7 +12,6 @@ export interface IUser extends Document {
   emailVerified: Date;
   image?: string;
   password?: string;
-  createdAt: Date;
   updatedAt: Date;
   accounts: {
     provider: string;
@@ -28,6 +27,7 @@ export interface IUser extends Document {
   saved: Schema.Types.ObjectId[];
   savedBlogs: Schema.Types.ObjectId[];
   joinedAt: Date;
+  twoFactorEnabled: boolean;
 }
 const UserSchema = new Schema({
   name: String,
@@ -41,7 +41,7 @@ const UserSchema = new Schema({
   emailVerified: { type: Date, default: null },
   image: String,
   password: String,
-  updatedAt: { type: Date, default: Date.now, index: true },
+  updatedAt: { type: Date, default: null, index: true },
   accounts: [
     {
       provider: String,
