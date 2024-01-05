@@ -3,9 +3,7 @@ import { getUserById } from "@/lib/actions/user.action";
 import { redirect } from "next/navigation";
 
 const Page = async () => {
- 
-
-  const user = await getUserById(true);
+  const user = await getUserById();
 
   if (!user?.owner) redirect("/blogs");
 

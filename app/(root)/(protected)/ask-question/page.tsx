@@ -4,8 +4,8 @@ import { getUserById } from "@/lib/actions/user.action";
 
 import VerificationButton from "@/components/shared/VerificationButton";
 const Page = async () => {
-
-  const user = await getUserById(true);
+  
+  const user = await getUserById();
 
   return (
     <div>
