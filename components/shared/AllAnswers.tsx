@@ -31,7 +31,7 @@ const AllAnswers = async ({
     sortBy: filter || "newest",
   });
   
-  const mongoUser = await getUserById(false);
+  const mongoUser = await getUserById();
 
   return (
     <div className="mt-11 ">

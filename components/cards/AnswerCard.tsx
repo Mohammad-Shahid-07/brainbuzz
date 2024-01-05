@@ -3,8 +3,7 @@ import Link from "next/link";
 import { formatLargeNumber, getTimeStamp } from "@/lib/utils";
 import Matric from "../shared/Matric";
 import EditDeleteAction from "../shared/EditDeleteAction";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { currentUser } from "@/lib/session";
 
 interface Props {
   userId?: string | null;
@@ -35,7 +34,7 @@ const AnswerCard = async ({
   createdAt,
 }: Props) => {
   const showActionButtons = userId && userId === author[0]?._id.toString();
-  const session = await getServerSession(authOptions);
+  const session = await currentUser();
 
   return (
     <Link
