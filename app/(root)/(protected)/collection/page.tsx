@@ -9,7 +9,7 @@ import SavedBlogsTab from "@/components/shared/SavedBlogsTab";
 import { getUserById } from "@/lib/actions/user.action";
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-  const userInfo = await getUserById(true);
+  const userInfo = await getUserById();
 
   return (
     <>
