@@ -17,10 +17,9 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { FormError } from "../Form-Error";
 import { FormSuccess } from "../Form-Sucess";
-import { LoginUser, resetPassword } from "@/lib/actions/auth.action";
+import {  resetPassword } from "@/lib/actions/auth.action";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+
 
 export const ResetForm = () => {
   const [error, setError] = useState<string | undefined>("");

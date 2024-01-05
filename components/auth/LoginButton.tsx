@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Dialog } from "../ui/dialog";
 import { DialogContent, DialogTrigger } from "@radix-ui/react-dialog";
 import { LoginForm } from "./LoginForm";
+import React from "react";
 
 interface LoginButtonProps {
   children: React.ReactNode;
@@ -19,12 +20,11 @@ const LoginButton = ({ children, mode, asChild }: LoginButtonProps) => {
     return (
       <Dialog>
         <DialogTrigger asChild={asChild}>{children}</DialogTrigger>
-        <DialogContent className="p-0 w-auto bg-gray-500/50 border-none">
+        <DialogContent className="w-auto border-none bg-gray-500/50 p-0">
           <LoginForm />
         </DialogContent>
       </Dialog>
     );
-  } else {
   }
 
   return (

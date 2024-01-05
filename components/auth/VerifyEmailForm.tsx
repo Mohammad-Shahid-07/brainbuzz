@@ -26,8 +26,8 @@ const VerifyEmailForm = () => {
           setSuccess(res?.success!);
         }
       })
-      .catch((err) => {
-        setError("Something went wrong");
+      .catch((error) => {
+        setError("Something went wrong" + error);
       });
   }, [token, success, error]);
 
@@ -40,7 +40,7 @@ const VerifyEmailForm = () => {
       BackButtonLabel="Back to login"
       BackButtonHref="/login"
     >
-      <div className="flex items-center w-full justify-center">
+      <div className="flex w-full items-center justify-center">
         {!success && !error && <Loader />}
         <FormSuccess message={success} />
         {!success && <FormError message={error} />}

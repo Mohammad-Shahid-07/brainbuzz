@@ -20,7 +20,6 @@ import { FormSuccess } from "../Form-Sucess";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { resetPasswordWithToken } from "@/lib/actions/auth.action";
 
 export const NewPasswordForm = () => {
