@@ -168,17 +168,18 @@ export async function RegisterUser(values: z.infer<typeof RegisterSchema>) {
     if (!validatedFields.success) {
       return { error: "Please provide a valid email and password" };
     }
-    const { name, email, password } = validatedFields.data;
+    const { name, email, password, username } = validatedFields.data;
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return { error: "User already exists" };
-    }
+    } 
 
     const newUser = new User({
       name,
       email,
+      username,
       password: hashedPassword,
     });
     try {
