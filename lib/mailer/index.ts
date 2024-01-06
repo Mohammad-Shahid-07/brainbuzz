@@ -18,6 +18,7 @@ export const sendEmail = async (
   token: string,
   subject: string,
 ) => {
+  console.log("Email password:", email, subject);
   const mailOptions = {
     from: "brain-buzz@outlook.com",
     to: email,
