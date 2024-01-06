@@ -14,14 +14,14 @@ const VerificationButton = ({
   const handleEmailSent = async () => {
     try {
       await sendverifyEmail(email).then((res) => {
-        console.log(res);
+        toast({
+          title: "Email Sent",
+          description: "Please check your email for verification link.",
+          variant: "success",
+        });
       });
 
-      toast({
-        title: "Email Sent",
-        description: "Please check your email for verification link.",
-        variant: "success",
-      });
+     
     } catch (error) {
       console.log(error);
       toast({

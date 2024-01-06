@@ -36,7 +36,7 @@ export async function LoginUser(values: z.infer<typeof LoginSchema>) {
     const { email, password, code } = validatedFields.data;
     const callbackUrl = "/";
     const existingUser = await User.findOne({ email });
-    console.log(existingUser);
+
 
     if (!existingUser || !existingUser.email || !existingUser.password) {
       return { error: "User not found" };
@@ -193,7 +193,6 @@ export async function RegisterUser(values: z.infer<typeof RegisterSchema>) {
     const verificationToken = await geterateVerificationToken(email);
 
     const token: string = `${process.env.NEXTAUTH_URL}/verify-email?token=${verificationToken.token}`;
-    console.log({ token });
     await sendEmail(email, token, "Verify Email");
     return { success: "Verification Email Sent!" };
   } catch (error: any) {
