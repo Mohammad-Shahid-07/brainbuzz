@@ -44,8 +44,12 @@ export async function LoginUser(values: z.infer<typeof LoginSchema>) {
     if (!existingUser.emailVerified) {
       const verificationToken = await geterateVerificationToken(email);
       const token: string = `${process.env.NEXTAUTH_URL}/verify-email?token=${verificationToken.token}`;
-
-      await sendEmail(verificationToken.email, token, "Verify Email");
+      console.log("token", token);
+      
+      await sendEmail(verificationToken.email, token, "Verify Email").then((res) => {
+        console.log("res", res);
+      })
+      
       return { success: "Confimation email sent" };
     }
     if (existingUser.twoFactorEnabled && existingUser.email) {
