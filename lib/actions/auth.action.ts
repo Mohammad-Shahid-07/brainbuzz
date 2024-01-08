@@ -341,6 +341,7 @@ export async function resetPassword(values: z.infer<typeof ResetSchema>) {
     }
     const verificationToken = await generatePasswordResetToken(email);
     const token = `${process.env.NEXTAUTH_URL}/new-password?token=${verificationToken.token}`;
+    
     await sendEmail(verificationToken.email, token, "Reset Password");
 
     return { success: "Password reset email sent" };
