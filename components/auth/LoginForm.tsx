@@ -87,7 +87,7 @@ export const LoginForm = () => {
                           type="email"
                           disabled={isPending}
                           {...field}
-                          className="text-dark-400"
+                          className="border-none bg-dark-400  text-light-400 focus:ring-1"
                         />
                       </FormControl>
                       <FormMessage />
@@ -105,16 +105,14 @@ export const LoginForm = () => {
                           placeholder="password"
                           disabled={isPending}
                           type="password"
-                          className="text-dark-400"
-                          
+                          className="border-none bg-dark-400  text-light-400 focus:ring-1"
                           {...field}
                         />
                       </FormControl>
                       <Button
                         variant="link"
                         asChild
-                        className="px-0 font-normal text-dark-400"
-                        
+                        className="px-0 font-normal text-light-500"
                         disabled={isPending}
                       >
                         <Link href="/reset">Forgot Password?</Link>
@@ -147,7 +145,11 @@ export const LoginForm = () => {
           </div>
           <FormError message={error || urlError} />
           <FormSuccess message={success} />
-          <Button type="submit" className="w-full" disabled={isPending}>
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="w-full bg-primary-500 shadow-light-200 hover:bg-primary-500/75"
+          >
             {showTwoFactor ? "Verify" : "Login"}
           </Button>
         </form>

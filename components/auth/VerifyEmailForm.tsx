@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { verifyToken } from "@/lib/actions/auth.action";
 import { FormSuccess } from "../Form-Sucess";
 import { FormError } from "../Form-Error";
+import { toast } from "../ui/use-toast";
 
 const VerifyEmailForm = () => {
   const [error, setError] = useState("");
@@ -24,6 +25,11 @@ const VerifyEmailForm = () => {
           setError(res?.error);
         } else {
           setSuccess(res?.success!);
+          toast({
+            title: "Success",
+            description: "Please login to continue",
+            variant: "success",
+          });
         }
       })
       .catch((error) => {
@@ -36,13 +42,14 @@ const VerifyEmailForm = () => {
   }, [onSubmit]);
   return (
     <CardWrapper
-      headerLabel="Verify your email address"
+      headerLabel="Verifying your email address"
       BackButtonLabel="Back to login"
       BackButtonHref="/login"
     >
       <div className="flex w-full items-center justify-center">
-        {!success && !error && <Loader />}
+        {!success && !error && <Loader size="150px" color="orange" />}
         <FormSuccess message={success} />
+
         {!success && <FormError message={error} />}
       </div>
     </CardWrapper>

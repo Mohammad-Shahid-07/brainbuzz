@@ -46,7 +46,7 @@ export const NewPasswordForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Forgot Your Password?"
+      headerLabel="Set your new password"
       BackButtonLabel="Back to login"
       BackButtonHref="/login"
     >
@@ -63,6 +63,7 @@ export const NewPasswordForm = () => {
                     <Input
                       placeholder="Your new password"
                       type="password"
+                      className="border-none bg-dark-400  text-light-400 focus:ring-1"
                       {...field}
                       disabled={isPending}
                     />
@@ -74,7 +75,11 @@ export const NewPasswordForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button type="submit" className="w-full" disabled={isPending}>
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="w-full bg-primary-500 shadow-light-200 hover:bg-primary-500/75"
+          >
             Reset Password
           </Button>
         </form>
