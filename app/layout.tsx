@@ -5,7 +5,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "../styles/prism.css";
 import { ThemeProvider } from "@/context/ThemeProvider";
-import Provider from "@/context/Provider";
 const inter = Inter({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -44,11 +43,9 @@ export default function RootLayout({
       </head>
 
       <ThemeProvider>
-        <Provider session={undefined}>
-          <body className={`${spaceGrotesk.variable} ${inter.variable} `}>
-            {children}
-          </body>
-        </Provider>
+        <body className={`${spaceGrotesk.variable} ${inter.variable} `}>
+          {children}
+        </body>
       </ThemeProvider>
     </html>
   );

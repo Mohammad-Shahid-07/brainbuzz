@@ -22,6 +22,8 @@ import EmailVerification from "@/database/verification_tokens/email_verify.model
 import ForgotPassword from "@/database/verification_tokens/forgot_pass.model";
 import { sendEmail } from "../mailer";
 import User from "@/database/user.model";
+import { getRandomProfileUrl } from "@/constants";
+import { processEmailForUsername } from "../utils";
 
 const DEFAULT_LOGIN_REDIRECT = "/";
 export async function LoginUser(values: z.infer<typeof LoginSchema>) {
@@ -32,10 +34,9 @@ export async function LoginUser(values: z.infer<typeof LoginSchema>) {
     if (!validatedFields.success) {
       return { error: "Please provide a valid email and password" };
     }
-    const { email, password, code } = validatedFields.data;
+    const { email, password, code,  } = validatedFields.data;
     const callbackUrl = "/";
     const existingUser = await User.findOne({ email });
-
 
     if (!existingUser || !existingUser.email || !existingUser.password) {
       return { error: "User not found" };
@@ -44,12 +45,11 @@ export async function LoginUser(values: z.infer<typeof LoginSchema>) {
       const verificationToken = await geterateVerificationToken(email);
       const token: string = `${process.env.NEXTAUTH_URL}/verify-email?token=${verificationToken.token}`;
 
-      await sendEmail(verificationToken.email, token, "Verify Email").then((res) => {
-        console.log("res", res);
-      })
-      
+      await sendEmail(verificationToken.email, token, "Verify Email");
+
       return { success: "Confimation email sent" };
     }
+    
     if (existingUser.twoFactorEnabled && existingUser.email) {
       if (code) {
         const twoFactorToken = await TwoFactorToken.findOne({ token: code });
@@ -106,29 +106,36 @@ export async function LoginUser(values: z.infer<typeof LoginSchema>) {
 export async function LoginWithOAuth({ user, account }: any) {
   try {
     connectToDatabase();
-    const { email, name } = user;
+    const { email, name, image } = user;
 
     const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      existingUser.accounts = [
-        {
-          provider: account.provider,
-          providerAccountId: account.providerAccountId,
-          access_token: account.access_token,
-          expires_at: account.expires_at,
-          expires_in: account.expires_in,
-          token_type: account.token_type,
-          scope: account.scope,
-          id_token: account.id_token,
-        },
-      ];
 
-      await existingUser.save();
+    if (existingUser) {
+      await User.updateOne(
+        { "accounts.providerAccountId": account.providerAccountId },
+        {
+          $set: {
+            "accounts.$": {
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+              refresh_token: account.refresh_token,
+              access_token: account.access_token,
+              expires_at: account.expires_at,
+              token_type: account.token_type,
+              scope: account.scope,
+              id_token: account.id_token,
+            },
+          },
+        },
+      );
       return true;
     } else {
+      const username = processEmailForUsername(user.email);
       const newUser = new User({
         name,
         email,
+        image,
+        username,
         emailVerified: Date.now(),
         accounts: [
           {
@@ -173,15 +180,18 @@ export async function RegisterUser(values: z.infer<typeof RegisterSchema>) {
     const { name, email, password, username } = validatedFields.data;
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const image = getRandomProfileUrl();
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return { error: "User already exists" };
-    } 
+    }
 
     const newUser = new User({
       name,
       email,
       username,
+      image,
       password: hashedPassword,
     });
     try {
@@ -190,7 +200,6 @@ export async function RegisterUser(values: z.infer<typeof RegisterSchema>) {
       console.log(error);
       return { error: "Something went wrong" };
     }
-
 
     const verificationToken = await geterateVerificationToken(email);
 

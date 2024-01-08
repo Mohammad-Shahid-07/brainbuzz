@@ -17,7 +17,7 @@ export const Social = () => {
   return (
     <div className="flex w-full items-center gap-x-2">
       <Button
-        className="w-full "
+        className="w-full border-2 border-dark-400 hover:bg-dark-400/90"
         variant="outline"
         size="lg"
         onClick={() => handleOauth("google")}
@@ -31,7 +31,7 @@ export const Social = () => {
         />
       </Button>
       <Button
-        className="w-full "
+        className="w-full border-2 border-dark-400 hover:bg-dark-400/90"
         variant="outline"
         size="lg"
         onClick={() => handleOauth("github")}
@@ -41,7 +41,7 @@ export const Social = () => {
           width={20}
           height={20}
           alt="Github"
-          className="h-8 w-8"
+          className="h-8 w-8 invert"
         />
       </Button>
     </div>

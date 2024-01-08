@@ -30,7 +30,7 @@ const UserAccount = ({ mongoUser }: Props) => {
                 width={60}
                 height={60}
               />
-              <h2 className="h3-bold  text-dark100_light900">{user?.name}</h2>
+              <h2 className="h3-bold text-dark100_light900">{user?.name}</h2>
             </div>
             <Image
               src="/assets/icons/arrow-right.svg"

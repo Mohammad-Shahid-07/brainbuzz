@@ -2,7 +2,7 @@
 import React, { useState, useTransition } from "react";
 import { CardWrapper } from "./CardWrapper";
 import { useForm } from "react-hook-form";
-import { ResetSchema } from "@/lib/validations";
+import { AddUsernameSchema } from "@/lib/validations";
 import * as z from "zod";
 import {
   Form,
@@ -17,26 +17,37 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { FormError } from "../Form-Error";
 import { FormSuccess } from "../Form-Sucess";
-import {  resetPassword } from "@/lib/actions/auth.action";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { addUsername } from "@/lib/actions/user.action";
+import { usePathname } from "next/navigation";
 
-
-export const ResetForm = () => {
+export const UsernameForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
-  const form = useForm<z.infer<typeof ResetSchema>>({
-    resolver: zodResolver(ResetSchema),
+  const pathname = usePathname();
+  const form = useForm<z.infer<typeof AddUsernameSchema>>({
+    resolver: zodResolver(AddUsernameSchema),
     defaultValues: {
-      email: "",
+      username: "",
     },
   });
 
-  async function onSubmit(values: z.infer<typeof ResetSchema>) {
+  async function onSubmit(values: z.infer<typeof AddUsernameSchema>) {
     startTransition(() => {
-      resetPassword(values).then((res) => {
-        setError(res?.error);
-        setSuccess(res?.success);
+      const regex = /^[a-zA-Z][a-zA-Z0-9_]{2,20}$/;
+      if (!regex.test(values.username)) {
+        // Handle the error (e.g., display a message to the user)
+        setError(
+          "Please use only letters, numbers, and underscores. It should start with a letter and be between 3 to 20 characters long.",
+        );
+      }
+      addUsername({
+        username: values.username,
+        path: pathname,
+      }).then((res) => {
+        if (res?.error) setError(res.error);
+        if (res?.success) setSuccess(res.success);
       });
     });
   }
@@ -52,16 +63,15 @@ export const ResetForm = () => {
           <div className="space-y-6">
             <FormField
               control={form.control}
-              name="email"
+              name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>New Username</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="jogn.doe@example.com"
-                      type="email"
+                      placeholder="Your new password"
+                      type="text"
                       {...field}
-                      className="border-none bg-dark-400  text-light-400 focus:ring-1"
                       disabled={isPending}
                     />
                   </FormControl>
@@ -72,12 +82,8 @@ export const ResetForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button
-            type="submit"
-            className="w-full bg-primary-500 shadow-light-200 hover:bg-primary-500/75"
-            disabled={isPending}
-          >
-            Send Reset Link
+          <Button type="submit" className="w-full" disabled={isPending}>
+            Add Username
           </Button>
         </form>
       </Form>

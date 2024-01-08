@@ -54,7 +54,7 @@ export const RegisterForm = () => {
       showSocial
     >
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 ">
           <div className="space-y-6">
             <FormField
               control={form.control}
@@ -67,8 +67,7 @@ export const RegisterForm = () => {
                       placeholder="John Doe"
                       disabled={isPending}
                       type="text"
-                      className="text-dark-400"
-
+                      className="border-none bg-dark-400  text-light-400 focus:ring-1"
                       {...field}
                     />
                   </FormControl>
@@ -76,7 +75,7 @@ export const RegisterForm = () => {
                 </FormItem>
               )}
             />
-               <FormField
+            <FormField
               control={form.control}
               name="email"
               render={({ field }) => (
@@ -87,8 +86,7 @@ export const RegisterForm = () => {
                       placeholder="JohnDoe@example.com"
                       disabled={isPending}
                       type="text"
-                      className="text-dark-400"
-
+                      className="border-none bg-dark-400  text-light-400 focus:ring-1"
                       {...field}
                     />
                   </FormControl>
@@ -107,8 +105,7 @@ export const RegisterForm = () => {
                       placeholder="@JohnDoe"
                       disabled={isPending}
                       type="username"
-                      className="text-dark-400"
-
+                      className="border-none bg-dark-400  text-light-400 focus:ring-1"
                       {...field}
                     />
                   </FormControl>
@@ -127,8 +124,7 @@ export const RegisterForm = () => {
                       placeholder="password"
                       disabled={isPending}
                       type="password"
-                      className="text-dark-400"
-
+                      className="border-none bg-dark-400  text-light-400 focus:ring-1"
                       {...field}
                     />
                   </FormControl>
@@ -140,7 +136,11 @@ export const RegisterForm = () => {
           </div>
           <FormError message={error} />
           <FormSuccess message={success} />
-          <Button type="submit" className="w-full" disabled={isPending}>
+          <Button
+            type="submit"
+            className="w-full bg-primary-500 shadow-light-200 hover:bg-primary-500/75"
+            disabled={isPending}
+          >
             Register
           </Button>
         </form>

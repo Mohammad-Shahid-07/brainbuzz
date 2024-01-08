@@ -30,7 +30,9 @@ const NameUser = ({ name, username, type }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
   // 1. Define your form.
+
   const form = useForm<z.infer<typeof AddUsernameSchema>>({
     resolver: zodResolver(AddUsernameSchema),
     defaultValues: {
@@ -69,7 +71,7 @@ const NameUser = ({ name, username, type }: Props) => {
             username: values.username,
           },
         });
-        router.push("/");
+        router.push("/profile/edit");
       } else if (type === "Name") {
         await addName({
           name: values.username,

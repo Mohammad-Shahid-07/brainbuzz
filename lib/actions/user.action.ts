@@ -281,16 +281,25 @@ export async function addUsername(params: { username: string; path: string }) {
       return null;
     }
     const { username, path } = params;
+
+    const regex = /^[a-zA-Z][a-zA-Z0-9_]{2,20}$/;
+    if (!regex.test(username)) {
+      // Handle the error (e.g., display a message to the user)
+      return {
+        error:
+          "Please use only letters, numbers, and underscores. It should start with a letter and be between 3 to 20 characters long.",
+      };
+    }
     // Check if the username is already taken
     const user = await User.findOne({ email: userSession?.email });
 
     if (!user) {
-      throw new Error("User not found");
+      return { error: "User not found" };
     }
     const existingUserWithUsername = await User.findOne({ username });
 
     if (existingUserWithUsername) {
-      throw new Error("Username is already taken");
+      return { error: "Username is already taken" };
     }
 
     // Update the user record in the database with the new username
@@ -300,6 +309,7 @@ export async function addUsername(params: { username: string; path: string }) {
     // Add the new username to the userSession
     userSession.username = user.username;
     revalidatePath(path);
+    return { success: "Username added successfully" };
   } catch (error) {
     console.error(error);
     throw error; // Re-throw the error to handle it in the calling code

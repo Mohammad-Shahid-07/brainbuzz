@@ -93,6 +93,7 @@ export const LoginSchema = z.object({
     z.string().min(6, {
       message: "Please provide a code",
     }),
+    
   ),
 });
 

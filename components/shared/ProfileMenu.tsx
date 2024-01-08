@@ -14,7 +14,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 const ProfileMenu = ({ user }: { user: string }) => {
-  
   const mongoUser = JSON.parse(user);
   return (
     <Menubar className="relative border-none bg-transparent shadow-none">
@@ -52,7 +51,7 @@ const ProfileMenu = ({ user }: { user: string }) => {
           <MenubarItem className="text-dark500_light700 focus:bg-light-400/5 ">
             <Link
               href="/profile/edit"
-              className="flex items-start gap-5   py-3  text-sm"
+              className="flex w-full items-start  gap-5 py-3  text-sm"
             >
               <Image
                 src="/assets/icons/user.svg"
@@ -66,7 +65,7 @@ const ProfileMenu = ({ user }: { user: string }) => {
           </MenubarItem>
           <MenubarItem className="text-dark500_light700 focus:bg-light-400/5 ">
             <button
-              className="inline-flex  items-center gap-5  py-3 text-sm "
+              className="inline-flex w-full items-center gap-5  py-3 text-sm "
               onClick={() => signOut()}
             >
               <Image

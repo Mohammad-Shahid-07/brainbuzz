@@ -1,10 +1,11 @@
-import { ResetForm } from "@/components/auth/ResetForm";
+
+import { UsernameForm } from "@/components/auth/UsernameForm";
 import React from "react";
 
 const Page = () => {
   return (
     <section className="flex items-center justify-center">
-      <ResetForm />
+      <UsernameForm />
     </section>
   );
 };
