@@ -8,7 +8,7 @@ const Loading = () => {
 
         <div className="mt-3">
           <Skeleton className="!dark-gradient h-7 w-28" />
-          <Skeleton className="!dark-gradient mt-3 h-7 w-20" />
+          <Skeleton className="!dark-gradient  mt-3 h-7 w-20" />
 
           <div className="mt-5 flex flex-wrap items-center justify-start gap-5">
             <Skeleton className="!dark-gradient h-9 w-36" />
@@ -40,7 +40,10 @@ const Loading = () => {
 
           <div className="mt-5 flex w-full flex-col gap-6">
             {[1, 2, 3, 4, 5].map((item) => (
-              <Skeleton key={item} className="h-48 !dark-gradient w-full rounded-xl" />
+              <Skeleton
+                key={item}
+                className="!dark-gradient h-48 w-full rounded-xl"
+              />
             ))}
           </div>
         </div>
