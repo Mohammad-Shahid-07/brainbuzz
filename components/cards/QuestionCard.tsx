@@ -3,8 +3,8 @@ import Matric from "../shared/Matric";
 import { formatLargeNumber, getTimeStamp } from "@/lib/utils";
 import RenderTags from "../shared/RenderTags";
 import EditDeleteAction from "../shared/EditDeleteAction";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+import { currentUser } from "@/lib/session";
 
 interface Props {
   _id: string;
@@ -36,10 +36,10 @@ const QuestionCard = async ({
   answers,
   createdAt,
 }: Props) => {
-  const session = await getServerSession(authOptions);
-  const user = session?.user?.id || null;
-  const showActionButtons = user && user === author?._id.toString();
-  
+  const user = (await currentUser()) || null;
+
+  const showActionButtons = user && user?.id === author?._id.toString();
+
   return (
     <div className="card-wrapper rounded-[10px] p-9 shadow-xl sm:px-11">
       <div className="flex flex-col-reverse items-start justify-between gap-5 sm:flex-row ">
@@ -54,7 +54,7 @@ const QuestionCard = async ({
           </Link>
         </div>
 
-        {session && showActionButtons && (
+        {user && showActionButtons && (
           <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
         )}
       </div>

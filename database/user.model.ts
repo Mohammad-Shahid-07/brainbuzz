@@ -11,8 +11,7 @@ export interface IUser extends Document {
   reputation: number;
   emailVerified: Date;
   image?: string;
-  hashedPassword?: string;
-  createdAt: Date;
+  password?: string;
   updatedAt: Date;
   accounts: {
     provider: string;
@@ -25,14 +24,10 @@ export interface IUser extends Document {
     id_token?: string;
   }[];
 
-  emailVerificationTokenExpiry?: Date;
-  emailVerificationToken?: string;
-  isVerified: boolean;
-  passwordResetToken?: string;
-  passwordResetTokenExpiry?: Date;
   saved: Schema.Types.ObjectId[];
   savedBlogs: Schema.Types.ObjectId[];
   joinedAt: Date;
+  twoFactorEnabled: boolean;
 }
 const UserSchema = new Schema({
   name: String,
@@ -43,13 +38,10 @@ const UserSchema = new Schema({
   portfolioWebsite: String,
   linkedin: String,
   reputation: { type: Number, default: 0 },
-
-  emailVerified: Date,
+  emailVerified: { type: Date, default: null },
   image: String,
-  hashedPassword: String,
-
-  updatedAt: { type: Date, default: Date.now, index: true },
-
+  password: String,
+  updatedAt: { type: Date, default: null, index: true },
   accounts: [
     {
       provider: String,
@@ -62,19 +54,10 @@ const UserSchema = new Schema({
       id_token: String,
     },
   ],
-
-  emailVerificationTokenExpiry: Date,
-
-  emailVerificationToken: String,
-
-  isVerified: { type: Boolean, default: false },
-
-  passwordResetToken: String,
-  passwordResetTokenExpiry: Date,
-
   saved: [{ type: Schema.Types.ObjectId, ref: "Question" }],
   savedBlogs: [{ type: Schema.Types.ObjectId, ref: "Blog" }],
   joinedAt: { type: Date, default: Date.now },
+  twoFactorEnabled: { type: Boolean, default: false },
 });
 const User = models.User || model<IUser>("User", UserSchema);
 

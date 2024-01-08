@@ -14,13 +14,14 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendEmail = async (
-  sendTo: string,
-  tokken: string,
-  type: string,
+  email: string,
+  token: string,
+  subject: string,
 ) => {
+  console.log("Email password:", email, subject);
   const mailOptions = {
     from: "brain-buzz@outlook.com",
-    to: sendTo,
+    to: email,
     html: `<html>
     <head>
       <style>
@@ -55,15 +56,19 @@ export const sendEmail = async (
     <body>
       <h1>Welcome to Your App!</h1>
       <p>We're excited to have you on board. Please click the link below to verify your account.</p>
-      <a href="${tokken}" target="_blank">Verify Your Account</a>
+      <a href="${token}" target="_blank">Verify Your Account</a>
       
     </body>
     </html>
     `,
-    subject: type,
+    subject,
   };
 
   transporter.sendMail(mailOptions, (error: any, info: any) => {
-    if (error) return console.log(error);
+    if (error) {
+      console.error("Error sending email:", error);
+    } else {
+      console.log("Email sent successfully:", info);
+    }
   });
 };
