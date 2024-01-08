@@ -18,7 +18,7 @@ export const sendEmail = async (
   token: string,
   subject: string,
 ) => {
-  console.log("Email password:", email, subject);
+
   const mailOptions = {
     from: "brain-buzz@outlook.com",
     to: email,
@@ -63,11 +63,14 @@ export const sendEmail = async (
     `,
     subject,
   };
-  await transporter.sendMail(mailOptions, (error: any, info: any) => {
-    if (error) {
-      console.error("Error sending email:", error);
-    } else {
-      console.log("Email sent successfully:");
-    }
+  await new Promise((resolve, reject) => {
+    transporter.sendMail(mailOptions, (error: any, info: any) => {
+      if (error) {
+        console.error(error);
+        reject(error);
+      } else {
+        resolve(info);
+      }
+    });
   });
 };
