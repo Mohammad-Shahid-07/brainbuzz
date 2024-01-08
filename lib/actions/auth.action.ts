@@ -8,7 +8,6 @@ import {
 } from "@/lib/validations";
 import * as z from "zod";
 import bcrypt from "bcryptjs";
-
 import { connectToDatabase } from "../mongoose";
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
