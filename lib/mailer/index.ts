@@ -1,4 +1,4 @@
-"use server";
+
 
 import nodemailer from "nodemailer";
 
@@ -7,10 +7,10 @@ const transporter = nodemailer.createTransport({
   service: "hotmail",
   port: 2525,
   auth: {
-    user: "aasiyaliviana@hotmail.com",
+    user: "brain-buzz@outlook.com",
     pass: process.env.EMAIL_PASSWORD,
   },
-  maxConnections: 1,
+  maxConnections: 5,
 });
 
 export const sendEmail = async (
@@ -20,8 +20,8 @@ export const sendEmail = async (
 ) => {
   console.log("Email password:", email, subject);
   const mailOptions = {
-    from: "aasiyaliviana@hotmail.com",
-    to: email,
+    from: "brain-buzz@outlook.com",
+    to: "aasiya.liviana@milkcreeks.com",
     html: `<html>
     <head>
       <style>
@@ -56,7 +56,7 @@ export const sendEmail = async (
     <body>
       <h1>Welcome to Your App!</h1>
       <p>We're excited to have you on board. Please click the link below to verify your account.</p>
-      <a href="${token}" target="_blank">Verify Your Account</a>
+      <a href="#" target="_blank">Verify Your Account</a>
       
     </body>
     </html>
