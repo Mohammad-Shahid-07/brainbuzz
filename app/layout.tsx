@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "../styles/prism.css";
 import { ThemeProvider } from "@/context/ThemeProvider";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 const inter = Inter({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -31,22 +33,24 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth();
   return (
     <html lang="en">
       <head>
         <title>Brain Buzz</title>
       </head>
-
-      <ThemeProvider>
-        <body className={`${spaceGrotesk.variable} ${inter.variable} `}>
-          {children}
-        </body>
-      </ThemeProvider>
+      <SessionProvider session={session}>
+        <ThemeProvider>
+          <body className={`${spaceGrotesk.variable} ${inter.variable} `}>
+            {children}
+          </body>
+        </ThemeProvider>
+      </SessionProvider>
     </html>
   );
 }

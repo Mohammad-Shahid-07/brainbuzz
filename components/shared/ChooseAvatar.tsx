@@ -9,19 +9,13 @@ import { useSession } from "next-auth/react";
 
 const ChooseAvatar = () => {
   const [loading, setLoading] = useState(false);
-  const { data: session, update } = useSession();
+  const {  update } = useSession();
   const path = usePathname();
   const handleImageChange = async (img: string) => {
     try {
       setLoading(true);
       await updateUserImage({ image: img, path });
-      await update({
-        ...session,
-        user: {
-          ...session?.user,
-          image: `${img}`,
-        },
-      });
+       update();
 
       toast({
         title: "Success",

@@ -26,7 +26,7 @@ interface Props {
   type?: string;
 }
 const NameUser = ({ name, username, type }: Props) => {
-  const { data: session, update } = useSession();
+  const { update } = useSession();
   const pathname = usePathname();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -64,13 +64,7 @@ const NameUser = ({ name, username, type }: Props) => {
             description: "Username updated successfully.",
           });
         });
-        await update({
-          ...session,
-          user: {
-            ...session?.user,
-            username: values.username,
-          },
-        });
+        update();
         router.push("/profile/edit");
       } else if (type === "Name") {
         await addName({
@@ -83,13 +77,7 @@ const NameUser = ({ name, username, type }: Props) => {
           });
         });
 
-        await update({
-          ...session,
-          user: {
-            ...session?.user,
-            name: values.username,
-          },
-        });
+        await update();
       }
     } catch (error) {
       console.log(error);

@@ -9,19 +9,20 @@ import { currentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 
 const page = async ({ params }: URLProps) => {
-
   const sessionUser = await currentUser();
-  if(!sessionUser) redirect("/login");
+  if (!sessionUser) redirect("/login");
 
   const mongoUser = await getUserById();
-  
+
   return (
     <>
       <section>
-      
         <UserAccount mongoUser={JSON.stringify(mongoUser)} />
         <div className="mt-9">
-          <Profile userId={JSON.stringify(mongoUser._id)} user={JSON.stringify(mongoUser)} />
+          <Profile
+            userId={JSON.stringify(mongoUser._id)}
+            user={JSON.stringify(mongoUser)}
+          />
         </div>
       </section>
       <section className="mt-9">
