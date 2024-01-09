@@ -178,7 +178,11 @@ export async function RegisterUser(values: z.infer<typeof RegisterSchema>) {
       return { error: "Please provide a valid email and password" };
     }
     const { name, email, password, username } = validatedFields.data;
-
+    const regex = /^[a-zA-Z][a-zA-Z0-9_]{2,20}$/;
+    if (!regex.test(values.username)) {
+      // Handle the error (e.g., display a message to the user)
+      return { error: "Invalid username" };
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const image = getRandomProfileUrl();
 

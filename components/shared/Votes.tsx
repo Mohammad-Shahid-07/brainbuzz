@@ -20,7 +20,7 @@ interface Props {
   downvotes: number;
   hasDownvoted: boolean;
   hasSaved?: boolean;
-  isVerified: boolean;
+
   itemId: string;
   userId: string;
 }
@@ -31,7 +31,7 @@ const Votes = ({
   downvotes,
   hasDownvoted,
   hasSaved,
-  isVerified,
+
   itemId,
   userId,
 }: Props) => {
@@ -47,14 +47,7 @@ const Votes = ({
         description: "You need to login to save",
       });
     }
-    if (isVerified === false) {
-      toast({
-        title: "Your email is not verified",
-        description: "Please verify your email first.",
-        variant: "destructive",
-      });
-      return;
-    }
+   
     if (type === "Question") {
       await toggleSaveQuestion({
         questionId: JSON.parse(itemId),

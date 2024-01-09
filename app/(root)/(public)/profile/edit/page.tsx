@@ -4,8 +4,7 @@ import { URLProps } from "@/types";
 import UserAccount from "@/components/shared/UserAccount";
 import Link from "next/link";
 import Image from "next/image";
-import { toast } from "@/components/ui/use-toast";
-import VerificationButton from "@/components/shared/VerificationButton";
+
 import { currentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 
@@ -15,17 +14,11 @@ const page = async ({ params }: URLProps) => {
   if(!sessionUser) redirect("/login");
 
   const mongoUser = await getUserById();
-  if (!mongoUser.isVerified) {
-    toast({
-      title: "Your email is not verified",
-      description: "Please verify your email first.",
-      variant: "destructive",
-    });
-  }
+  
   return (
     <>
       <section>
-      {!mongoUser?.isVerified &&   <VerificationButton email={mongoUser?.email} classes="my-5" />}
+      
         <UserAccount mongoUser={JSON.stringify(mongoUser)} />
         <div className="mt-9">
           <Profile userId={JSON.stringify(mongoUser._id)} user={JSON.stringify(mongoUser)} />

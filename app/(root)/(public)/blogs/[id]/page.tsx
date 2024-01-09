@@ -75,7 +75,7 @@ const Page = async ({ params, searchParams }: URLProps) => {
               hasDownvoted={res?.downvotes.includes(mongoUser?._id)}
               hasSaved={mongoUser?.savedBlogs.includes(res?._id)}
               itemId={JSON.stringify(res?._id)}
-              isVerified={mongoUser?.isVerified}
+             
               userId={JSON.stringify(mongoUser?._id)}
             />
           </div>

@@ -19,6 +19,7 @@ import { FormError } from "../Form-Error";
 import { FormSuccess } from "../Form-Sucess";
 import { RegisterUser } from "@/lib/actions/auth.action";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "../ui/use-toast";
 
 export const RegisterForm = () => {
   const [error, setError] = useState<string | undefined>("");
@@ -35,6 +36,16 @@ export const RegisterForm = () => {
   });
 
   async function onSubmit(values: z.infer<typeof RegisterSchema>) {
+    const regex = /^[a-zA-Z][a-zA-Z0-9_]{2,20}$/;
+    if (!regex.test(values.username)) {
+      // Handle the error (e.g., display a message to the user)
+      return toast({
+        title: "Invalid Username",
+        description:
+          "Please use only letters, numbers, and underscores. It should start with a letter and be between 3 to 20 characters long.",
+        variant: "destructive",
+      });
+    }
     startTransition(() => {
       RegisterUser(values).then((res) => {
         if (res?.error) {

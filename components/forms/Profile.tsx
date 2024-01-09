@@ -43,7 +43,7 @@ const Profile = ({ userId, user }: Props) => {
   async function onSubmit(values: z.infer<typeof ProfileSchema>) {
     setIsSubmitting(true);
     try {
-      if (parsedUser.isVerified === false) {
+      if (!parsedUser.emailVerified) {
         toast({
           title: "Your email is not verified",
           description: "Please verify your email first.",
