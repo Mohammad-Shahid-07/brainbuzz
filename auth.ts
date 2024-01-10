@@ -14,6 +14,7 @@ declare module "next-auth" {
     user: {
       id?: string | undefined;
       username?: string | undefined;
+   
     } & DefaultSession["user"];
   }
 }
@@ -58,6 +59,7 @@ export const {
       if (token.username && session.user) {
         session.user.username = token.username.toString();
       }
+     
       if (session.user) {
         session.user.name = token?.name;
         session.user.email = token?.email;
@@ -77,6 +79,7 @@ export const {
       token.image = dbUser?.image;
       token.id = dbUser.id;
       token.username = dbUser.username;
+      token.twoFactorEnabled = dbUser.twoFactorEnabled;
 
       return token;
     },

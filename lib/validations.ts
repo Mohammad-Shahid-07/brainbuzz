@@ -93,7 +93,6 @@ export const LoginSchema = z.object({
     z.string().min(6, {
       message: "Please provide a code",
     }),
-    
   ),
 });
 
@@ -111,6 +110,13 @@ export const RegisterSchema = z.object({
     message: "Please provide a name",
   }),
 });
+export const DeleteAccountSchema = z.object({
+ 
+  password: z.string().min(6, {
+    message: "Please provide a password with at least 6 characters",
+  }),
+ 
+});
 
 export const ResetSchema = z.object({
   email: z.string().email({
@@ -122,6 +128,9 @@ export const NewPasswordSchema = z.object({
   password: z.string().min(6, {
     message: "Please provide a password with at least 6 characters",
   }),
+});
+export const TwoFactorTogglerSchema = z.object({
+  isTwoFactorEnabled: z.optional(z.boolean()),
 });
 
 export const SettingsSchema = z

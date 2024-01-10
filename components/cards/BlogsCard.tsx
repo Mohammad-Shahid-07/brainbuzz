@@ -60,12 +60,12 @@ const BlogsCard = ({
         </Link>
         <div className="flex-between mt-6 w-full flex-wrap gap-3">
           <Matric
-            imgURL={author?.image}
+            imgURL={author?.image || "/assets/images/deleted.jpg"}
             alt="User"
-            value={author?.name}
+            value={author?.name || "Deleted Account"}
             title={`- asked `}
             textStyles="body-medium text-dark400_light700"
-            href={`/profile/${author?.username}`}
+            href={author?.username ? `/profile/${author.username}` : "#"}
             isauthor
           />
           <div className="flex items-center gap-3 max-sm:flex-wrap max-sm:justify-start">

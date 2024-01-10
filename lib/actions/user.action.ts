@@ -3,12 +3,14 @@
 import User from "@/database/user.model";
 import { connectToDatabase } from "../mongoose";
 import {
+  ChangePassParams,
   CreateUserParams,
   CreateUserWithCredentialsParams,
   DeleteUserParams,
   GetAllUsersParams,
   GetUserByIdParams,
   GetUserStatsParams,
+  TwoFactorSystemParams,
   UpdateUserImageParams,
   UpdateUserParams,
 } from "./shared.types";
@@ -26,6 +28,7 @@ import { sendEmail } from "../mailer";
 import { getRandomProfileUrl } from "@/constants";
 import { currentUser } from "../session";
 import { redirect } from "next/navigation";
+import { signOut } from "@/auth";
 
 export async function getUserById() {
   const userSession = await currentUser();
@@ -388,7 +391,7 @@ export async function setNewPass(params: any) {
       throw new Error("User not found");
     }
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.hashedPassword = hashedPassword;
+    user.password = hashedPassword;
     await user.save();
     revalidatePath(path);
   } catch (error) {
@@ -396,7 +399,7 @@ export async function setNewPass(params: any) {
     throw error;
   }
 }
-export async function changePass(params: any) {
+export async function changePass(params: ChangePassParams) {
   const { userId, newPassword, oldPassword, path } = params;
   try {
     connectToDatabase();
@@ -420,18 +423,23 @@ export async function changePass(params: any) {
 export async function deleteUser(params: DeleteUserParams) {
   try {
     connectToDatabase();
-    const { clerkId } = params;
-    const user = await User.findOne({ clerkId });
+    const userSession = await currentUser();
+    const { password } = params;
+    const user = await User.findOne({ email: userSession?.email });
     if (!user) {
-      throw new Error("User not found");
+      return { error: "User not found" };
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return { error: "Password is incorrect" };
     }
 
-    await Question.deleteMany({ author: user._id });
-
+    
     // TODO: Delete all the questions and answers of the user
 
-    const deletedUser = await User.findOneAndDelete({ clerkId });
-    return deletedUser;
+    await User.findOneAndDelete({ email: user.email })
+    await signOut()
+    return { success: "User deleted successfully" };
   } catch (error) {
     console.log(error);
     throw error;
@@ -579,6 +587,39 @@ export async function getUserAnswers(params: GetUserStatsParams) {
     return { userAnswers, totalAnswers, isNext };
   } catch (error) {
     console.log(error);
+    throw error;
+  }
+}
+
+export async function TwoFactorSystem(params: TwoFactorSystemParams) {
+  try {
+    connectToDatabase();
+    const { path, isTwoFactorEnabled } = params;
+    const userSession = await currentUser();
+    console.log("function ran");
+
+    if (!userSession) {
+      return { error: "User session not found" };
+    }
+
+    const user = await User.findOne({ email: userSession.email });
+
+    if (!user) {
+      return { error: "User not found" };
+    }
+    if (user.password) {
+      user.twoFactorEnabled = isTwoFactorEnabled;
+      await user.save();
+      revalidatePath(path);
+    }
+
+    return {
+      success: `Two Factor Authentication is ${
+        user.twoFactorEnabled ? "Enabled" : "Disabled"
+      }`,
+    };
+  } catch (error) {
+    console.error("Error in TwoFactorSystem:", error);
     throw error;
   }
 }

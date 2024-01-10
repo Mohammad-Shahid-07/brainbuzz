@@ -172,10 +172,17 @@ export interface GetUserStatsParams {
 }
 
 export interface DeleteUserParams {
-  clerkId: string;
+  password: string;
 }
-export interface UpdateUserImageParams{
+export interface UpdateUserImageParams {
   image: string;
+  path: string;
+}
+
+export interface ChangePassParams {
+  userId: string;
+  newPassword: string;
+  oldPassword: string;
   path: string;
 }
 
@@ -245,5 +252,7 @@ export interface CreateUserWithCredentialsParams {
   account: Account;
 }
 
-
-
+export interface TwoFactorSystemParams {
+  path: string;
+  isTwoFactorEnabled: boolean;
+}

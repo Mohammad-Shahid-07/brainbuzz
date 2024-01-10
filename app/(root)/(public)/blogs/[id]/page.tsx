@@ -44,27 +44,30 @@ export async function generateMetadata({
 const Page = async ({ params, searchParams }: URLProps) => {
   const res = await getBlogBySlug({ slug: params.id });
 
-
   const mongoUser = await getUserById();
-  
+
   return (
     <>
       <div className="flex-start w-full flex-col">
         <div className="flex w-full flex-col-reverse justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
           <Link
-            href={`/profile/${res?.author?.username}`}
+            href={res?.author?.username ? `/profile/${res.author.username}` : '#'}
             className="flex items-center justify-start gap-1"
           >
             <Image
-              src={res?.author?.image}
+              src={res?.author?.image || "/assets/images/deleted.jpg" }
               alt="Picture of the author"
               width={40}
               height={40}
               className="rounded-full"
             />
-            <p className="paragraph-semibold text-dark300_light700">
+          {res?.author?.name ?  <p className="paragraph-semibold text-dark300_light700">
               {res?.author?.name}
             </p>
+          : <p className="paragraph-semibold text-red-500">
+               Deleted Account
+            </p>  
+          }
           </Link>
           <div className="flex justify-end">
             <Votes
@@ -75,7 +78,6 @@ const Page = async ({ params, searchParams }: URLProps) => {
               hasDownvoted={res?.downvotes.includes(mongoUser?._id)}
               hasSaved={mongoUser?.savedBlogs.includes(res?._id)}
               itemId={JSON.stringify(res?._id)}
-             
               userId={JSON.stringify(mongoUser?._id)}
             />
           </div>

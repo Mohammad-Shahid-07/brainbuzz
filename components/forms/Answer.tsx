@@ -61,7 +61,6 @@ const Answer = ({ authorId, questionId, question }: Props) => {
         <h2 className="h3-semibold text-dark200_light900 w-full text-left">
           Write Your Answer Here!
         </h2>
-       
       </div>
       <Form {...form}>
         <form
