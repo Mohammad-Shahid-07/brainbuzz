@@ -15,56 +15,18 @@ const transporter = nodemailer.createTransport({
 
 export const sendEmail = async (
   email: string,
-  token: string,
+  htmlContent: string,
   subject: string,
 ) => {
-
   const mailOptions = {
     from: "brain-buzz@outlook.com",
     to: email,
-    html: `<html>
-    <head>
-      <style>
-        body {
-          font-family: 'Arial', sans-serif;
-          background-color: #f5f5f5;
-          color: #333;
-          text-align: center;
-        }
-    
-        h1 {
-          color: #1f2c64;
-          margin-bottom: 20px;
-        }
-    
-        a {
-          display: inline-block;
-          margin-top: 20px;
-          padding: 10px 20px;
-          background-color: #2196F3;
-          color: #fff;
-          text-decoration: none;
-          border-radius: 5px;
-          transition: background-color 0.3s ease;
-        }
-    
-        a:hover {
-          background-color: #1565c0;
-        }
-      </style>
-    </head>
-    <body>
-      <h1>Welcome to Your App!</h1>
-      <p>We're excited to have you on board. Please click the link below to verify your account.</p>
-      <a href="${token}" target="_blank">Verify Your Account</a>
-      
-    </body>
-    </html>
-    `,
+    html: htmlContent,
     subject,
   };
   await new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions, (error: any, info: any) => {
+ 
       if (error) {
         console.error(error);
         reject(error);

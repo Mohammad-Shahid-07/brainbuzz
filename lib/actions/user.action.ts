@@ -29,6 +29,7 @@ import { getRandomProfileUrl } from "@/constants";
 import { currentUser } from "../session";
 import { redirect } from "next/navigation";
 import { signOut } from "@/auth";
+import { verifyEmailContent } from "../mailer/html-content";
 
 export async function getUserById() {
   const userSession = await currentUser();
@@ -97,8 +98,15 @@ export async function sendverifyEmail(email: string) {
     user.emailVerificationToken = emailVericationToken;
     user.emailVerificationTokenExpiresAt = emailVerificationTokenExpiresAt;
     const resetUrl = `${process.env.NEXTAUTH_URL}/signup/verify/${verificationToken}`;
+    
+    const htmlContent = verifyEmailContent(user.name, resetUrl);
+    console.log(htmlContent);
 
-    sendEmail(email, resetUrl, "Email Verification");
+    await sendEmail(
+      email,
+      htmlContent,
+      "Welcome to Brain Buzz - Confirm Your Signup!",
+    );
 
     await user.save();
     return true;

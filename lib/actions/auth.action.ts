@@ -24,6 +24,11 @@ import { sendEmail } from "../mailer";
 import User from "@/database/user.model";
 import { getRandomProfileUrl } from "@/constants";
 import { processEmailForUsername } from "../utils";
+import {
+  ResetEmailContent,
+  TwoFactorEmailContent,
+  verifyEmailContent,
+} from "../mailer/html-content";
 
 const DEFAULT_LOGIN_REDIRECT = "/";
 export async function LoginUser(values: z.infer<typeof LoginSchema>) {
@@ -34,7 +39,7 @@ export async function LoginUser(values: z.infer<typeof LoginSchema>) {
     if (!validatedFields.success) {
       return { error: "Please provide a valid email and password" };
     }
-    const { email, password, code,  } = validatedFields.data;
+    const { email, password, code } = validatedFields.data;
     const callbackUrl = "/";
     const existingUser = await User.findOne({ email });
 
@@ -44,12 +49,17 @@ export async function LoginUser(values: z.infer<typeof LoginSchema>) {
     if (!existingUser.emailVerified) {
       const verificationToken = await geterateVerificationToken(email);
       const token: string = `${process.env.NEXTAUTH_URL}/verify-email?token=${verificationToken.token}`;
+      const htmlContent = verifyEmailContent(existingUser.name, token);
 
-      await sendEmail(verificationToken.email, token, "Verify Email");
+      await sendEmail(
+        email,
+        htmlContent,
+        "Welcome to Brain Buzz - Confirm Your Signup!",
+      );
 
       return { success: "Confimation email sent" };
     }
-    
+
     if (existingUser.twoFactorEnabled && existingUser.email) {
       if (code) {
         const twoFactorToken = await TwoFactorToken.findOne({ token: code });
@@ -75,11 +85,12 @@ export async function LoginUser(values: z.infer<typeof LoginSchema>) {
         });
       } else {
         const twoFactorToken = await generateTwoFactorToken(existingUser.email);
-        await sendEmail(
-          existingUser.email,
+        const htmlContent = TwoFactorEmailContent(
+          existingUser.name,
           twoFactorToken.token,
-          "Two Factor Code",
         );
+
+        await sendEmail(email, htmlContent, "Two Factor Authentication Code");
 
         return { twoFactor: true };
       }
@@ -208,7 +219,14 @@ export async function RegisterUser(values: z.infer<typeof RegisterSchema>) {
     const verificationToken = await geterateVerificationToken(email);
 
     const token: string = `${process.env.NEXTAUTH_URL}/verify-email?token=${verificationToken.token}`;
-    await sendEmail(email, token, "Verify Email");
+    const htmlContent = verifyEmailContent(name, token);
+
+    await sendEmail(
+      email,
+      htmlContent,
+      "Welcome to Brain Buzz - Confirm Your Signup!",
+    );
+
     return { success: "Verification Email Sent!" };
   } catch (error: any) {
     return error.message;
@@ -345,8 +363,10 @@ export async function resetPassword(values: z.infer<typeof ResetSchema>) {
     }
     const verificationToken = await generatePasswordResetToken(email);
     const token = `${process.env.NEXTAUTH_URL}/new-password?token=${verificationToken.token}`;
-    
-    await sendEmail(verificationToken.email, token, "Reset Password");
+
+    const htmlContent = ResetEmailContent(user.name, token);
+
+    await sendEmail(email, htmlContent, "Brain Buzz - Reset Password");
 
     return { success: "Password reset email sent" };
   } catch (error) {

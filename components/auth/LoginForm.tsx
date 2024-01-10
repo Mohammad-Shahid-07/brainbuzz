@@ -134,6 +134,7 @@ export const LoginForm = () => {
                         placeholder="123456"
                         type="number"
                         disabled={isPending}
+                        className="border-none bg-dark-400  text-light-400 focus:ring-1"
                         {...field}
                       />
                     </FormControl>
