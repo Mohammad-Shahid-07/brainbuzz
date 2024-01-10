@@ -254,5 +254,5 @@ export interface CreateUserWithCredentialsParams {
 
 export interface TwoFactorSystemParams {
   path: string;
-  isTwoFactorEnabled: boolean;
+  isTwoFactorEnabled?: boolean;
 }

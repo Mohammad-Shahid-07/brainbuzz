@@ -434,11 +434,10 @@ export async function deleteUser(params: DeleteUserParams) {
       return { error: "Password is incorrect" };
     }
 
-    
     // TODO: Delete all the questions and answers of the user
 
-    await User.findOneAndDelete({ email: user.email })
-    await signOut()
+    await User.findOneAndDelete({ email: user.email });
+    await signOut();
     return { success: "User deleted successfully" };
   } catch (error) {
     console.log(error);
@@ -596,12 +595,9 @@ export async function TwoFactorSystem(params: TwoFactorSystemParams) {
     connectToDatabase();
     const { path, isTwoFactorEnabled } = params;
     const userSession = await currentUser();
-    console.log("function ran");
-
     if (!userSession) {
       return { error: "User session not found" };
     }
-
     const user = await User.findOne({ email: userSession.email });
 
     if (!user) {
