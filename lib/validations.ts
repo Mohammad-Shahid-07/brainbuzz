@@ -111,11 +111,9 @@ export const RegisterSchema = z.object({
   }),
 });
 export const DeleteAccountSchema = z.object({
- 
   password: z.string().min(6, {
     message: "Please provide a password with at least 6 characters",
   }),
- 
 });
 
 export const ResetSchema = z.object({

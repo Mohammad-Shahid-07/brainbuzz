@@ -407,7 +407,7 @@ export async function changePass(params: ChangePassParams) {
     if (!user) {
       throw new Error("User not found");
     }
-    const isMatch = await bcrypt.compare(oldPassword, user.hashedPassword);
+    const isMatch = await bcrypt.compare(oldPassword!, user.hashedPassword);
     if (!isMatch) {
       throw new Error("Old password is incorrect");
     }

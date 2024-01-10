@@ -182,7 +182,7 @@ export interface UpdateUserImageParams {
 export interface ChangePassParams {
   userId: string;
   newPassword: string;
-  oldPassword: string;
+  oldPassword?: string;
   path: string;
 }
 
