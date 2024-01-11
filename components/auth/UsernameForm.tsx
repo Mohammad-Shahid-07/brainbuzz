@@ -69,7 +69,7 @@ export const UsernameForm = () => {
                   <FormLabel>New Username</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Your new password"
+                      placeholder="@JohnDoe"
                       type="text"
                       className="border-none bg-dark-400  text-light-400 focus:ring-1"
                       {...field}

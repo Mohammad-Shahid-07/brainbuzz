@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { usePathname, useRouter } from "next/navigation";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SetPasswordSchema } from "@/lib/validations";
 import { changePass, setNewPass } from "@/lib/actions/user.action";
 import { toast } from "@/components/ui/use-toast";
@@ -115,7 +115,7 @@ const Password = ({ userId, type }: Props) => {
                 <FormControl>
                   <Input
                     placeholder="Old Password"
-                    type="text"
+                    type="password"
                     {...field}
                     className="no-focus paragraph-regular text-dark300_light700 background-light800_dark300 border"
                   />
@@ -137,7 +137,7 @@ const Password = ({ userId, type }: Props) => {
               <FormControl>
                 <Input
                   placeholder="Type In Your New Password"
-                  type="text"
+                  type="password"
                   {...field}
                   className="no-focus paragraph-regular text-dark300_light700 background-light800_dark300 border"
                 />
@@ -158,7 +158,7 @@ const Password = ({ userId, type }: Props) => {
               <FormControl>
                 <Input
                   placeholder="Please Confrim Your Password"
-                  type="text"
+                  type="password"
                   {...field}
                   className="no-focus paragraph-regular text-dark300_light700 background-light800_dark300 border"
                 />

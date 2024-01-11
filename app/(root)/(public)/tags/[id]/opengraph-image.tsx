@@ -45,7 +45,12 @@ export default async function Image({ params }: ParamsProps) {
           </p>
           <div tw="flex justify-center mt-4">
             <span tw="text-white  text-6xl flex flex-col font-extrabold">
-              Brain Buzz{" "}
+              <span className="flex items-center gap-1">
+                <img src="/assets/images/logo.png" alt="site logo " />
+                <p className="h2-bold font-spaceGrotesk text-dark-100 dark:text-light-900 max-sm:hidden">
+                  Brain <span className="text-primary-500">Buzz</span>{" "}
+                </p>
+              </span>
             </span>
             <span tw="w-full mr-15">
               {" "}
