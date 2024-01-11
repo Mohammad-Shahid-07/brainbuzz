@@ -10,7 +10,7 @@ export const Social = () => {
 
   const handleOauth = (provider: "google" | "github") => {
     signIn(provider, {
-      callbackUrl: callbackUrl || "/",
+      callbackUrl: callbackUrl || "/add-username",
     });
   };
 

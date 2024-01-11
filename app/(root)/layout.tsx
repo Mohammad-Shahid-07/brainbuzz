@@ -3,12 +3,20 @@ import RightSidebar from "@/components/shared/RightSidebar";
 import Navbar from "@/components/shared/navbar/Navbar";
 import { Toaster } from "@/components/ui/toaster";
 import { currentUser } from "@/lib/session";
+import { processEmailForUsername } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 import React from "react";
 
 const Layout = async ({ children }: { children: React.ReactNode }) => {
   const sessionUser = await currentUser();
 
+  if (sessionUser) {
+    const username = processEmailForUsername(sessionUser.email!);
+    if (username === sessionUser.username) {
+      redirect("/add-username");
+    }
+  }
   return (
     <main className="background-light850_dark100 relative">
       <Navbar />

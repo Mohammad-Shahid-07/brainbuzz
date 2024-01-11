@@ -142,6 +142,7 @@ export async function LoginWithOAuth({ user, account }: any) {
       return true;
     } else {
       const username = processEmailForUsername(user.email);
+   
       const newUser = new User({
         name,
         email,
