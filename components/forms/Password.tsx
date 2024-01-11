@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import {  useEffect, useState } from "react";
 import { SetPasswordSchema } from "@/lib/validations";
 import { changePass, setNewPass } from "@/lib/actions/user.action";
 import { toast } from "@/components/ui/use-toast";
@@ -36,6 +36,9 @@ const Password = ({ userId, type }: Props) => {
       confirmNewPassword: "",
     },
   });
+  useEffect(() => {
+    scrollTo(0, 0);
+  }, []);
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof SetPasswordSchema>) {

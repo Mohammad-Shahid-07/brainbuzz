@@ -14,7 +14,7 @@ const NavContent = () => {
   const path = usePathname();
 
   return (
-    <section className="flex h-full w-full flex-col gap-6 pt-16">
+    <section className="flex  w-full flex-col  gap-6 pt-16">
       {sidebarLinks.map((link) => {
         const isActive =
           (path.includes(link.route) && link.route.length > 1) ||
@@ -51,7 +51,7 @@ interface Props {
 }
 const MobileNav = ({ SignedIn }: Props) => {
   return (
-    <Sheet>
+    <Sheet >
       <SheetTrigger asChild>
         <Image
           src="/assets/icons/hamburger.svg"
@@ -63,11 +63,11 @@ const MobileNav = ({ SignedIn }: Props) => {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="background-light900_dark200 border-none "
+        className="background-light900_dark200 border-none  overflow-y-auto custom-scrollbar"
       >
         <Link href="/" className="flex items-center gap-1">
           <Image
-            src="/assets/images/site-logo.svg"
+            src="/assets/images/logo.svg"
             width={23}
             height={23}
             alt="site logo"

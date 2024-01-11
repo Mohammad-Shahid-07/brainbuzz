@@ -14,9 +14,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 // import { createUser } from "@/lib/action/user.action";
-import { useState } from "react";
+import {  useState } from "react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -25,6 +25,7 @@ import { toast } from "@/components/ui/use-toast";
 
 const Signin = () => {
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   // 1. Define your form.
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -131,7 +132,10 @@ const Signin = () => {
 
         <span className="text-light-400">
           Don&rsquo;t have a account yet?{" "}
-          <Link href="/register" className="text-primary-500 hover:text-blue-500">
+          <Link
+            href="/register"
+            className="text-primary-500 hover:text-blue-500"
+          >
             Sign up
           </Link>
         </span>
