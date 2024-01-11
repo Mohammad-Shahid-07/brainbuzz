@@ -353,7 +353,7 @@ export const TwoFactorEmailContent = (name: string, token: string) => {
   <body>
     <main class="container">
       <div class="header">
-        <img src="./logo.svg" alt="" />
+        <img src="./logo.png" alt="" />
         <h1 class="heading">Hi <span>${name}</span>,</h1>
         <p class="headingpara">here’s your code to login</p>
       </div>

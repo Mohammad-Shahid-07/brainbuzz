@@ -51,7 +51,7 @@ interface Props {
 }
 const MobileNav = ({ SignedIn }: Props) => {
   return (
-    <Sheet >
+    <Sheet>
       <SheetTrigger asChild>
         <Image
           src="/assets/icons/hamburger.svg"
@@ -63,13 +63,13 @@ const MobileNav = ({ SignedIn }: Props) => {
       </SheetTrigger>
       <SheetContent
         side="left"
-        className="background-light900_dark200 border-none  overflow-y-auto custom-scrollbar"
+        className="background-light900_dark200 custom-scrollbar  overflow-y-auto border-none"
       >
         <Link href="/" className="flex items-center gap-1">
           <Image
-            src="/assets/images/logo.svg"
-            width={23}
-            height={23}
+            src="/assets/images/logo.png"
+            width={32}
+            height={35}
             alt="site logo"
           />
           <p className="h2-bold text-dark100_light900 font-spaceGrotesk ">
