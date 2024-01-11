@@ -45,7 +45,7 @@ export default async function Image({ params }: ParamsProps) {
           </p>
           <div tw="flex justify-center mt-4">
             <span tw="text-white  text-6xl flex flex-col font-extrabold">
-              AjmerKaStudent.me{" "}
+              Brain Buzz{" "}
             </span>
             <span tw="w-full mr-15">
               {" "}

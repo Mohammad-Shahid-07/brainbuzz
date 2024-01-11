@@ -34,9 +34,7 @@ export default async function DynamicImage({ params }: Props) {
   return new ImageResponse(
     (
       <div tw="relative flex flex-col bg-[#13121C] w-full h-full justify-start">
-        <h1 tw="mx-auto mt-10 font-sans text-white text-4xl">
-          Ajmerkastudent.me{" "}
-        </h1>
+        <h1 tw="mx-auto mt-10 font-sans text-white text-4xl">Brain Buzz </h1>
         <span tw="absolute right-0 top--1/2">
           {" "}
           <svg

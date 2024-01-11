@@ -125,6 +125,9 @@ export async function getQuestions(params: GetQuestionsParams) {
 export async function getQuestionById({ questionId }: GetQuestionByIdParams) {
   try {
     connectToDatabase();
+    if (questionId === "4f64eaa44708eacdfb67703150ce5f05.jpg") {
+      return;
+    }
 
     const question = await Question.findOne({ _id: questionId })
       .populate({ path: "tags", model: Tags, select: "_id name" })

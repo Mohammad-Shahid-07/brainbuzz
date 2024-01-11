@@ -2,6 +2,7 @@ import Answer from "@/components/forms/Answer";
 import AllAnswers from "@/components/shared/AllAnswers";
 import Matric from "@/components/shared/Matric";
 import ParseHTML from "@/components/shared/ParseHTML";
+
 import RenderTags from "@/components/shared/RenderTags";
 import Votes from "@/components/shared/Votes";
 import { getQuestionById } from "@/lib/actions/question.action";
@@ -10,7 +11,7 @@ import { formatLargeNumber, getTimeStamp } from "@/lib/utils";
 import { URLProps } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
-
+import { convert } from "html-to-text";
 export async function generateMetadata({
   params,
 }: {
@@ -27,9 +28,11 @@ export async function generateMetadata({
         description: "The page you are looking for does not exist.",
       };
 
+    const description = convert(question.content);
+
     return {
       title: question?.title,
-      description: question?.content,
+      description,
       alternates: {
         canonical: `/question/${params.slug}/${params.id}`,
       },
@@ -64,13 +67,13 @@ const Page = async ({ params, searchParams }: URLProps) => {
               height={40}
               className="rounded-full"
             />
-            {res?.author?.name ?  <p className="paragraph-semibold text-dark300_light700">
-              {res?.author?.name}
-            </p>
-          : <p className="paragraph-semibold text-red-500">
-               Deleted Account
-            </p>  
-          }
+            {res?.author?.name ? (
+              <p className="paragraph-semibold text-dark300_light700">
+                {res?.author?.name}
+              </p>
+            ) : (
+              <p className="paragraph-semibold text-red-500">Deleted Account</p>
+            )}
           </Link>
           <div className="flex justify-end">
             <Votes
@@ -103,7 +106,6 @@ const Page = async ({ params, searchParams }: URLProps) => {
           value={formatLargeNumber(res?.answers?.length)}
           title="Answers"
           textStyles="body-medium text-dark400_light700"
-          href={`/profile/${res?.author?._id}`}
           isauthor
         />
 

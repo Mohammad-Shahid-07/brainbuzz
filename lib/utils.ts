@@ -9,6 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const getTimeStamp = (createdAt: Date): string => {
   const now = new Date();
+  if(!createdAt) return "just now";
   const timeDifference = now.getTime() - createdAt.getTime();
 
   const seconds = Math.floor(timeDifference / 1000);
@@ -34,6 +35,7 @@ export const getTimeStamp = (createdAt: Date): string => {
 };
 
 export const formatLargeNumber = (num: number): string => {
+  if(!num) return "0";
   if (num >= 1e9) {
     return (num / 1e9).toFixed(2) + " billion";
   } else if (num >= 1e6) {
@@ -48,6 +50,7 @@ export const formatLargeNumber = (num: number): string => {
 // Example usage:
 
 export function formatMonthYear(date: Date): string {
+  if (!date) return "";
   const options: Intl.DateTimeFormatOptions = {
     month: "long",
     year: "numeric",
