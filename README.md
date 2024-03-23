@@ -22,7 +22,7 @@ Brain Buzz is a dynamic web application designed to provide users with an engagi
 - **NextAuth**: NextAuth is a library for authentication in Next.js applications, offering easy integration with various authentication providers.
 
 ##Live Website
-The live version of Brain Buzz can be accessed ![here](https://brain-buzz.vercel.app).
+The live version of Brain Buzz can be accessed [here](https://your-brain-buzz-url.com).
 
 ## Installation
 
@@ -55,3 +55,8 @@ EMAIL_PASSWORD=
 ## Contributing
 
 Contributions are welcome! If you'd like to contribute to Brain Buzz, please fork the repository and submit a pull request with your changes.
+Certainly! Here's the updated README with the live website URL included:
+
+
+
+
