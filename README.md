@@ -21,6 +21,8 @@ Brain Buzz is a dynamic web application designed to provide users with an engagi
 - **MongoDB**: MongoDB is a NoSQL database used for scalable and flexible data storage.
 - **NextAuth**: NextAuth is a library for authentication in Next.js applications, offering easy integration with various authentication providers.
 
+##Live Website
+The live version of Brain Buzz can be accessed ![here](https://brain-buzz.vercel.app).
 
 ## Installation
 
